@@ -1,0 +1,66 @@
+7-13. 배포하기
+
+
+	참고 사이트🔊
+
+my-json 사이트🏹 : https://my-json-server.typicode.com/
+
+Netlify 주소 : https://www.netlify.com/
+
+전체 소스코드📜 : https://github.com/legobitna/hnm-react-router
+
+netlify 사용법을 모른다면? : https://youtu.be/WJtetccrv3o
+
+github 사용법을 모른다면? : https://youtu.be/lelVripbt2M
+
+CI=false란?
+
+CI는 환경변수 입니다. 
+
+우리가 애플리케이션을 빌드 할때 필요한 환경변수들을 넣어줄 수 있습니다.
+
+CI를 이용해서 빌드하는 환경을 허가하는게 netlify의 기본 설정값이고 (2020년 6월 15일에 생긴 룰),
+
+이게 필요 없는 환경인 경우 false로 설정해주면 된다
+
+참고자료: 
+
+https://answers.netlify.com/t/new-ci-true-build-configuration-treating-warnings-as-errors-because-process-env-ci-true/14434
+
+
+
+배포해보기
+
+- 깃허브에 프로젝트를 올린다.
+
+- 넷틀리파이로 간다.
+
+- 깃허브를 이용해서 로그인한다.
+
+- add new site 클릭한다.
+
+- import an existing project 클릭한다. (깃허브에 올려놓은 프로젝트를 불러온다.)
+
+- pick a project from Github 가 나오면 깃허브에 올라온 나의 프로젝트들이 보인다.
+
+- 배포할 프로젝트를 클릭한다.
+
+- Basic build setting > Build command 입력창에 다가 CI=false npm run build 라고 입력한다. (CI == 씨아이)
+
+- 이렇게 적지 않으면 배포가 안된단다.
+
+- 하단에 deploy site 클릭하면 배포가 끝난다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

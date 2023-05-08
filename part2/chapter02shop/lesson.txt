@@ -1,0 +1,7246 @@
+/* chapter 02  */
+
+2강. 
+
+내컴퓨터의 이미지를 가져다 사용하는 경우 
+
+경로를 정확히 import 해야하고, 작명을 해줘야 쓸 수 있다.
+
+----------------------------------------------------------------------
+
+4강. 저번시간 숙제 해설 (Card 컴포넌트 만들기)
+
+문자 중간에 변수 넣고 싶으면 '문자'+변수+'문자' 이렇게 쓰면 된다.
+
+<img src="https://static.nike.com" + 변수+ "/" alt="" />
+
+map( ) 사용법 :
+
+배열.map((a, i)=>{
+  return (
+
+ )	
+}
+
+
+{shoes.map((shoe, i) => {
+            return (
+              <Products key={i} item={shoe} />
+            )
+          })}
+
+----------------------------------------------------------------------
+
+5강 . 리액트 라우터 1 : 셋팅이랑 기본 라우팅
+
+라우팅 : 버튼을 클릭했을 때 다른 페이지를 보여주는 것을 말한다.
+
+install :
+
+npm install react-router-dom@6
+
+index.js 가서 
+
+import { BrowserRouter } from "react-router-dom";
+
+<React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
+
+이렇게 하면 설치끝.
+
+
+----------------------------------------------------------------------
+
+6강. 리액트 라우터 2 : navigate, nested routes, outlet 사용법
+
+
+import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
+
+1. 페이지 이동기능을 만들고 싶으면 useNavigate() 씁니다.
+
+페이지 이동은 Link 써도 된다고 했는데 그게 못생겼으면 이거 쓰면 됩니다. 
+
+
+
+function App(){
+  let navigate = useNavigate()
+  
+  return (
+    (생략)
+    <button onClick={()=>{ navigate('/detail') }}>이동버튼</button>
+  )
+}
+
+
+useNavigate() 쓰면 그 자리에 유용한 함수가 남습니다.
+
+페이지 이동시켜주는 함수입니다.
+
+그럼 이제 navigate('/detail') 이런 코드가 실행되면 /detail 페이지로 이동가능합니다.
+
+navigate(2) 숫자넣으면 앞으로가기, 뒤로가기 기능개발도 가능합니다.
+
+1 넣으면 뒤로 1번 가기
+
+2 넣으면 앞으로 2번 가기 기능입니다. 
+
+
+2. 404페이지는
+
+ 유저가 이상한 경로로 접속했을 때 "없는 페이지입니다" 이런거 보여주고 싶으면
+
+ 
+
+<Route path="*" element={ <div>없는페이지임</div> } />
+<Route path="*"> 하나 맨 밑에 만들어두면 됩니다.
+
+* 경로는 모든 경로를 뜻해서
+
+위에 만들어둔 /detail 이런게 아닌 이상한 페이지 접속시 * 경로로 안내해줍니다. 
+
+ 
+
+3. 서브경로 만들 수 있는 nested routes
+
+ 
+
+/about/member로 접속하면 회사멤버 소개하는 페이지
+
+/about/location으로 접속하면 회사위치 소개하는 페이지
+
+를 만들고 싶으면 어떻게 합니까. 
+
+ 
+
+<Route path="/about/member" element={ <div>멤버들</div> } />
+<Route path="/about/location" element={ <div>회사위치</div> } />
+이렇게 만들어도 되겠지만
+
+ 
+
+ 
+
+<Route path="/about" element={ <About/> } >  
+  <Route path="member" element={ <div>멤버들</div> } />
+  <Route path="location" element={ <div>회사위치</div> } />
+</Route>
+이렇게 만들어도 됩니다.
+
+
+
+<Route>안에 <Route>를 넣을 수 있는데 이걸 Nested routes 라고 부릅니다.
+
+저렇게 쓰면
+
+/about/member로 접속시 <About> &<div>멤버들</div> 을 보여줍니다.
+
+/about/location으로 접속시 <About> & <div>회사위치</div> 을 보여줍니다.
+
+진짜 보이는지 <About>컴포넌트 하나 만들어서 확인해봅시다. 
+
+
+실은 위처럼 코드짜면 
+
+/about/member로 접속시 <About>안에 <div>멤버들</div> 을 보여줍니다.
+
+그래서 <About> 컴포넌트 안에 <div>를 어디다 보여줄지 표기해야 잘보여줍니다. 
+
+ 
+
+<Route path="/about" element={ <About/> } >  
+  <Route path="member" element={ <div>멤버들</div> } />
+  <Route path="location" element={ <div>회사위치</div> } />
+</Route>
+function About(){
+  return (
+    <div>
+      <h4>about페이지임</h4>
+      <Outlet></Outlet>
+    </div>
+  )
+}
+위에서 import해온 <Outlet>은 nested routes안의 element들을 어디에 보여줄지 표기하는 곳입니다. 
+
+그래서 이렇게 해두면 
+
+/about/member로 접속시 <Outlet>자리에 아까의 <div> 박스들이 잘 보입니다. 
+
+그래서 유사한 서브페이지들이 많이 필요하다면 이렇게 만들어도 됩니다.
+
+ 
+
+ 
+
+방금 만든거 보면 페이지 url을 바꿀 때 마다 각각 다른 UI를 보여주는데
+
+이것도 동적인 UI 만드는 방법 중 하나입니다.
+
+그래서 라우터써도 동적인 UI 만들 수 있습니다.
+
+라우터쓰면 뒤로가기 버튼을 이용가능하다는 장점이 있을듯요 
+
+
+----------------------------------------------------------------------
+
+7강 . 리액트 라우터 3 : URL 파라미터로 상세페이지 100개 만들기
+
+상세페이지에 상품명 넣어봅시다
+
+ 
+
+임시 글자들만 들어있으면 밋밋해서 그렇습니다.
+
+그래서 shoes 라는 state에 있던 상품정보들을 Detail 컴포넌트에 꽂아넣어봅시다.
+
+근데 안타깝게도 shoes는 App 컴포넌트에 있으니 App -> Detail 이렇게 전송하면 쓸 수 있겠군요. 
+
+ 
+
+<Route path="/detail" element={ <Detail shoes={shoes}/> }/> 
+그래서 App.js 안에 <Detail> 쓰는 곳에서 일단 props 전송하고 
+
+ 
+
+ 
+
+(Detail.js)
+<div className="container>
+  <div className="row">
+    <div className="col-md-6">
+      <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="100%" />
+    </div>
+    <div className="col-md-6 mt-4">
+      <h4 className="pt-5">{props.shoes[0].title}</h4>
+      <p>{props.shoes[0].content}</p>
+      <p>{props.shoes[0].price}원</p>
+      <button className="btn btn-danger">주문하기</button>
+    </div>
+  </div> 
+</div>
+Detail 컴포넌트는 props 파라미터 등록해서 shoes를 자유롭게 사용했습니다.
+
+props.shoes[0].title 하면 0번째 상품명 나올듯 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Q. 근데 shoes라는 state를 Detail.js 안에서 또 만들면 굳이 props 필요없지 않나요?
+
+A. 나중에 수정이 필요하면 두군데 수정해야해서 귀찮으니 그러면 안됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+상세페이지 여러개 만들려면
+
+ 
+
+방금 만든건 0번 상품의 상세페이지일 뿐입니다.
+
+상품이 3개니까 상세페이지도 3개 필요할텐데 
+
+그럼 이렇게 코드짜면 되겠군요.
+
+<Route> 쓰면 페이지하나 만들 수 있다고 했으니까...
+
+ 
+
+ 
+
+ 
+
+<Route path="/detail/0" element={ <Detail shoes={shoes}/> }/>
+<Route path="/detail/1" element={ <Detail shoes={shoes}/> }/>
+<Route path="/detail/2" element={ <Detail shoes={shoes}/> }/> 
+<Route>를 3개 만드는겁니다. 그럼 페이지 3개 완성 
+
+path 작명시 슬래시 기호도 맘대로 사용가능한데 단어간 띄어쓰기용으로 많이 사용합니다.
+
+ 
+
+근데 상품이 100만개라면 <Route>도 100만개 만들것입니까?
+
+그건 너무 끔찍하기 때문에 다른 방법을 사용합니다. 
+
+ 
+
+ 
+
+ 
+
+<Route path="/detail/:id" element={ <Detail shoes={shoes}/> }/>
+페이지를 여러개 만들고 싶으면 URL 파라미터라는 문법을 사용가능합니다. 
+
+path 작명할 때 /:어쩌구 이렇게 사용하면 "아무 문자"를 뜻합니다.
+
+그래서 위의 <Route>는 누군가 주소창에 /detail/아무거나 입력했을 때
+
+<Detail> 컴포넌트 보여달라는 뜻입니다.
+
+ 
+
+이제 그럼
+
+/detail/0
+
+/detail/1
+
+/detail/2
+
+이렇게 접속해도 <Detail> 컴포넌트 잘 보여줄 수 있습니다. 
+
+문제해결
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+페이지마다 똑같은 내용은 보여주기 싫은데요
+
+ 
+
+/detail/0
+
+/detail/1
+
+/detail/2
+
+이렇게 페이지는 여러개 만들어놨지만 접속해보면 다 똑같은 0번째 상품명만 보여주고 있습니다.
+
+왜냐면 0번째 상품명 보여달라고 여러분이 코드짰으니까요.
+
+이게 싫으면 이렇게 코드짤 수 있지않을까요. 
+
+ 
+
+ 
+
+(Detail.js)
+
+<h4 className="pt-5">{props.shoes[현재url에입력된숫자].title}</h4>
+<p>{props.shoes[0].content}</p>
+<p>{props.shoes[0].price}원</p>
+<button className="btn btn-danger">주문하기</button>
+0이라고 하드코딩해놨던 자리에
+
+현재url파라미터에 입력된숫자를 넣는겁니다.
+
+그럼 /detail/1로 접속하면 1번째 상품명을 보여줄 수 있을듯요. 
+
+저런 숫자를 가져올 수 있냐고요? 
+
+가져올 수 있습니다. 
+
+ 
+
+ 
+
+import { useParams } from 'react-router-dom'
+
+function Detail(){
+  let {id} = useParams();
+  console.log(id)
+  
+  return (
+    <div className="container>
+      <div className="row">
+        <div className="col-md-6">
+          <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="100%" />
+        </div>
+        <div className="col-md-6 mt-4">
+        <h4 className="pt-5">{props.shoes[id].title}</h4>
+        <p>{props.shoes[0].content}</p>
+        <p>{props.shoes[0].price}원</p>
+        <button className="btn btn-danger">주문하기</button>
+      </div>
+    </div>
+  </div>
+  )
+}
+useParams() 라는 함수를 상단에서 import 해오면 쓸 수 있는데
+
+이거 쓰면 현재 /:url파라미터 자리에 유저가 입력한 값을 가져올 수 있습니다.
+
+변수에 저장해서 쓰든가 하면 됩니다.
+
+ 
+
+그래서 위처럼 사용하면
+
+누가 /detail/1로 접속하면 id라는 변수에 1이 들어옵니다.
+
+누가 /detail/2로 접속하면 id라는 변수에 2가 들어옵니다.
+
+그래서 props.shoes[id].title 이러면 아까 의도했던 기능이 완성되겠군요. 
+
+페이지마다 각각 다른 상품명이 보입니다.
+
+ 
+
+(참고)
+
+path 작명시 url 파라미터는 몇번이고 사용가능합니다. detail/:어쩌구/:저쩌구 이런식
+
+
+----------------------------------------------------------------------
+
+8강 . styled-components 쓰면 CSS 파일 없어도 되는데
+
+
+
+
+컴포넌트가 많은 경우 스타일링을 하다보면 불편함이 생기는데
+
+1. class 만들어놓은걸 까먹고 중복해서 또 만들거나
+
+2. 갑자기 다른 이상한 컴포넌트에 원하지않는 스타일이 적용되거나
+
+3. CSS 파일이 너무 길어져서 수정이 어렵거나
+
+이런 경우가 있습니다.
+
+ 
+
+그래서 스타일을 바로 입혀서 컴포넌트를 만들어버릴 수도 있는데
+
+styled-components 라는 인기 라이브러리를 설치하여 이용하시면 됩니다.
+
+ 
+
+일단 설치부터 해봅시다
+
+ 
+
+터미널 열어서 
+
+npm install styled-components
+
+해주면 됩니다.
+
+ 
+
+import styled from 'styled-components'
+그리고 사용하고 싶은 컴포넌트 맨위에 이런걸 import 해와야합니다.
+
+Detail.js 파일 위에 ▲ 위처럼 입력해서 import 해오십시오. 그럼 셋팅 끝 
+
+ 
+
+styled-components 기본적인 사용법 
+
+ 
+
+이 라이브러리를 이용하면 컴포넌트를 만들 때 스타일을 미리 주입해서 만들 수 있습니다.
+
+제가 한번 예시로 padding : 20px인 div박스를 styled-components를 이용해 만들어보겠습니다.
+
+ 
+
+ 
+
+ 
+
+import styled from 'styled-components';
+
+let Box = styled.div`
+  padding : 20px;
+  color : grey
+`;
+let YellowBtn = styled.button`
+  background : yellow;
+  color : black;
+  padding : 10px;
+`;
+
+function Detail(){
+  return (
+    <div>
+      <Box>
+        <YellowBtn>버튼임</YellowBtn>
+      </Box>
+    </div>
+  )
+}
+1. <div>를 하나 만들고 싶으면 저렇게 styled.div 라는걸 사용하면 됩니다.
+
+<p> 만들려면 styled.p 이런 식임 
+
+2. 오른쪽에 `` backtick 기호를 이용해서 CSS 스타일을 넣을 수 있습니다. 
+
+3. 그럼 그 자리에 컴포넌트를 남겨주는데 변수에 저장해서 쓰면 됩니다. 
+
+ 
+
+ 
+
+장점1. CSS 파일 오픈할 필요없이 JS 파일에서 바로 스타일넣을 수 있습니다.
+
+장점2. 여기 적은 스타일이 다른 JS 파일로 오염되지 않습니다. 원래 그냥 CSS파일은 오염됩니다.
+
+장점3. 페이지 로딩시간 단축됩니다.
+
+왜냐면 저기 적은 스타일은 html 페이지의 <style>태그에 넣어줘서 그렇습니다. 
+
+ 
+
+ 
+실은 일반 CSS 파일도 오염방지 가능
+
+ 
+
+여러분이 App.css 파일을 만들어서 App.js에서 import해서 쓴다고 해도 
+
+거기 적은 클래스명들은 Detail.js까지 사용가능합니다. (오염됨)
+
+프로젝트 사이즈가 작을 땐 편리하겠지만 사이즈가 커지면 관리하기 힘들어집니다. 
+
+ 
+
+그럴 땐 styled-components 써도 되지만 그냥 CSS파일에서도 다른 JS 파일에 간섭하지 않는 '모듈화' 기능을 제공하는데
+
+컴포넌트명.module.css
+
+이렇게 CSS 파일을 작명하면 됩니다.
+
+그리고 컴포넌트명.js 파일에서 import 해서 쓰면 그 스타일들은 컴포넌트명.js 파일에만 적용됩니다.
+
+ 
+
+
+추가 문법 : props로 재활용가능
+
+ 
+
+여러가지 비슷한 UI가 필요한 경우 어쩌죠?
+
+예를 들어 지금 노란 버튼말고 오렌지색 버튼이 필요해지면?
+
+물론 예전 강의를 잘 되살려보면 props 이용하면 기존 컴포넌트를 살짝씩 다르게 이용할 수 있다고 했습니다.
+
+그래서 여기도 props 문법 지원합니다. 
+
+ 
+
+ 
+
+import styled from 'styled-components';
+
+let YellowBtn = styled.button`
+  background : ${ props => props.bg };
+  color : black;
+  padding : 10px;
+`;
+
+function Detail(){
+  return (
+    <div>
+        <YellowBtn bg="orange">오렌지색 버튼임</YellowBtn>
+        <YellowBtn bg="blue">파란색 버튼임</YellowBtn>
+    </div>
+  )
+}
+${ props => props.bg } 이게 styled-components 에서의 props 뚫는 문법입니다.
+
+bg부분에 자유롭게 작명하면되고
+
+이제 컴포넌트 쓸 때 bg라는 props를 입력가능합니다.
+
+ 
+
+물론 CSS 쓴다고 이게 불가능한건 아닙니다. class 더 만들면 되는 것임
+
+ 
+
+ 
+
+Q. 저거 ${ } 이거 무슨 문법임?
+
+A. 자바스크립트 `` 백틱 따옴표 안에 적어도 문자를 만들 수 있는데
+
+백틱으로 만든 문자 중간에 변수같은걸 넣고 싶을 때 ${ 변수명 } 이렇게 쓸 수 있습니다. 
+
+ 
+
+Q. props 전송시 작명={ } 이렇게 전송안하고 따옴표써도 되나요?
+
+A. 넴
+
+ 
+let YellowBtn = styled.button` 
+  background : ${ props => props.bg };
+  color : ${ props => props.bg == 'blue' ? 'white' : 'black' };
+  padding : 10px; 
+`; 
+자바스크립트 적는 공간이다보니까 이런 식의 스타일 프로그래밍도 가능합니다. 
+
+무슨 뜻이게요 
+
+ 
+
+세상에 장점만 있는게 어딨습니까 
+
+ 
+
+단점1. JS 파일이 매우 복잡해집니다.
+
+그리고 이 컴포넌트가 styled 인지 아니면 일반 컴포넌트인지 구분도 어렵습니다.
+
+ 
+
+단점2. JS 파일 간 중복 디자인이 많이 필요하면 어쩌죠?
+
+다른 파일에서 스타일 넣은 것들 import 해와서 쓰면 됩니다.
+
+근데 그럼 CSS파일 쓰는거랑 차이가 없을 수도요
+
+ 
+
+단점3. CSS 담당하는 디자이너가 있다면 협업시 불편할텐데 
+
+그 사람이 styled-components 문법을 모른다면 
+
+그 사람이 CSS로 짠걸 styled-components 문법으로 다시 바꾸거나 그런 작업이 필요하겠군요.
+
+그래서 신기술같은거 도입시엔 언제나 미래를 생각해보아야합니다. 
+
+ 
+
+
+styled-components를 써보고 싶다면 직접 레이아웃 몇개 만들어보며 익혀보면 되겠습니다.
+
+언제까지 강의만 보고 있을 것임 
+----------------------------------------------------------------------
+
+9강 . Lifecycle과 useEffect 1
+
+
+
+오늘의 숙제 :
+
+노란 박스 하나 만들고 Detail 페이지 방문 후 2초 후에 박스가 사라지게 해보십시오.
+
+ 
+
+ 
+오늘은 Lifecycle 어쩌구랑 useEffect라는 함수에 대해 알아봅시다. 
+
+어딜 들쳐봐도 다들 어렵게 가르치는 Lifecycle 이라는 개념이 있는데 실은 별거아닙니다.
+
+이걸 배우는 이유는 componentDidMount() 이런 유용한 Lifecycle 함수들을 쓰기 위해서 배우는겁니다.
+
+요즘 사람들은 저렇게 긴 함수 안쓰고 useEffect() 라는 깔끔한 함수를 사용하기 때문에 우리도 그걸 배워봅시다.
+
+ 
+
+컴포넌트의 인생 
+
+ 
+여러분이 만들어쓰고있는 컴포넌트는 Lifecycle이라는 개념이 있습니다.
+
+컴포넌트도 인생이 있다는겁니다.
+
+ 
+ 
+컴포넌트는
+
+1. 생성이 될 수도 있고 (전문용어로 mount)
+
+2. 재렌더링이 될 수도 있고 (전문용어로 update)
+
+3. 삭제가 될 수도 있습니다. (전문용어로 unmount)
+
+ 
+
+우리 인생 살기도 힘든데 컴포넌트의 인생 알아서 뭐합니까
+
+뭔가를 배우면 어디다 쓸지 생각해보아야 합니다. 그래야 나중에 활용하겠죠? 
+
+컴포넌트의 인생을 배우는 이유는 컴포넌트 인생 중간중간에 간섭할 수 있기 때문입니다.
+
+간섭이 뭐냐면 그냥 코드실행인데 
+
+컴포넌트가 장착이 될 때 특정 코드를 실행할 수도 있고 
+
+컴포넌트가 업데이트될 때 특정 코드를 실행할 수도 있다는 겁니다.
+
+그럼 재밌는 기능들 개발가능 
+
+ 
+
+ 
+인생에 간섭하는 방법 
+
+ 
+
+"Detail 컴포넌트 등장 전에 이것좀 해줘"
+
+"Detail 컴포넌트 사라지기 전에 이것좀 해줘"
+
+"Detail 컴포넌트 업데이트 되고나서 이것좀 해줘"
+
+이렇게 코드좀 실행해달라고 간섭할 수 있는데
+
+간섭은 갈고리를 달아서 합니다. 
+
+ 
+
+갈고리를 달아서 코드를 넣어주면 됩니다.
+
+그럼 진짜 페이지 장착시, 업데이트시, 제거시 코드실행가능 
+
+갈고리는 영어로 hook이라고 합니다. 
+
+그래서 저걸 Lifecycle hook 이라고 부릅니다. 
+
+ 
+
+옛날 React에서 Lifecycle hook 쓰는 법
+
+
+class Detail2 extends React.Component {
+  componentDidMount(){
+    //Detail2 컴포넌트가 로드되고나서 실행할 코드
+  }
+  componentDidUpdate(){
+    //Detail2 컴포넌트가 업데이트 되고나서 실행할 코드
+  }
+  componentWillUnmount(){
+    //Detail2 컴포넌트가 삭제되기전에 실행할 코드
+  }
+}
+
+
+예전엔 class 문법으로 컴포넌트를 만들었습니다.
+
+그 경우엔 안에 함수명을 저렇게 써주면 각각 특정 Lifecycle에서 코드를 실행할 수 있었습니다.
+
+ 
+
+요즘 React에서 Lifecycle hook 쓰는 법
+
+ 
+
+import {useState, useEffect} from 'react';
+
+function Detail(){
+
+  useEffect(()=>{
+    //여기적은 코드는 컴포넌트 mount & 업데이트 마다 실행됨
+    console.log('안녕')
+  });
+  
+  return (생략)
+}
+
+
+상단에서 useEffect import해오고 
+
+콜백함수 추가해서 안에 코드 적으면 이제 그 코드는 컴포넌트가 mount & update시 실행됩니다.
+
+그래서 이게 Lifecycle hook 입니다. 
+
+진짜 Detail 페이지 로드시 콘솔창에 '안녕' 출력되나 확인해봅시다. 
+
+
+ 
+
+
+
+import {useState, useEffect} from 'react';
+
+function Detail(){
+
+  useEffect(()=>{
+    //여기적은 코드는 컴포넌트 로드 & 업데이트(재렌더링) 마다 실행됨
+    console.log('안녕')
+  });
+
+  let [count, setCount] = useState(0)
+  
+  return (
+    <button onClick={()=>{ setCount(count+1) }}>버튼</button>
+  )
+}
+재렌더링시에도 진짜 '안녕' 출력되나 테스트해보려고 
+
+버튼누르면 재렌더링되게 코드짜봤습니다.
+
+버튼눌러서 실험해봅시다. 
+
+ 
+
+ 
+
+Q. 왜 저는 '안녕' 2번 출력됨?
+
+index.js에 <React.StrictMode>라는 태그가 있으면 2번 출력해줍니다.
+
+디버깅용으로 편하라고 2번 출력해주는데 싫으면 저 태그를 제거하거나 그럽시다. 
+
+ 
+
+ 
+
+근데 useEffect 밖에 적어도 똑같은데요
+
+ 
+
+들킴
+
+실은 useEffect 바깥에 적어도 똑같이 컴포넌트 mount & update시 실행됩니다. 
+
+컴포넌트가 mount & update시 function 안에 있는 코드도 다시 읽고 지나가서 그렇습니다. 
+
+그럼 대체 useEffect 왜 만들어놓은 것이죠 
+
+ 
+
+그래서 문법 배우는게 중요한게 아니라 이걸 배웠으면
+
+어떤 상황에서 언제 사용할지도 함께 배워야합니다. 
+
+그래야 나중에 "여기서 useEffect 써도 되나요" 이런 초보질문 안함
+
+ 
+
+useEffect 안에 적은 코드는 html 렌더링 이후에 동작합니다.
+
+그럼 이제 useEffect가 뭔가 유용할 것 같지 않습니까 
+
+예를 들어서 굉장히 시간이 오래걸리는 쓸데없는 코드가 필요하다고 가정해봅시다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+function Detail(){
+
+  (반복문 10억번 돌리는 코드)
+  return (생략)
+}
+▲ 여기에 대충 적으면 반복문 돌리고 나서 하단의 html 보여줌
+
+ 
+
+ 
+
+function Detail(){
+
+  useEffect(()=>{
+    (반복문 10억번 돌리는 코드)
+  });
+  
+  return (생략)
+}
+▲ useEffect 안에 적으면 html 보여주고 나서 반복문 돌림 
+
+ 
+
+이런 식으로 코드의 실행 시점을 조절할 수 있기 때문에
+
+조금이라도 html 렌더링이 빠른 사이트를 원하면
+
+쓸데없는 것들은 useEffect 안에 넣어보길 바랍니다. 
+
+ 
+
+ 
+
+그래서 이걸 알면 리액트만든 놈이 이 함수를 useEffect라고 작명한 이유도 알 수 있는데 
+
+함수안에 이것저것 코드짤 때 
+
+함수의 핵심기능 외에 쓸데없는 기능들을 프로그래밍 용어로 side effect라고 부릅니다.
+
+ 
+
+그래서 useEffect도 거기서 따온건데
+
+컴포넌트의 핵심 기능은 html 렌더링이라 
+
+그거 외의 쓸데없는 기능들은 useEffect 안에 적으라는 소리입니다. 
+
+오래걸리는 반복연산, 서버에서 데이터가져오는 작업, 타이머다는거 
+
+이런건 useEffect 안에 많이 적습니다.
+
+ 
+
+오늘의 숙제 :
+
+Detail 페이지 안에 노란 박스 하나 만들고
+
+Detail 페이지 방문 후 2초 후에 박스가 사라지게 해보십시오.
+
+ 
+
+(팁) 동적인 UI 어떻게 만든다고 했습니까 
+
+
+
+
+
+그전에 알아야할 내용 setTimeout
+ 
+
+자바스크립트로 X초 후에 코드를 실행하고 싶으면 setTimeout이라는 함수를 사용합니다.
+
+ 
+
+setTimeout( ()=>{  1초 후 실행할 코드 }, 1000);
+사용법은 이렇습니다.
+
+1000이라고 숫자적은 곳에 ms 단위로 시간을 적어주시면 됩니다.
+
+1000이라고 적으면 1초겠죠? 1초 후에 내부 코드를 실행해줍니다.
+
+ 
+----------------------------------------------------------------------
+
+10강 . Lifecycle과 useEffect 2
+
+
+저번시간 숙제는 
+
+ 
+
+Detail 페이지 후 2초 후에 박스가 사라지게 해보라고 했습니다. 
+
+동적인 UI 같은거라 그런거 만들 땐 
+
+1. UI 상태를 저장할 state 만들고
+
+2. state에 따라서 UI가 어떻게 보일지 작성하라고 했으니 그거부터 해봅시다. 
+
+ 
+
+function Detail(){
+
+  let [alert, setAlert] = useState(true)
+
+  return (
+  {
+    alert == true
+    ? <div className="alert alert-warning">
+        2초이내 구매시 할인
+      </div>
+    : null
+  }
+  )
+}
+그랬습니다.
+
+이제 alert라는 state를 true로 바꾸면 노란박스가 보이고
+
+false로 바꾸면 안보임 
+
+ 
+
+그럼 이제 Detail 페이지 접속 후 2초 후에 저걸 안보이게 처리하려면 
+
+useEffect와 setTimeout 이런거 쓰면 될듯요 
+
+ 
+
+ 
+
+function Detail(){
+
+  let [alert, setAlert] = useState(true)
+  useEffect(()=>{
+    setTimeout(()=>{ setAlert(false) }, 2000)
+  }, [])
+
+  return (
+  {
+    alert == true
+    ? <div className="alert alert-warning">
+        2초이내 구매시 할인
+      </div>
+    : null
+  }
+  )
+}
+이랬더니 2초 후에 잘 동작하는군요. 
+
+근데 [ ] 이거가 갑자기 어디서 나온건지 알아봅시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+useEffect에 넣을 수 있는 실행조건 
+
+ 
+
+useEffect(()=>{ 실행할코드 }, [count])
+useEffect()의 둘째 파라미터로 [ ] 를 넣을 수 있는데
+
+거기에 변수나 state같은 것들을 넣을 수 있습니다.
+
+그렇게 하면 [ ]에 있는 변수나 state 가 변할 때만 useEffect 안의 코드를 실행해줍니다.
+
+그래서 위의 코드는 count라는 변수가 변할 때만 useEffect 안의 코드가 실행되겠군요. 
+
+(참고) dependency : [ ] 안에 state 여러개 넣을 수 있음
+
+ 
+
+ 
+
+useEffect(()=>{ 실행할코드 }, [])
+아무것도 안넣으면 컴포넌트 mount시 (로드시) 1회 실행하고 영영 실행해주지 않습니다.
+
+********** 즉, 딱 한번만 실행되게 하고 싶을 때에 [ ] 비워놓는 코드를 작성해준다.
+
+그래서 저번시간 숙제에도 [ ] 이걸 넣어봤습니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+clean up function
+
+ 
+
+useEffect 동작하기 전에 특정코드를 실행하고 싶으면
+
+return ()=>{} 안에 넣을 수 있습니다. 
+
+ 이게 무슨 말이냐면?
+ 
+
+ 
+
+useEffect(()=>{ 
+  그 다음 실행됨 
+  return ()=>{
+    여기있는게 먼저실행됨
+  }
+}, [count])
+
+
+그럼 useEffect 안에 있는 코드를 실행하기 전에
+
+return ()=>{ } 안에 있는 코드를 실행해줍니다. 
+
+참고로 저걸 clean up function 이라고 부릅니다. 
+
+왜 저딴 쓸데없는 기능이 있냐고요?
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+여러분 복잡하고 어려운 숙제할 때 
+
+책상을 싹 치우고 하면 잘되는 것 처럼 
+
+useEffect 안에 있는 코드를 실행할 때도
+
+싹 치우고 깔끔한 마음으로 실행하는게 좋을 때가 있습니다. 
+
+ 
+
+예를 들면 숙제로 했던 setTimeout 타이머인데
+
+setTimeout() 쓸 때마다 브라우저 안에 타이머가 하나 생깁니다.
+
+근데 useEffect 안에 썼기 때문에 컴포넌트가 mount 될 때 마다 실행됩니다. 
+
+그럼 잘못 코드를 짜면 타이머가 100개 1000개 생길 수도 있겠군요.
+
+ 
+
+나중에 그런 버그를 방지하고 싶으면useEffect에서 타이머 만들기 전에 기존 타이머를
+
+ 싹 제거하라고 코드를 짜면 되는데
+
+그런거 짤 때 return ()=>{} 안에 짜면 됩니다. 
+
+ 
+TMI : clearTimeout( ) 함수 : 이전에 있던 타이머들을 제거해주는 함수
+ 
+
+useEffect(()=>{ 
+  let a = setTimeout(()=>{ setAlert(false) }, 2000)
+  return ()=>{
+    clearTimeout(a)
+  }
+}, [])
+
+setTimeout( ) : 셋타임아웃 함수는 타이머를 생성하는 함수이고 이 함수를 변수에 넣을 수 있다.
+
+위의 예제코드를 보면 변수 a 에다가 셋타임아웃을 넣엇따.
+
+이제 이 타이머 생성함수로 생성된 타이머를 제거하고 싶으면 clearTimeout(타이머)
+
+이렇게 코드짜면 됩니다. 
+
+그래서 숙제를 이렇게 하면 좀 더 안전한 코드가 되겠군요.
+
+타이머 장착하기 전에 기존 타이머가 있으면 제거를 해줄듯요 
+
+ 
+또 다른 예제 코드 :
+
+
+useEffect(()=>{ 
+  
+  let a = setTimeout(()=>{ setAlert(false) }, 2000)
+  console.log( 2 );
+  
+  return ()=>{
+    console.log( 1 );
+    clearTimeout(a);
+  }
+}, [])
+
+실행결과 : 
+
+1
+
+2
+
+1이 먼저 출력(실행)되고 2가 실행됨. 
+
+ 
+
+(참고1) clean up function에는 타이머제거, socket 연결요청제거, ajax요청 중단 이런 코드를 많이 작성합니다.
+
+(참고2) 컴포넌트 unmount 시에도 clean up function 안에 있던게 1회 실행됩니다.
+
+ 
+
+ 
+
+ 
+
+빡통식 정리시간 
+
+ 
+
+저런 코드가 언제 실행되는지만 잘 알아두면 알아서 개발가능한데
+
+원리이해가 싫다면 사용법만 정리해둡시다. 
+
+ 
+
+ 
+
+useEffect(()=>{ 실행할코드 })
+1. 이러면 재렌더링마다 코드를 실행가능합니다.
+
+ 
+
+ 
+
+useEffect(()=>{ 실행할코드 }, [])
+2. 이러면 컴포넌트 mount시 (로드시) 딱 한번 1회만 실행가능합니다.
+
+ 
+
+ 
+
+useEffect(()=>{ 
+  return ()=>{
+    실행할코드
+  }
+})
+3. 이러면 useEffect 안의 코드 실행 전에 항상 실행됩니다. 
+
+ 
+
+ 
+
+useEffect(()=>{ 
+  return ()=>{
+    실행할코드
+  }
+}, [])
+4. 이러면 컴포넌트 unmount시 1회 실행됩니다.
+
+ 
+
+ 
+
+useEffect(()=>{ 
+  실행할코드
+}, [state])
+5. 이러면 특정 state 변경시에만 계속 실행됩니다. 
+
+ 
+
+ 
+
+
+오늘의 숙제 : 
+
+<input> 하나 만들고 거기에 유저가 숫자 말고 다른걸 입력하면
+
+"그러지마세요"라는 안내메세지를 출력해봅시다.
+
+굳이 그럴 필요는 없겠지만 오늘 배운 useEffect 써보는게 어떨까요. 이걸 안써도 되지만 그냥 숙제니까...해보란다.
+
+(팁) 모르는건 검색해봐야합니다.
+
+
+숙제풀이 :
+
+isNaN('문자') true 리턴됨
+
+isNaN('1234') false 리턴됨
+
+이것을 이용해서 alert를 보여주고 안보여주고 해주면 됨.
+
+
+
+
+let [orderNumber, setOrderNumber] = useState(0);
+let [orderAlert, setOrderAlert] = useState(false);
+
+
+useEffect(() => {
+    if (isNaN(orderNumber) == true) {
+      setOrderAlert(true);
+    } else {
+      setOrderAlert(false);
+    }
+  }, [orderNumber]);
+
+
+
+
+
+
+<input
+            type='text'
+            placeholder='주문하실 상품의 수량을 숫자로 입력해주세요'
+            onChange={(event) => setOrderNumber(event.target.value)}
+          />
+          {orderAlert == true ? (
+            <div className='alert alert-warning'>
+              숫자만 입력하실 수 있습니다.
+            </div>
+          ) : null}
+
+
+코드리뷰 :
+
+2개의 state를 만들었음. 인풋태그에서 입력된 정보들을 저장하는 state 하나랑.
+
+useEffect( ) 함수 내부에서 입력된 값들이 isNaN을 통해서 true인지 false인지를 구별해주고 
+
+리턴된 true와 false를 가지고
+
+
+화면에 보여지게 되는 Alert의 코드
+
+
+{orderAlert == true ? (
+            <div className='alert alert-warning'>
+              숫자만 입력하실 수 있습니다.
+            </div>
+          ) : null}
+
+
+
+
+true인 경우 => setOrderAlert( true ) => 화면에 Alert가 보여지게 됨.
+
+false인 경우 => setOrderAlert( false ) => 화면에 Alert가 사라짐.
+
+
+
+
+isNaN 에 대해 더 알고 싶으면??
+
+https://javascript.plainenglish.io/3-ways-to-check-if-variable-is-a-number-in-javascript-bd8157301274
+----------------------------------------------------------------------
+
+11강. 리액트에서 서버와 통신하려면 ajax 1
+
+
+
+오늘의 숙제 : 
+
+버튼을 누르면 서버에서 상품데이터 3개를 가져와서 메인페이지에 상품카드 3개를 더 생성해봅시다. 
+
+https://codingapple1.github.io/shop/data2.json
+
+여기로 GET요청하면 상품데이터를 3개 더 보내줍니다.
+
+ 
+
+ 
+
+ 
+
+오늘은 상품 더보기 기능을 만들어봅시다. 
+
+그래서 실제 상품을 서버에서 가져와볼 것인데 
+
+서버가 뭔지 그리고 통신은 어떻게 하는지 부터 알아봅시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+서버란?
+
+ 
+
+유저가 데이터달라고 요청을 하면 데이터를 보내주는 간단한 프로그램일 뿐입니다.
+
+네이버웹툰 서버 : 유저가 웹툰 달라고 하면 웹툰 보내주는 프로그램
+
+유튜브 서버 : 유저가 영상 달라고 하면 영상 보내주는 프로그램
+
+입니다. 
+
+그래서 서버개발 별거아님
+
+"누가 A를 요청하면 A를 보내주세요" 라고 코드짜는게 서버개발 끝입니다. 
+
+ 
+
+ 
+
+
+
+ 
+
+유저가 그냥 데이터달라고 떼쓰면 서버가 보내주진 않습니다.
+
+서버에 데이터를 요청할 때는 정확한 규격에 맞춰서 요청해야하는데 
+
+1. 어떤 데이터인지 (URL 형식으로)
+
+2. 어떤 방법으로 요청할지 (GET or POST)
+
+잘 기재해야 데이터를 보내줍니다. 
+
+ 
+
+ 
+
+데이터를 가져올 때는 보통 GET 고르면 되고 
+
+데이터를 서버로 보낼 때는 POST 고르면 됩니다. 
+
+그리고 어떤 데이터를 보고싶은지 URL만 잘 기재하면 되는데 
+
+ 
+
+예를 들어서 쇼미더럭키짱이라는 네이버웹툰을 보고싶으면
+
+https://comic.naver.com/webtoon/list?titleId=783054 여기 URL로 GET요청하면 보내줍니다.
+
+예를 들어서 독립일기라는 네이버웹툰을 보고싶으면
+
+https://comic.naver.com/webtoon/list?titleId=748105 여기 URL로 GET요청하면 보내줍니다.
+
+URL을 어떻게 알았냐고요? 
+
+네이버 웹툰 서버개발자에게 물어보거나 URL이 기재된 html 페이지를 찾아보거나 그러면 됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+GET/POST 요청하는 법?
+
+ 
+
+GET요청을 날리고 싶으면 가장 쉬운 방법은 브라우저 주소창입니다.
+
+거기에 URL 아무거나 적으면 그 곳으로 GET요청을 날려줍니다.
+
+진짠지 테스트해보셈 
+
+ 
+
+POST요청을 날리고 싶으면
+
+<form action="요청할url" method="post"> 태그 이용하면 됩니다.
+
+그럼 폼이 전송되었을 때 POST요청을 날려줍니다. 
+
+근데 GET, POST 요청을 저렇게 날리면 단점이 뭐냐면 브라우저가 새로고침됩니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+AJAX란? 
+
+ 
+
+서버에 GET, POST 요청을 할 때 새로고침 없이 데이터를 주고받을 수 있게 도와주는
+
+간단한 브라우저 기능을 AJAX라고 합니다. 
+
+그거 쓰면 새로고침 없이도 쇼핑몰 상품을 더 가져올 수도 있고
+
+새로고침 없이도 댓글을 서버로 전송할 수도 있고 
+
+그런 기능을 만들 수 있는 것임 
+
+ 
+
+AJAX로 GET/POST요청하려면 방법 3개 중 택1 하면 됩니다.
+
+1. XMLHttpRequest라는 옛날 문법 쓰기
+
+2. fetch() 라는 최신 문법 쓰기
+
+3. axios 같은 외부 라이브러리 쓰기 
+
+3번이 가장 편하니 3번을 써봅시다. 
+
+ 
+
+터미널 열어서 
+
+npm install axios 
+하면 설치 끝입니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+AJAX 요청하는 법
+
+ 
+
+버튼누르면 제가 만든 서버로 ajax 요청을 해봅시다.
+
+https://codingapple1.github.io/shop/data2.json 이 URL로 GET요청을 하면 상품 3개를 가져와줍니다.
+
+여기로 요청해봅시다. 
+
+ 
+
+ 
+
+import axios from 'axios'
+
+function App(){
+  return (
+    <button onClick={()=>{
+      axios.get('https://codingapple1.github.io/shop/data2.json').then((결과)=>{
+        console.log(결과.data)
+      })
+      .catch(()=>{
+        console.log('실패함')
+      })
+    }}>버튼</button>
+  )
+}
+1. axios를 쓰려면 상단에서 import해오고
+
+2. axios.get(URL) 이러면 그 URL로 GET요청이 됩니다.
+
+3. 데이터 가져온 결과는 결과.data 안에 들어있습니다. 
+
+그래서 위의 버튼 누르면 서버에서 가져온 데이터가 콘솔창에 출력됩니다. 
+
+ 
+
+4. 인터넷이 안되거나 URL이 이상하면 실패하는데
+
+실패했을 때 실행할 코드는 .catch() 안에 적으면 됩니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+그래서 오늘의 숙제로
+
+버튼을 누르면 서버에서 상품데이터 3개를 가져와서 
+
+메인페이지에 상품카드 3개를 더 생성해봅시다. 
+
+ 
+
+(팁) 리액트에선 html을 3개 더 생성해주세요~라고 코드짜지 않는다고 했습니다. 
+
+state 조작하면 html 알아서 생성될걸요 
+
+----------------------------------------------------------------------
+
+
+
+12강. 리액트에서 서버와 통신하려면 ajax 2 : post, fetch
+
+
+
+
+심심하면 이런 것들도 해봅시다.
+
+ 
+
+응용1. 버튼을 2번 누르면 7,8,9번 상품을 가져와서 html로 보여주려면?
+
+여기로 GET요청하면 7,8,9번 상품 줍니다. 
+
+https://codingapple1.github.io/shop/data3.json
+
+버튼을 몇번 눌렀는지 어디 변수나 state 같은 곳에 기록해둬도 되겠군요.
+
+ 
+
+응용2. 버튼을 3번 누르면 더 상품이 없다고 안내문을 띄우려면?
+
+아니면 버튼을 숨기거나 그래도 되겠군요.
+
+ 
+
+응용3. 버튼을 누른 직후엔 "로딩중입니다" 이런 글자를 주변에 띄우고 싶으면?
+
+그리고 요청이 성공하거나 실패하거나 그 후엔 "로딩중입니다" 글자를 제거해야합니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+저번시간 숙제는
+
+ 
+
+서버에서 데이터 가져와서 상품 html 3개 생성하라고 했는데
+
+1. 서버에서 데이터 가져와주세요
+
+2. html 3개 더 만들어주세요
+
+이렇게 코드 2개만 짜면 되겠군요 근데 1번은 저번시간에 해서 2번만 짜면 숙제 끝임 
+
+ 
+
+ 
+
+리액트에선 "html 3개 더 만들어주세요~" 이렇게 코드짜지 않습니다.
+
+state 조작하면 알아서 html이 변경되도록 코드짠다고 했는데 
+
+지금도 shoes.map() 덕분에 shoes에 들어있는 자료 갯수만큼 html이 자동으로 생성되고 있어서
+
+여러분은 그냥 state만 조작하면 됩니다. 
+
+"shoes라는 state에 자료 3개 추가해주세요~" 라고 코드짜면 html 알아서 3개 더 생성됩니다.
+
+ 
+
+ 
+
+ 
+
+import axios from 'axios'
+
+function App(){
+
+  let [shoes, setShoes] = useState(어쩌구);
+  return (
+    <button onClick={()=>{
+      axios.get('https://codingapple1.github.io/shop/data2.json').then((결과)=>{
+        let copy = [...shoes, ...결과.data]
+        setShoes(copy)
+      })
+      .catch(()=>{
+        console.log('실패함')
+      })
+    }}>버튼</button>
+  )
+}
+1. 점3개 이용해서 shoes의 사본을 만들었습니다.
+
+근데 그 안에 ...결과.data 이것도 함께 뒤에 집어넣었습니다.
+
+결과.data 출력해보면 [{4번상품}, {5번상품}, {6번상품}] 이게 나오기 때문에 ...결과.data 하면 { }, { }, { } 이것만 남을듯요 
+
+2. 그 다음에 그걸 shoes라는 state에 추가했습니다. 
+
+ 
+
+ 
+
+그럼 이제 버튼누르면 shoes라는 state는 
+
+[{ }, { }, { }, { }, { }, { }]
+
+이렇게 되어있을듯요
+
+그럼 이거에 맞게 상품 html도 알아서 6개가 잘 생성됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+POST요청 하는 법
+
+ 
+
+axios.post('URL', {name : 'kim'})
+이거 실행하면 서버로 { name : 'kim' } 자료가 전송됩니다. 
+
+완료시 특정 코드를 실행하고 싶으면 이것도 역시 .then() 뒤에 붙이면 됩니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+동시에 AJAX 요청 여러개 날리려면
+
+ 
+
+Promise.all( [axios.get('URL1'), axios.get('URL2')] )
+이러면 URL1, URL2로 GET요청을 동시에 해줍니다.
+
+둘 다 완료시 특정 코드를 실행하고 싶으면 .then() 뒤에 붙이면 됩니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+원래 서버와 문자자료만 주고받을 수 있음 
+
+ 
+
+object/array 이런거 못주고받습니다.
+
+근데 방금만해도 array 자료 받아온 것 같은데 그건 어떻게 한거냐면 
+
+object/array 자료에 따옴표를 쳐놓으면 됩니다.
+
+ 
+
+"{"name" : "kim"}"
+
+이걸 JSON 이라고 합니다.
+
+JSON은 문자 취급을 받기 때문에 서버와 자유롭게 주고받을 수 있습니다.
+
+ 
+
+그래서 실제로 결과.data 출력해보면 따옴표쳐진 JSON이 나와야하는데
+
+axios 라이브러리는 JSON -> object/array 변환작업을 자동으로 해줘서 
+
+출력해보면 object/array가 나옵니다. 
+
+ 
+
+ 
+
+ 
+
+fetch('URL').then(결과 => 결과.json()).then((결과) => { console.log(결과) } )
+쌩자바스크립트 문법인 fetch() 를 이용해도 GET/POST 요청이 가능한데
+
+그건 JSON -> object/array 이렇게 자동으로 안바꿔줘서 직접 바꾸는 작업이 필요합니다. 
+
+마음에 들면 쓰도록 합시다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+자주묻는 질문 : ajax로 가져온 데이터를 html에 꽂을 때 왜 에러남? 
+
+ 
+
+1. ajax요청으로 데이터를 가져와서 
+
+2. state에 저장하라고 코드를 짜놨고
+
+3. state를 html에 넣어서 보여달라고 <div> {state.어쩌구} </div> 이렇게 코드 짰습니다.
+
+잘 될 것 같은데 이 상황에서 state가 텅 비어있다고 에러가 나는 경우가 많습니다.
+
+ 
+
+이유는 ajax 요청보다 html 렌더링이 더 빨라서 그럴 수 있습니다. 
+
+state안에 뭐가 들어있으면 보여달라고 if문 같은걸 추가하거나 그러면 됩니다. 
+
+
+----------------------------------------------------------------------
+
+13. 리액트에서 탭 UI 만들기
+
+ 
+
+
+ 
+
+오늘은 쇼핑몰에서 흔히 볼 수 있는 탭 UI를 만들어봅시다. 
+
+버튼 3개와 박스 3개를 미리 만들어놓고 버튼 누를 때 마다 그에 맞는 박스 보여주는게 탭 UI입니다. 
+
+동적인 UI 만드는 법 다 알려드렸는데
+
+그거 가지고 혼자 코드짜보는게 실력향상에 많은 도움이 될듯 합니다. 
+
+ 
+
+1. html css로 디자인 미리 완성해놓고
+
+2. UI의 현재 상태를 저장할 state 하나 만들고
+
+3. state에 따라서 UI가 어떻게 보일지 작성하면 된다고 했습니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+1. html css로 탭 디자인 미리 완성하기
+
+ 
+
+버튼3개와 <div> 3개가 필요합니다. 
+
+디자인하기 귀찮아서 버튼은 react-bootstrap 사이트에서 복사해서 Detail 페이지에 넣어봤습니다. 
+
+ 
+
+<Nav variant="tabs"  defaultActiveKey="link0">
+    <Nav.Item>
+      <Nav.Link eventKey="link0">버튼0</Nav.Link>
+    </Nav.Item>
+    <Nav.Item>
+      <Nav.Link eventKey="link1">버튼1</Nav.Link>
+    </Nav.Item>
+    <Nav.Item>
+      <Nav.Link eventKey="link2">버튼2</Nav.Link>
+    </Nav.Item>
+</Nav>
+<div>내용0</div>
+<div>내용1</div>
+<div>내용2</div> 
+거기 문서 보니까 eventKey 속성은 버튼마다 맘대로 작명하면 된다고 합니다. 
+
+defaultActiveKey 여기는 페이지 로드시 어떤 버튼에 눌린효과를 줄지 결정하는 부분입니다. 
+
+ 
+
+ 
+
+2. UI의 현재 상태를 저장할 state 하나 만들기
+
+ 
+
+function Detail(){
+  let [탭, 탭변경] = useState(0)
+  (생략)
+}
+상단에 state 하나 만들었습니다.
+
+탭 UI의 상태는
+
+0번 내용이 보이거나 / 1번 내용이 보이거나 / 2번 내용이 보이거나 
+
+셋 중 하나기 때문에 저는 0, 1, 2 숫자로 상태를 표현해보겠습니다.
+
+ 
+
+ 
+
+ 
+
+3. state에 따라서 UI가 어떻게 보일지 작성
+
+ 
+
+state가 0이면 0번 내용 보여주세요~
+
+1이면 1번 내용 보여주세요~
+
+이렇게 코드짜면 됩니다. 삼항연산자 이런거 써도 되는데 심심하니까 컴포넌트로 만들어봅시다.
+
+ 
+
+function Detail(){
+  let [탭, 탭변경] = useState(0)
+  
+  return (
+    <TabContent/>
+  )
+}
+
+function TabContent(){
+  if (탭 === 0){
+    <div>내용0</div>
+  }
+  if (탭 === 1){
+    <div>내용1</div>
+  }
+  if (탭 === 2){
+    <div>내용2</div>
+  }
+}
+그래서 컴포넌트로 만들어서 Detail 페이지 안에 넣어봤습니다.
+
+근데 위 코드는 잘 동작하진 않을 것 같군요.
+
+알아서 고쳐봅시다. 
+
+ 
+
+왜일까요
+ 
+
+ 
+
+ 
+
+ 
+
+완성이군요 이제 탭이라는 state를 0, 1, 2로 변경할 때마다 
+
+원하는 내용들이 잘 보입니다.
+
+그럼 0번 버튼 누르면 0번 내용
+
+1번 버튼 누르면 1번 내용
+
+2번 버튼 누르면 2번 내용 
+
+을 보여주고 싶으면 코드 어떻게 짜야합니까?
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+<Nav variant="tabs"  defaultActiveKey="link0">
+    <Nav.Item>
+      <Nav.Link onClick={()=>{ 탭변경(0) }} eventKey="link0">버튼0</Nav.Link>
+    </Nav.Item>
+    <Nav.Item>
+      <Nav.Link onClick={()=>{ 탭변경(1) }} eventKey="link1">버튼1</Nav.Link>
+    </Nav.Item>
+    <Nav.Item>
+      <Nav.Link onClick={()=>{ 탭변경(2) }} eventKey="link2">버튼2</Nav.Link>
+    </Nav.Item>
+</Nav>
+이러면 버튼 누를 때 마다 원하는 탭 내용을 보여줄 수 있습니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+센스좋으면 if 필요 없을 수도 있습니다
+
+ 
+
+function TabContent(props){
+  return [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][props.탭]
+}
+이래도 될듯요 
+
+왜냐면 props.탭이 0이면 저 긴 array자료에서 0번 자료를 꺼내줄테니까요. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+참고사항 : props 쉽게 쓰고 싶으면
+
+ 
+
+function TabContent({탭}){
+  return [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][탭]
+}
+자식컴포넌트에서 props라고 파라미터를 하나만 작명하는게 아니라
+
+{state1이름, state2이름 ... }
+
+이렇게 작성하면
+
+props.state1이름 이렇게 쓸 필요가 없어집니다. 
+
+마음에 들면 씁시다.
+----------------------------------------------------------------------
+
+
+
+14강. 멋있게 컴포넌트 전환 애니메이션 주는 법 (transition)
+
+
+
+
+오늘의 숙제 : 
+
+Detail 컴포넌트 로드시 투명도가 0에서 1로 서서히 증가하는 애니메이션을 주려면?
+
+ 
+
+ 
+
+ 
+
+컴포넌트 등장, 퇴장 애니메이션같은게 필요하면 
+
+라이브러리설치해서 써도 되겠지만 CSS 잘하면 간단한건 알아서 개발가능합니다.
+
+옛날에 배웠던 useEffect 이런거 활용하면 되는데 
+
+CSS 애니메이션 처음인 분들을 위해 오늘도 정확한 개발스텝을 알려드립니다. 
+
+ 
+
+ 
+
+ 
+
+애니메이션 만들고 싶으면 
+
+1. 애니메이션 동작 전 스타일을 담을 className 만들기 
+
+2. 애니메이션 동작 후 스타일을 담을 className 만들기 
+
+3. transition 속성도 추가
+
+4. 원할 때 2번 탈부착
+
+이게 끝입니다. CSS 잘쓰면 모든 애니메이션 알아서 만들 수 있습니다. 
+
+저번에 만들었던 탭의 내용이 서서히 등장하는 fade in 애니메이션을 만들어봅시다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+1. 애니메이션 동작 전 2. 애니메이션 동작 후 className 만들기 
+
+ 
+
+.start {
+  opacity : 0
+}
+.end {
+  opacity : 1;
+}
+CSS 파일 열어서 이런거 추가하면 됩니다. 
+
+애니메이션 동작 전엔 투명도가 0, 동작 후엔 투명도가 1이 되면 좋을듯요 
+
+ 
+
+ 
+
+ 
+
+3. transition 추가
+
+ 
+
+.start {
+  opacity : 0
+}
+.end {
+  opacity : 1;
+  transition : opacity 0.5s;
+}
+transition은 "해당 속성이 변할 때 서서히 변경해주세요~" 라는 뜻입니다. 
+
+그럼 이제 원하는 <div> 요소에 start 넣어두고 end 를 탈부착할 때 마다 fade in이 됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+function TabContent({탭}){
+
+  return (
+    <div className="start end">
+      { [<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][탭] }
+    </div>
+  )
+}
+▲ end라는 className 떼었다가 붙여보면 진짜로 애니메이션이 동작합니다. 
+
+안보이면 저장을 안했거나 CSS파일이 import 안되어있는 것임 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+4. 원할 때 end 부착
+
+ 
+
+이제 "버튼을 누를 때 마다 end를 저기 부착해주세요" 라고 코드짜면 애니메이션 동작합니다.
+
+버튼누르면 end 부착하라고 코드짜려면 코드를 3번이나 짜야할듯요 버튼이 3개니까요.
+
+그게 싫으면 useEffect 이런거 활용해봐도 됩니다.
+
+ 
+
+useEffect 쓰면 특정 state 아니면 props가 변할 때 마다 코드실행이 가능하다고 했습니다. 
+
+그래서 "탭이라는 state가 변할 때 end를 저기 부착해주세요" 라고 코드짜도 같을듯 
+
+ 
+
+ 
+
+ 
+
+function TabContent({탭}){
+
+  let [fade, setFade] = useState('')
+
+  useEffect(()=>{
+    setFade('end')
+  }, [탭])
+
+  return (
+    <div className={'start ' + fade}>
+      { [<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][탭] }
+    </div>
+  )
+}
+탭이라는게 변할 때 end를 저기 부착하고 싶으면 동적인 UI 만드는 법 떠올리면 됩니다. 
+
+- fade라는 state 하나 만들고 
+
+- state에 따라서 className이 어떻게 보일지 작성하고
+
+- 원할 때 fade를 변경했습니다.
+
+ 
+
+ 
+
+이제 탭이라는 state가 변할 때 마다
+
+fade라는 state가 'end'로 변하고 
+
+그럼 className="start end" 이렇게 변합니다.  
+
+이제 버튼 막 누르면 end가 부착되니까 애니메이션이 잘 보이겠군요 
+
+ 
+
+ 
+
+ 
+
+Q. 안보이는데요
+
+내 의도와 다르게 동작하는건 개발자도구에서 검사해보면 됩니다. 
+
+end라는 클래스명을 부착하는게 맞긴 맞는데 
+
+실은 떼었다가 붙여야 애니메이션이 보입니다. end를 떼었다가 붙여보셈 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+function TabContent({탭}){
+
+  let [fade, setFade] = useState('')
+
+  useEffect(()=>{
+    setTImeout(()=>{ setFade('end') }, 100)
+  return ()=>{
+    setFade('')
+  }
+  }, [탭])
+
+  return (
+    <div className={'start ' + fade}>
+      { [<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][탭] }
+    </div>
+  )
+}
+▲ 떼었다가 부착하라고 코드짜봤습니다.
+
+clean up function 안에 fade라는 state를 공백으로 바꾸라고 했으니
+
+useEffect 실행 전엔 'end'가 ' ' 이걸로 바뀝니다.
+
+이제 잘될듯 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Q. setTimeout 왜 씁니까
+
+리액트 18버전 이상부터는 automatic batch 라는 기능이 생겼습니다.
+
+state 변경함수들이 연달아서 여러개 처리되어야한다면 
+
+state 변경함수를 다 처리하고 마지막에 한 번만 재렌더링됩니다. 
+
+그래서 'end' 로 변경하는거랑 ' ' 이걸로 변경하는거랑 약간 시간차를 뒀습니다.
+
+찾아보면 setTimeout 말고 flushSync() 이런거 써도 될 것 같기도 합니다. automatic batching을 막아줍니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+오늘의 숙제 : 
+
+Detail 컴포넌트 로드시 투명도가 0에서 1로 서서히 증가하는 애니메이션을 주려면?
+----------------------------------------------------------------------
+
+
+15강. 	props 싫으면 Context API 써도 됩니다
+
+
+
+
+props 싫으면 Context API 써도 됩니다
+
+ 
+
+0:00 컴포넌트가 여러개 중첩되어있으면 귀찮은 점 
+
+4:03 props 싫으면 이거 쓰셈  
+
+5:00 Context API 사용법
+
+11:32 Context API 편한지 모르겠는데요
+
+ 
+
+ 
+
+ 
+
+App에 있던 state를 TabContent 컴포넌트에서 사용하고 싶어지면 어떻게 코드짜야하죠?
+
+App -> Detail -> TabContent 이렇게 props를 2번 전송해주면 됩니다.
+
+ 
+
+
+
+ 
+
+이게 귀찮으면 Context API 문법을 쓰거나 Redux 같은 외부 라이브러리 쓰면 되는데 오늘은 전자를 알아봅시다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Context API 문법으로 props 없이 state 공유하기
+
+ 
+
+재고라는 state를 App 컴포넌트에 만들어봅시다.
+
+이걸 TabContent라는 자식컴포넌트에서 쓰고싶다고 가정해봅시다.
+
+Context API 문법을 쓰면 props 전송없이도 TabContent 컴포넌트가 쓸 수 있는데
+
+이거 쓰려면 일단 셋팅부터 해야합니다.
+
+ 
+
+ 
+
+(App.js)
+
+let Context1 = React.createContext();
+
+function App(){
+  let [재고, 재고변경] = useState([10,11,12]);
+
+  (생략)
+}
+▲ 1. 일단 createContext() 함수를 가져와서 context를 하나 만들어줍니다.
+
+context를 쉽게 비유해서 설명하자면 state 보관함입니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+(App.js)
+
+let Context1 = React.createContext();
+
+function App(){
+  let [재고, 재고변경] = useState([10,11,12]);
+
+  return (
+    <Context1.Provider value={ {재고, shoes} }>
+      <Detail shoes={shoes}/>
+    </Context1.Provider>
+    
+  )
+}
+▲ 2. 아까만든 Context1로 원하는 곳을 감싸고 공유를 원하는 state를 value 안에 다 적으면 됩니다.
+
+그럼 이제 Context1로 감싼 모든 컴포넌트와 그 자식컴포넌트는 
+
+state를 props 전송없이 직접 사용가능합니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Context 안에 있던 state 사용하려면
+
+ 
+
+1. 만들어둔 Context를 import 해옵니다.
+
+2. useContext() 안에 넣습니다. 
+
+그럼 이제 그 자리에 공유했던 state가 전부 남는데 그거 쓰면 됩니다. 
+
+ 
+
+ 
+
+(Detail.js)
+
+import {useState, useEffect, useContext} from 'react';
+import {Context1} from './../App.js';
+
+function Detail(){
+  let {재고} = useContext(Context1)
+
+  return (
+    <div>{재고}</div>
+  )
+}
+▲ 예를 들어서 Detail 컴포넌트에서 Context에 있던 state를 꺼내 쓰려면
+
+1. Context1을 import 하고 
+
+2. useContext() 안에 담으면 됩니다. Context 해체해주는 함수임
+
+그럼 그 자리에 공유했던 모든 state가 남습니다.
+
+변수에 담아서 가져다쓰거나 하면 됩니다. 
+
+ 
+
+심지어 Detail 안에 있는 모든 자식컴포넌트도 useContext() 쓰면 자유롭게 재고 state를 사용가능합니다.
+
+TabContent 안에서 실험해봅시다. 
+
+ 
+
+ 
+
+ 
+
+Q. props보다 불편한데요?
+
+A. 그럼 props를 씁시다. 이건 중첩해서 사용한 컴포넌트가 많을 때 편리한 문법입니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Context API 단점
+
+ 
+
+실은 잘 안쓰는 이유는 
+
+1. state 변경시 쓸데없는 컴포넌트까지 전부 재렌더링이 되고 
+
+2. useContext() 를 쓰고 있는 컴포넌트는 나중에 다른 파일에서 재사용할 때 Context를
+
+ import 하는게 귀찮아질 수 있습니다.
+
+그래서 이것 보다는 redux 같은 외부라이브러리를 많이들 사용합니다.
+
+
+----------------------------------------------------------------------
+
+16강.	장바구니 페이지 만들기 & Redux 1 : Redux Toolkit 설치
+
+
+
+/cart로 접속하면 장바구니 페이지를 보여줍시다. 
+
+근데 장바구니 기능은 Redux 배울 겸 그걸 이용해서 만들어봅시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+장바구니 페이지만들기
+
+ 
+
+페이지하나 필요하면 어떻게 해야합니까.
+
+라우터 쓰면 되는 것 아니겠습니까 그래서 App.js의 <Routes> 쓰던 곳을 찾아가봅시다.
+
+ 
+
+ 
+
+<Route path="/cart" element={ <Cart/> } /> 
+그리고 <Route>를 하나 추가했습니다. 누가 /cart 로 접속하면 <Cart> 컴포넌트를 보여주기로 했습니다.
+
+<Cart> 컴포넌트는 알아서 만들어서 저기 넣으면 됩니다. 
+
+전 Cart.js 라는 다른 파일에 컴포넌트 만들었음
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+장바구니 페이지에서 사용할 Table 레이아웃은 
+
+ 
+
+<Table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>상품명</th>
+      <th>수량</th>
+      <th>변경하기</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>안녕</td>
+      <td>안녕</td>
+      <td>안녕</td>
+    </tr>
+  </tbody>
+</Table> 
+
+이거 넣으면 표가 생성됩니다. Cart 컴포넌트에 넣어봤습니다. 
+
+물론 React-bootstrap에서 가져온거라 상단에서 import { Table } from 'react-bootstrap' 하면 됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Redux 쓰면 뭐가 좋냐면
+
+ 
+
+Redux는 props 없이 state를 공유할 수 있게 도와주는 라이브러리입니다. 
+
+ 
+
+ 
+
+
+
+ 
+
+이거 설치하면 js 파일 하나에 state들을 보관할 수 있는데
+
+그걸 모든 컴포넌트가 직접 꺼내쓸 수 있습니다. 
+
+그래서 귀찮은 props 전송이 필요없어집니다. 
+
+컴포넌트가 많아질 수록 좋겠군요. 
+
+ 
+
+그래서 사이트가 커지면 쓸 수 밖에 없어서 
+
+개발자 구인시에도 redux같은 라이브러리 숙련도를 대부분 요구합니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Redux 설치는 
+
+ 
+
+npm install @reduxjs/toolkit react-redux
+터미널에 입력하면됩니다. 
+
+참고로 redux toolkit이라는 라이브러리를 설치할 건데 redux의 개선버전이라고 보면 됩니다. 문법이 좀 더 쉬워짐 
+
+ 
+
+근데 설치하기 전에 package.json 파일을 열어서
+
+"react"
+
+"react-dom" 
+
+항목의 버전을 확인합시다.
+
+이거 두개가 18.1.x 이상이면 사용가능합니다. 
+
+ 
+
+
+
+▲ 그게 아니면 직접 두개를 18.1.0 이렇게 수정한 다음 파일저장하고
+
+터미널에서 npm install 누르면 됩니다. 그럼 이제 redux 설치가능
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Redux 셋팅은 
+
+ 
+
+import { configureStore } from '@reduxjs/toolkit'
+
+export default configureStore({
+  reducer: { }
+}) 
+1. 아무데나 store.js 파일을 만들어서 위 코드를 복붙해줍니다. 
+
+저는 src 폴더 안에 만들었음 
+
+이게 뭐냐면 아까 말했던 state들을 보관하는 파일입니다. 
+
+ 
+
+ 
+
+ 
+
+import { Provider } from "react-redux";
+import store from './store.js'
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>
+); 
+2. index.js 파일가서 Provider 라는 컴포넌트와 아까 작성한 파일을 import 해옵니다. 
+
+그리고 밑에 <Provider store={import해온거}> 이걸로 <App/> 을 감싸면 됩니다. 
+
+그럼 이제 <App>과 그 모든 자식컴포넌트들은 store.js에 있던 state를 맘대로 꺼내쓸 수 있습니다.
+
+간편하겠군요 실제 사용은 다음시간에 해봅시다. 
+
+
+----------------------------------------------------------------------
+
+17강.  Redux 2 : store에 state 보관하고 쓰는 법
+
+
+
+오늘의 숙제 : 
+
+하단에 있는 데이터를 Redux store 안에 보관해둡시다. 
+
+그리고 Cart.js 페이지에 가져와서 데이터바인딩해봅시다.
+
+데이터 갯수에 맞게 표 생성해달라고 반복문쓰는 것도 좋을듯요 
+
+ 
+
+숙제용 장바구니 데이터
+
+
+[
+  {id : 0, name : 'White and Black', count : 2},
+  {id : 2, name : 'Grey Yordan', count : 1}
+] 
+▲ 유저가 장바구니에 추가한 데이터라고 생각하고 
+
+redux store에 보관해두고 가져다가 써봅시다. 
+
+array 자료 안에 object 자료가 2개 들어있을 뿐입니다.
+
+object 자료 안엔 상품 1개의 정보가 들어있군요 
+ 
+
+ 
+
+뭐 배우기 전에 항상 이걸 왜 쓰는지 생각해보는게 중요합니다. 
+
+그래야 나중에 "여기서 Redux 쓰는게 맞나요?" 이런 질문 안하고 알아서 코드 잘짬 
+
+Redux 라이브러리 왜 쓴다고 했냐면
+
+state를 Redux store에 보관해둘 수 있는데 모든 컴포넌트가 거기 있던 state를 직접 꺼내쓸 수 있어서
+
+props 없어도 편리하게 state 공유가 가능하다고 했습니다. 
+
+오늘은 Redux store에 state 보관하는 법을 알아봅시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Redux store에 state 보관하는 법 
+
+ 
+
+저번시간에 만들어둔 store.js 파일 열어서 이렇게 코드짜면 state 하나 만들 수 있습니다.
+
+step 1. createSlice( ) 로 state 만들고
+
+step 2. configureStore( ) 안에 등록하면 됩니다.
+
+ 
+
+import { configureStore, createSlice } from '@reduxjs/toolkit'
+
+let user = createSlice({
+  name : 'user',
+  initialState : 'kim'
+})
+
+let stock = createSlice({
+  name: 'stock',
+  initialState : [ 10, 11, 29 ]
+})
+
+export default configureStore({
+  reducer: {
+    user : user.reducer,
+    작명 : stock.reducer 
+  }
+}) 
+
+
+
+1. createSlice( ) 상단에서 import 해온 다음에 
+
+{ name : 'state이름', initialState : 'state값' } 이거 넣으면 state 하나 생성가능합니다. 
+
+(createSlice( ) 는 useState( ) 와 용도가 비슷하다고 보면 됩니다)
+
+ 
+
+2. state 등록은 configureStore( ) 안에 하면 됩니다.
+
+{ 작명 : createSlice만든거.reducer } 이러면 등록 끝입니다. 
+
+여기 등록한 state는 모든 컴포넌트가 자유롭게 사용가능합니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Redux store에 있던 state 가져다쓰는 법
+
+ 
+
+(Cart.js)
+
+import { useSelector } from "react-redux"
+
+function Cart(){
+  let a = useSelector((state) => { return state } )
+  console.log(a)
+
+  return (생략)
+}
+아무 컴포넌트에서 useSelector((state) => { return state } ) 쓰면 store에 있던 모든 state가 그 자리에 남습니다. 
+
+변수에 저장해서 진짜로 출력해보십시오. 
+
+{ user : 'kim' } 이런거 출력될듯
+
+ 
+
+ 
+
+ 
+
+ 
+
+let a = useSelector((state) => state.user ) 
+이런 식으로 쓰면 좀 더 편리할 수도 있습니다.
+
+ 
+
+ 
+
+ 
+Redux 편하니까 맨날 쓰면 되겠네요
+
+ 
+
+간단한거 만들 때
+
+컴포넌트가 몇개 없을 때 
+
+이럴 땐 그냥 props 쓰는게 더 코드가 짧습니다. 
+
+
+----------------------------------------------------------------------
+
+
+ 18강. Redux 3 : store의 state 변경하는 법
+
+
+
+Redux의 state를 변경하고 싶으면 변경하는 법이 따로 있습니다. 
+
+1. store.js에 state변경해주는 함수부터 만들고
+
+2. export 해두고
+
+3. 필요할 때 import 해서 쓰면 되는데 dispatch() 로 감싸서 써야합니다.
+
+좀 길고 복잡합니다. 
+
+ 
+
+ 
+ 
+
+ 
+
+store의 state 변경하는 법 
+
+ 
+
+큰 그림부터 그려드리면 
+
+state 수정해주는 함수부터 store.js에 만들어두고
+
+그걸 컴포넌트에서 원할 때 실행하는 식으로 코드를 짭니다. 
+
+버튼누르면 예전에 'kim' 이라고 저장해놓은걸 'john kim' 으로 수정하고 싶으면 어떻게 해야할지 알아봅시다. 
+
+정확한 step으로 딱딱 알려드려야 혼자 코드짤 때 편하니까 step을 알려드리면 
+
+ 
+
+ 
+
+ 
+
+ 
+
+1. store.js 안에 state 수정해주는 함수부터 만듭니다. 
+
+ 
+
+let user = createSlice({
+  name : 'user',
+  initialState : 'kim',
+  reducers : {
+    changeName(state){
+      return 'john ' + state
+    },
+    함수 2( ) {
+	// 다른함수를 만들고 싶으면 요기다가 이렇게 만들면 된다.
+    },
+	
+  }
+}) 
+
+
+slice 안에 reducers : { } 열고 거기 안에 함수 만들면 됩니다.
+
+- 함수 작명 맘대로 합니다.
+
+- 파라미터 하나 작명하면 그건 기존 state가 됩니다.   
+
+ initialState = 'kim' = changeName(initialState ) = changeName( state )
+
+- return 우측에 새로운 state 입력하면 그걸로 기존 state를 갈아치워줍니다. 
+
+ 
+
+ 
+
+이제 changeName() 쓸 때 마다 'kim' -> 'john kim' 이렇게 변할듯 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+2. 다른 곳에서 쓰기좋게 export 해둡니다.
+
+ 
+
+export let { changeName } = user.actions 
+이런 코드 store.js 밑에 추가하면 됩니다.
+
+slice이름.actions 라고 적으면 state 변경함수가 전부 그 자리에 출력됩니다.
+
+그걸 변수에 저장했다가 export 하라는 뜻일 뿐임 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+3. 원할 때 import 해서 사용합니다. 근데 dispatch() 로 감싸서 써야함 
+
+ 
+
+예를 들어서 Cart.js 에서 버튼같은거 하나 만들고
+
+그 버튼 누르면 state를 'kim' -> 'john kim' 이렇게 변경하고 싶으면
+
+ 
+
+(Cart.js)
+
+import { useDispatch, useSelector } from "react-redux"
+import { changeName } from "./../store.js"
+
+(생략) 
+
+<button onClick={()=>{
+  dispatch(changeName())
+}}>버튼임</button> 
+이렇게 코드짜면 됩니다. 
+
+- store.js에서 원하는 state변경함수 가져오면 되고 
+
+- useDispatch 라는 것도 라이브러리에서 가져옵니다.
+
+- 그리고 dispatch( state변경함수() ) 이렇게 감싸서 실행하면 state 진짜로 변경됩니다. 
+
+ 
+
+진짜인지 궁금하면 user라는 state 한 번 출력해보십시오.
+
+dispatch로 꼭 감싸야 실행됩니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+그지같고 복잡한데요
+
+ 
+
+store안에 있는 state를 수정하고 싶으면 
+
+- state 수정해주는 함수를 store.js에 만들어두고 
+
+- 컴포넌트는 그걸 부르기만 하는 식으로 state 수정하게 되어있습니다. 
+
+ 
+
+ 
+
+Q. 왜 이렇게 복잡하고 그지같나요?
+
+Redux 만든 사람이 정한 문법일 뿐이라 Redux 만든사람에게 뭐라하면 됩니다. 
+
+ 
+
+ 
+
+Q. 컴포넌트에서 state 직접 수정하면 편하지 않나요?
+
+그럼 당장은 편한데 나중에 프로젝트가 커지면 심각한 단점이 있을 수 있습니다. 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+컴포넌트 100개에서 직접 'kim' 이라는 state 변경하다가
+
+갑자기 'kim'이 123이 되어버리는 버그가 발생하면
+
+범인 찾으려고 컴포넌트 100개를 다 뒤져야합니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+근데 state 수정함수를 store.js에 미리 만들어두고
+
+컴포넌트는 그거 실행해달라고 부탁만 하는 식으로 코드를 짜놓으면
+
+'kim'이 123이 되어버리는 버그가 발생했을 때 범인찾기가 수월합니다.
+
+범인은 무조건 store.js에 있으니까요. (수정함수를 잘 만들어놨다면)
+
+ 
+
+ 
+
+ 
+
+아무튼 그런 장점 덕분에 저따구로 코드를 짜는 것일 뿐이고
+
+자신있으면 예습 차원으로
+
+Cart 페이지에 만들어둔 버튼누르면 왼쪽에 있는 수량이 +1 되는 기능을 만들어봅시다. 
+
+
+----------------------------------------------------------------------
+
+
+19강.  Redux 4 : state가 object/array일 경우 변경하는 법
+
+
+
+
+오늘의 숙제 :
+
+1. + 버튼을 누르면 해당 상품의 수량부분이 +1 되는 기능을 만들어옵시다.
+
+2. 상세페이지 주문하기 버튼을 누르면 새로운 상품이 state에 추가되는 기능을 만들어옵시다.
+
+ 1번은 이렇게 코드짜면 쉬울텐데
+
+"0번째 버튼을 누르면 state의 0번째 상품을 +1 해주세요~"
+
+"1번째 버튼을 누르면 state의 1번째 상품을 +1 해주세요~"
+
+그러면 됩니다. 
+
+ 
+
+근데 나중에 Cart페이지에 있는 상품들 정렬 순서같은게 바뀌거나 그럴 경우
+
+store의 state는 정렬순서가 그대로라면 약간 이상한 일이 일어날 수도 있겠군요.
+
+그래서 "버튼을 누르면 옆에 있는 상품id와 동일한 상품id 가진걸 state에서 찾은 다음에 그걸 +1" 
+
+하라고 하면 좀 정확할듯요 
+
+ 
+
+Q. 전 array에서 원하는 항목 찾는 방법을 모르는데요
+
+A. 모르는건 생각해본다고 나오지 않습니다 
+
+
+2번은 그냥 state에 새로운 { } 하나 추가하면 그게 상품추가기능 끝입니다. 
+
+store에 저장된 state가 array, object 자료인 경우 state 변경을 좀 쉽게 편리하게 할 수 있는데
+
+오늘은 그 방법을 알아봅시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+redux state가 array/object인 경우 변경하려면 
+
+ 
+
+대충 {name : 'kim', age : 20} 이렇게 생긴 자료를 state로 만들어봅시다. 
+
+근데 저기서 'kim' -> 'park' 이렇게 변경하고 싶으면 state 변경함수 어떻게 만들어야할까요? 
+
+ 
+
+ 
+
+let user = createSlice({
+  name : 'user',
+  initialState : {name : 'kim', age : 20},
+  reducers : {
+    changeName(state){
+      return {name : 'park', age : 20}
+    }
+  }
+}) 
+당연히 저렇게 쓰면 changeName() 사용시 변경됩니다.
+
+return 오른쪽에 적은걸로 기존 state를 갈아치워주니까요. 
+
+ 
+
+ 
+
+ 
+
+let user = createSlice({
+  name : 'user',
+  initialState : {name : 'kim', age : 20},
+  reducers : {
+    changeName(state){
+      state.name = 'park'
+    }
+  }
+}) 
+
+
+근데 state를 직접 수정하라고해도 변경 잘 됩니다. 
+
+state를 직접 수정하는 문법을 사용해도 잘 변경되는 이유는
+
+Immer.js 라이브러리가 state 사본을 하나 더 생성해준 덕분인데 Redux 설치하면 딸려와서 그렇습니다.
+
+ 
+
+그래서 결론은 array/object 자료의 경우 state변경은
+
+state를 직접 수정해버려도 잘 되니까 직접 수정하십시오. 
+
+ 
+
+(참고) 그래서 state 만들 때 문자나 숫자하나만 필요해도
+
+redux에선 일부러 object 아니면 array에 담는 경우도 있습니다. 
+
+수정이 편리해지니까요. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+간단한 퀴즈시간
+
+ 
+
+사이트 아무데나 버튼 하나만 만들어봅시다.
+
+그 버튼을 누르면 위에 있는 state 중에 age 항목이 +1 되어야합니다. 
+
+어떻게 만들면 될까요? 
+
+
+
+
+
+state 변경함수가 여러개 필요하면
+
+ 
+
+방금 퀴즈에서 +1 하는 기능을 만들어봤는데 
+
+가끔은 +10 하고 가끔은 +100 하고싶으면 어떻게 하죠?
+
++10 하는 함수만들고 
+
++100 하는 함수만들고
+
+그렇게 여러개를 미리 만들어놔도 되는데 
+
+근데 함수는 파라미터문법 이용하면 비슷한 함수 여러개 만들 필요가 없다고 했습니다. 
+
+state변경함수에도 파라미터문법 사용가능함 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+let user = createSlice({
+  name : 'user',
+  initialState : {name : 'kim', age : 20},
+  reducers : {
+    increase(state, a){
+      state.age += a.payload
+    }
+  }
+}) 
+state변경함수의 둘째 파라미터를 작명하면 이제 
+
+increase(10)
+
+increase(100)
+
+이런 식으로 파라미터입력을 해서 함수사용이 가능합니다.
+
+파라미터자리에 넣은 자료들은 a.payload 하면 나옵니다.
+
+ 
+
+그래서 위처럼 코드 작성해놓으면
+
+increase(10) 이거 실행하면 +10 됩니다.
+
+increase(100) 이거 실행하면 +100 됩니다. 
+
+여기서도 파라미터문법 이용하면 비슷한 함수들은 여러개 만들 필요없습니다. 
+
+진짜 잘되는지 확인하려면 가져다가 써봅시다.
+
+ 
+
+ 
+
+ 
+
+(참고)
+
+- a 말고 action 이런 식으로 작명 많이 합니다. 
+
+- action.type 하면 state변경함수 이름이 나오고
+
+- action.payload 하면 파라미터가 나옵니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+파일 분할은
+
+ 
+
+코드가 길어서 보기싫으면 코드 덩어리들을 다른 파일로 빼면 됩니다. 
+
+그래서 강의에선 let user 변수와 state변경함수 export 부분을
+
+store폴더/userSlice.js로 빼봤습니다.
+
+import export 문법 배웠으면 알아서 잘할 수 있겠군요. 
+
+
+
+----------------------------------------------------------------------
+
+ 20강.	Redux 5 : 장바구니 기능 만들기 숙제 & 응용문제
+
+
+
+실력향상 응용문제들 : 
+
+응용1. 표의 행마다 삭제버튼 만들고 그거 누르면 상품이 삭제되게 만들려면?
+
+응용2. 주문하기 버튼 누를 때 이미 상품이 state안에 있으면 추가가 아니라 기존 항목 수량증가만?
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+숙제1. 수량 +1 기능 만들기
+
+ 
+
+버튼누르면 일단 state를 수정해야하니까 state를 +1 해주는 수정함수부터 만들었습니다.
+
+ 
+
+ 
+
+let cart = createSlice({
+  name : 'cart',
+  initialState : [
+    {id : 0, name : 'White and Black', count : 2},
+    {id : 2, name : 'Grey Yordan', count : 1}
+  ],
+  reducers : {
+    addCount(state, action){
+      state[action.payload].count++
+    }
+  }
+}) 
+addCount라는 함수 만들어놨습니다.
+
+addCount(0) 하면 0번째 상품이 +1 됩니다. 
+
+addCount(1) 하면 1번째 상품이 +1 됩니다. 
+
+export 해놓고 필요할 때 쓰면 되겠군요. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+(Cart.js)
+
+<tbody>
+  {
+    state.cart.map((a, i)=>
+      <tr key={i}>
+        <td>{state.cart[i].id}</td>
+        <td>{state.cart[i].name}</td>
+        <td>{state.cart[i].count}</td>
+        <td>
+          <button onClick={()=>{ dispatch(addCount(i)) }}>+</button>
+        </td>
+      </tr>
+     )
+   }
+</tbody> 
+장바구니페이지에 있는 + 버튼 누르면 addCount() 하라고 코드짜봤습니다.
+
+당연히 쓰려면 import해와야합니다. 
+
+근데 addCount(i) 이렇게 i 변수를 넣어봤는데 이러면 
+
+0번째 버튼을 누르면 addCount(0) 실행해줍니다.
+
+1번째 버튼을 누르면 addCount(1) 실행해줍니다. 
+
+왜냐고요? i 변수는 반복문에서 생성해주는 0,1,2 이렇게 1씩 증가하는 숫자니까요.
+
+여기까지만 하면 잘 동작하긴 합니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+근데 좀 정확히하고 싶으면 
+
+ 
+
+"버튼 누르면 버튼 옆에 있는 상품 id 가져와서
+
+이거랑 똑같은 id를 가진 상품을 state에서 찾아서 그걸 +1 해주쇼"
+
+라고 코드짜는게 더 확실할 것 같군요.
+
+그럼 나중에 상품 순서가 이상하게 바뀌거나 그래도 잘 동작할듯 하니까요. 
+
+ 
+
+ 
+
+ 
+
+dispatch(addCount(state.cart[i].id)) 
+1. 그래서 버튼누르면 이렇게 옆에있던 상품 id를 payload로 전송하라고 해놨고 
+
+ 
+
+ 
+
+ 
+
+ 
+
+let cart = createSlice({
+  name : 'cart',
+  initialState : [
+    {id : 0, name : 'White and Black', count : 2},
+    {id : 2, name : 'Grey Yordan', count : 1}
+  ],
+  reducers : {
+    addCount(state, action){
+      let 번호 = state.findIndex((a)=>{ return a.id === action.payload })
+      state[번호].count++
+    }
+  }
+}) 
+2. "payload와 같은 id를 가진 상품을 찾아서 +1 해달라~"고 코드짰습니다. 
+
+array 자료에서 원하는 항목을 찾으려면 
+
+반복문, find(), findIndex() 이런거 골라서 쓰면 됩니다.
+
+ 
+
+findIndex()는 array 뒤에 붙일 수 있는데 
+
+- 안에 콜백함수넣고 return 뒤에 조건식도 넣으면 됩니다. 
+
+- a라는 파라미터는 array 안에 있던 하나하나의 자료입니다.
+
+- array에 있던 자료를 다 꺼내서 조건식에 대입해보는데 조건식이 참이면 그게 몇번째 자료인지 알려줍니다. 
+
+그래서 위의 코드는 a.id와 payload가 같으면 그게 몇번째 자료인지 변수에 저장하라는 소리입니다. 
+
+ 
+
+ 
+
+Q. 안가르쳐준건데 저걸 내가 어떻게 알고 사용합니까?
+
+A. 저도 "array에서 원하는거 찾는 법"을 검색했읍니다 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+숙제2. 주문버튼누르면 state에 새로운 상품추가
+
+ 
+
+상세페이지의 주문하기 버튼을 누르면
+
+장바구니 state에 항목이 하나 추가되어야합니다.
+
+이것도 state 변경함수 만들고 export하고 import해서 사용했습니다. 
+
+ 
+
+ 
+
+ 
+
+let cart = createSlice({
+  name : 'cart',
+  initialState : [
+    {id : 0, name : 'White and Black', count : 2},
+    {id : 2, name : 'Grey Yordan', count : 1}
+  ],
+  reducers : {
+    addCount(state, action){
+      state[action.payload].count++
+    },
+    addItem(state, action){
+      state.push(action.payload)
+    }
+  }
+}) 
+1. addItem이라고 함수 만들어놨습니다.
+
+addItem( {id : 2, name : 'Grey Yordan', count : 1} )
+
+이렇게 사용하면 {id : 2, name : 'Grey Yordan', count : 1} 이 상품이 state에 추가가 됩니다. 
+
+export 하고 가져다쓰도록 합시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+(Detail.js)
+
+<div className="col-md-6">
+  <h4 className="pt-5">{찾은상품.title}</h4>
+  <p>{찾은상품.content}</p>
+  <p>{찾은상품.price}원</p>
+  <button className="btn btn-danger" onClick={()=>{
+    dispatch(addItem( {id : 1, name : 'Red Knit', count : 1} ))
+  }}>주문하기</button>
+  </div>
+</div> 
+2. 상세페이지에서 주문버튼 누르면 addItem() 이거 실행해달라고 코드짰습니다.
+
+(당연히 상단에서 import 해와야겠죠)
+
+ 
+
+그럼 이제 버튼 누를 때 {id : 1, name : 'Red Knit', count : 1} 이런 상품이 추가되는데
+
+'Red Knit' 라고 하드코딩하는게 아니라 현재 페이지의 상품명을 집어넣는 것도 좋겠군요. 
+
+그럼 각각 다른 상세페이지여도 잘 동작하겠네요. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Q. 근데 cart 페이지로 가보면 장바구니에 새로운 상품이 없는데요 
+
+A. 주소창에 /cart 입력하면 페이지가 새로고침됩니다.
+
+새로고침되면 state도 초기값으로돌아갑니다. 라우터 버튼 만들어서 페이지 이동합시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+실은 지금 설치해서 사용중인 라이브러리는 Redux Toolkit임
+
+ 
+
+Redux 만든 사람이 이전의 과오를 깨닫고 새롭게 만든 라이브러리입니다.
+
+Redux를 조금 더 쓰기 쉽게 만든 버전인데
+
+Redux 만든 아저씨가 요즘은 이거 쓰라고하니까 이걸 많이 쓰도록 합시다.  
+
+
+----------------------------------------------------------------------
+
+
+21강. 리액트에서 자주쓰는 if문 작성패턴 5개
+
+
+
+
+ 
+
+딱히 설명할 부분이 없어서 글로 진행합니다.
+
+ 
+
+지금까지 JSX 이용해서 html을 작성하고 있는데
+
+if문을 써서 조건부로 html을 보여주고 싶을 때가 매우 많습니다.
+
+지금까지는 삼항연산자만 주구장창 사용했는데 또 어떤 if문들을 쓸 수 있는지 맛만 보고 지나갑시다.
+
+그냥 코딩 스타일적인 부분이기 때문에 그냥 이런게 있다고 알아두기만 해도 될듯요 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+1. 컴포넌트 안에서 쓰는 if/else
+
+ 
+
+function Component() {
+  if ( true ) {
+    return <p>참이면 보여줄 HTML</p>;
+  } else {
+    return null;
+  }
+} 
+컴포넌트에서 JSX를 조건부로 보여주고 싶으면 그냥 이렇게 씁니다.
+
+우리가 자주 쓰던 자바스크립트 if문은
+
+return () 안의 JSX 내에서는 사용 불가능합니다.
+
+<div> if (어쩌구) {저쩌구} </div> 이게 안된다는 소리입니다.
+
+그래서 보통 return + JSX 전체를 퉤 뱉는 if문을 작성해서 사용합니다. 
+
+ 
+
+ 
+
+ 
+
+(참고) 근데 이렇게 쓰시려면 else 생략이 가능합니다
+
+ 
+
+function Component() {
+  if ( true ) {
+    return <p>참이면 보여줄 HTML</p>;
+  } 
+  return null;
+} 
+else와 중괄호를 하나 없애도 아까 코드와 똑같은 기능을 합니다.
+
+왜냐면 자바스크립트 function 안에선 return 이라는 키워드를 만나면 return 밑에 있는 코드는 더이상 실행되지 않으니까요.
+
+그래서 else가 필요없는 경우도 많으니 깔끔한 코드를 위해 한번 생략해보십시오.
+
+if -> else if -> else 이렇게 구성된 조건문도 if 두개로 축약가능합니다. 한번 생각해보시면 됩니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+2. JSX안에서 쓰는 삼항연산자 
+
+ 
+
+영어로 간지나게 ternary operator 라고 합니다. 
+
+조건문 ? 조건문 참일때 실행할 코드 : 거짓일 때 실행할 코드
+
+이 형식에 맞춰 쓰면 끝입니다.
+
+ 
+
+ 
+
+function Component() {
+  return (
+    <div>
+      {
+        1 === 1
+        ? <p>참이면 보여줄 HTML</p>
+        : null
+      }
+    </div>
+  )
+} 
+그냥 JSX 내에서 if/else 대신 쓸 수 있다는게 장점이고 이전 강의들에서 자주 해본 것이니 설명은 스킵하도록 하겠습니다.
+
+삼항연산자는 그냥 if와는 다르게 JSX 안에서도 실행가능하며 조건을 간단히 주고 싶을 때 사용합니다.
+
+ 
+
+ 
+
+ 
+
+삼항연산자는 중첩 사용도 됩니다. 
+
+ 
+
+function Component() {
+  return (
+    <div>
+      {
+        1 === 1
+        ? <p>참이면 보여줄 HTML</p>
+        : ( 2 === 2 
+            ? <p>안녕</p> 
+            : <p>반갑</p> 
+          )
+      }
+    </div>
+  )
+} 
+else 문 안에 if/else 문을 하나 추가한 건데 제가 써놓고도 뭔소린지 모르겠군요
+
+이렇게 나중에 읽었을 때 + 남이 읽었을 때 보기싫은 코드는 좋지 않습니다.
+
+그냥 return문 바깥에서 if else 쓰신 다음 그 결과를 변수로 저장해놓고 변수를 저기 집어넣든 하십시오.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+3. && 연산자로 if 역할 대신하기
+
+ 
+
+ 
+
+(문법) 자바스크립트에선 &&연산자라는게 있습니다.
+ 
+
+ 
+
+html 조건부로 보여줄 때 이런 경우가 많습니다.
+
+"만약에 이 변수가 참이면 <p></p>를 이 자리에 뱉고 참이 아니면 null 뱉고"
+
+UI만들 때 이런거 매우 자주 씁니다. 
+
+이걸 조금 더 쉽게 축약할 수 있습니다. && 연산자를 쓰면 됩니다.
+
+ 
+
+ 
+
+ 
+
+function Component() {
+  return (
+    <div>
+      {
+        1 === 1
+        ? <p>참이면 보여줄 HTML</p>
+        : null
+      }
+    </div>
+  )
+} 
+
+function Component() {
+  return (
+    <div>
+      { 1 === 1 && <p>참이면 보여줄 HTML</p> }
+    </div>
+  )
+}
+그래서 위의 예제 두개는 동일한 역할을 합니다.
+
+밑의 예제를 보시면 && 연산자로 조건식과 오른쪽 JSX 자료를 비교하고 있습니다.
+
+이 때, 왼쪽 조건식이 true면 오른쪽 JSX가 그 자리에 남습니다.
+
+왼쪽 조건식이 false면 false가 남습니다.
+
+(false가 남으면 HTML로 렌더링하지 않습니다)
+
+ 
+
+ 
+
+아무튼 "만약에 이 변수가 참이면 <p></p>를 이 자리에 뱉고 참이 아니면 null 뱉고"
+
+이런 상황에서 자주 쓸 수 있는 간단한 조건문입니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+4. switch / case 조건문
+
+ 
+
+이것도 기본 문법인데 if문이 중첩해서 여러개 달려있는 경우에 가끔 씁니다.
+
+ 
+
+ 
+
+function Component2(){
+  var user = 'seller';
+  if (user === 'seller'){
+    return <h4>판매자 로그인</h4>
+  } else if (user === 'customer'){
+    return <h4>구매자 로그인</h4>
+  } else {
+    return <h4>그냥 로그인</h4>
+  }
+}
+▲ if문을 저렇게 연달아 여러개 써야되는 상황들이 있으면 
+
+자바스크립트 switch 문법을 이용하면 괄호를 조금 더 줄일 수 있습니다. 
+
+ 
+
+ 
+
+ 
+
+function Component2(){
+  var user = 'seller';
+  switch (user){
+    case 'seller' :
+      return <h4>판매자 로그인</h4>
+    case 'customer' :
+      return <h4>구매자 로그인</h4>
+    default : 
+      return <h4>그냥 로그인</h4>
+  }
+}
+▲ switch 문법 어떻게 쓰냐면 
+
+ 
+
+1. switch (검사할변수){} 이거부터 작성하고
+
+2. 그 안에 case 검사할변수가이거랑일치하냐 : 를 넣어줍니다.
+
+3. 그래서 이게 일치하면 case : 밑에 있는 코드를 실행해줍니다.
+
+4. default : 는 그냥 맨 마지막에 쓰는 else문과 동일합니다.
+
+ 
+
+장점은 if문 연달아쓸 때 코드가 약간 줄어들 수 있는데
+
+조건식란에서 변수하나만 검사할 수 있다는게 단점입니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+5. object/array 자료형 응용 
+
+ 
+
+"경우에 따라서 다른 html 태그들을 보여주고 싶은 경우"
+
+if문 여러개 혹은 삼항연산자 여러개를 작성해야겠죠? 근데 이렇게 작성할 수도 있습니다.
+
+ 
+
+ 
+
+ 
+
+예를 들면 쇼핑몰에서 상품설명부분을 탭으로 만든다고 합시다.
+
+탭이 뭐냐면 그냥 경우에 따라서 상품정보 / 배송정보 / 환불약관 내용을 보여주고 싶은겁니다.
+
+ 
+
+현재 state가 info면 <p>상품정보</p>
+
+현재 state가 shipping이면 <p>배송정보</p>
+
+현재 state가 refund면 <p>환불약관</p>
+
+이런걸 보여주자는겁니다.
+
+ 
+
+ 
+
+일단 state를 만들어놓고 if문으로 state를 검사하는 문법을 써야할 것 같지만
+
+이번엔 if문이 아니라 자바스크립트 object 자료형에 내가 보여주고 싶은 HTML을 다 담습니다.
+
+ 
+
+function Component() {
+  var 현재상태 = 'info';
+  return (
+    <div>
+      {
+        { 
+           info : <p>상품정보</p>,
+           shipping : <p>배송관련</p>,
+           refund : <p>환불약관</p>
+        }[현재상태]
+      }
+
+    </div>
+  )
+} 
+▲ 원래 JSX 상에서 html 태그들은 저렇게 object에 담든, array에 담든 아무 상관없습니다.
+
+암튼 이렇게 object 자료형으로 HTML을 다 정리해서 담은 다음
+
+마지막에 object{} 뒤에 [] 대괄호를 붙여서 "key값이 현재상태인 자료를 뽑겠습니다" 라고 써놓는겁니다.
+
+ 
+
+그럼 이제 현재상태라는 변수의 값에 따라서 원하는 HTML을 보여줄 수 있습니다.
+
+만약에 var 현재상태가 'info'면 info 항목에 저장된 <p>태그가 보여질 것이고
+
+만약에 var 현재상태가 'refund'면 refund 항목에 저장된 <p>태그가 보여지겠죠? 
+
+ 
+
+ 
+
+아주 간단하고 직관적인 if문이 완성되었습니다.
+
+이제 if/else 몰라도 조건부로 html 보여주기 가능 
+
+(예제에선 귀찮아서 state가 아니라 var 변수를 만들었습니다)
+
+ 
+
+ 
+
+ 
+
+혹은 변수에 저장해서 써도 깔끔해질 것 같긴 합니다 
+
+ 
+
+var 탭UI = { 
+  info : <p>상품정보</p>,
+  shipping : <p>배송관련</p>,
+  refund : <p>환불약관</p>
+}
+
+function Component() {
+  var 현재상태 = 'info';
+  return (
+    <div>
+      {
+        탭UI[현재상태]
+      }
+    </div>
+  )
+} 
+▲ 뭔가 매우 깔끔해졌습니다.
+
+실은 안깔끔합니다
+
+리액트처럼 html css js를 마구 한데 비벼서 개발하면 어떻게 해도 코드가 더러움 
+
+----------------------------------------------------------------------
+
+	22강. localStorage로 만드는 최근 본 상품 기능 1
+
+
+
+새로고침하면 모든 state 데이터는 리셋됩니다.
+
+왜냐면 새로고침하면 브라우저는 html css js 파일들을 첨부터 다시 읽기 때문입니다.
+
+이게 싫다면 state 데이터를 서버로 보내서 DB에 저장하거나 하면 됩니다.
+
+내가 서버나 DB 지식이 없다면 localStorage를 이용해도 됩니다.
+
+유저의 브라우저에 몰래 정보를 저장하고 싶을 때 쓰는 공간입니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+▲ 크롬개발자 도구에서 Application 탭 들어가면 구경가능합니다.
+
+- 사이트마다 5MB 정도의 문자 데이터를 저장할 수 있습니다.
+
+- object 자료랑 비슷하게 key/value 형태로 저장합니다.
+
+유저가 브라우저 청소를 하지 않는 이상 영구적으로 남아있습니다.
+
+ 
+
+밑에 있는 Session Storage도 똑같은데 브라우저 끄면 삭제됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+localStorage 문법 
+
+ 
+
+그냥 js 파일 아무데서나 다음 문법을 쓰면
+
+localStorage에 데이터 입출력할 수 있습니다.
+
+ 
+
+ 
+
+localStorage.setItem('데이터이름', '데이터');
+localStorage.getItem('데이터이름');
+localStorage.removeItem('데이터이름')
+차례로 추가, 읽기, 삭제 문법입니다.
+
+진짜 저장되었는지 application 탭에서 확인해보십시오.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+localStorage에 array/object 자료를 저장하려면
+
+ 
+
+"문자만 저장할 수 있는 공간"이라 array/object를 바로 저장할 수는 없습니다. 
+
+강제로 저장해보면 문자로 바꿔서 저장해주는데 그럼 array/object 자료가 깨져서 저장됩니다.
+
+그래서 편법이 하나 있는데 array/object -> JSON 이렇게 변환해서 저장하면 됩니다. 
+
+JSON.stringify({name:'kim'}) 이렇게 해주면 "객체" =>  "문자"로 변환됨
+
+JSON은 문자취급을 받아서 그렇습니다. 
+
+JSON은 그냥 따옴표친 array/object 자료입니다. 
+
+ 
+
+ 
+
+localStorage.setItem('obj', JSON.stringify({name:'kim'}) );
+JSON.stringify() 라는 함수에 array/object를 집어넣으면 그 자리에 JSON으로 변환된걸 남겨줍니다.
+
+그래서 위처럼 코드짜면 저장가능합니다. 
+
+"{"name":"kim"}" 이런거 저장될듯 
+
+ 
+
+ 
+
+ 
+
+ 
+
+var a = localStorage.getItem('obj');
+var b = JSON.parse(a)
+당연히 데이터를 다시 꺼내면 JSON이 나옵니다. 
+
+JSON -> array/object 변환하고 싶으면 
+
+JSON.parse()를 쓰면 되겠습니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+ 
+
+최근 본 상품 UI 기능 만들기 
+
+ 
+
+메인페이지에 최근 본 상품을 보여주는 성가신 UI를 만들어봅시다. 
+
+근데 사이트를 재접속해도 잘 보여야하기 때문에 localStorage를 활용해봅시다.  
+
+그래서 다음 시간까지 만들어오면 되는데
+
+하지만 여러분에 대한 기대치가 높지 않기 때문에 가장 쉬운거 하나만 해오면 됩니다. 
+
+상세페이지 들어가면 현재 페이지에 있는 상품 id를 localStorage에 저장되게 만들어오면 됩니다. 
+
+ 
+
+ 
+
+저장할 땐 array 자료형을 활용합시다. array의 set자료형을 인터넷에서 찾아보자.
+
+만약에 0번 1번 상품을 보았다면 [0,1] 이런 데이터가 localStorage에 저장되게 하면 되겠군요.
+
+그리고 시간남으면 메인페이지에서 이 데이터를 가지고
+
+최근 본 상품 UI도 자유롭게 만들어보십시오.
+
+
+
+
+
+
+
+
+약간의 힌트
+ 
+
+누가 내 사이트로 접속시 localStorage에 [ ] 가 하나 있어야
+
+자료 추가같은게 쉬울 것 같습니다. 
+
+ 
+
+function App() {
+
+  useEffect(()=>{
+    localStorage.setItem('watched', JSON.stringify( [] ))
+  },[]) 
+
+}
+그래서 이런코드 하나 넣고 시작하면 편리할듯요 
+
+----------------------------------------------------------------------
+
+	23강. localStorage로 만드는 최근 본 상품 기능 2
+
+
+
+
+저번시간 숙제만 해보고 지나갈 것이기 때문에 
+
+잘 했으면 응용사항만 보고 지나갑시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+내가 코드짜는 법을 모른다면
+
+ 
+
+이런 기능만들라고 하면 코드 어떻게 짜야할지 모르겠다는 분들은
+
+리액트를 못하는게 아니라 프로그래밍하는 법을 모를 뿐입니다. 
+
+잠깐 설명하자면 "컴퓨터라는 노예에게 명령내리는 행위"를 프로그래밍이라고 합니다.
+
+그리고 컴퓨터는 코드만 알아듣기 때문에 자바스크립트로 명령내리면 됩니다. 
+
+ 
+
+ 
+
+
+
+ 
+
+근데 안타깝게도 컴퓨터는 지능이란게 없어서
+
+"최근 본 상품 기능좀 만들어줘" 
+
+이렇게 대충 명령하면 절대 못알아듣습니다.
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+5살짜리 애한테 설명하듯이 
+
+1. 누가 Detail 페이지 접속하면 
+
+2. 상품번호 가져와서
+
+3. localStorage에 우선 array 형식으로 보관하고.. 
+
+이런 식으로 하나하나 상세히 설명해야 명령을 수행합니다. 컴퓨터는 빡통이라그럼 
+
+ 
+
+그래서 저렇게 상세히 설명을 한글로 적어놓고
+
+그걸 그대로 자바스크립트 문법으로 옮기기는게 프로그래밍입니다. 
+
+그래서 코드부터 짜는게 아니라 컴퓨터에게 어떤걸 시킬지 한글부터 쭉 상세히 적고 번역하면 됩니다.
+
+ 
+
+ 
+
+Q. 코딩고수들 강의 보면 코딩할 때 한글 그런거 안적는데요?
+
+A. 머릿속으로 함
+
+ 
+
+아무튼 프로그래밍 하는 법을 알아야 코드짤 수 있습니다.
+
+한글은 짜겠는데 코드로 번역을 못하겠다고요?
+
+그건 자바스크립트 기초를 이상한데서 배워서 그럼 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+저번시간 숙제는
+
+ 
+
+1. 누가 Detail페이지 접속하면 
+
+2. 현재 페이지에 보이는 상품id 가져와서
+
+3. localStorage에 watch항목에 있던 [ ] 에 추가
+
+라고 한글로 짜놓고 그대로 JS로 번역을 해봅시다. 
+
+ 
+
+ 
+
+(Detail.js)
+
+useEffect(()=>{
+  console.log(찾은상품.id)
+}, [])
+1번 2번은 이렇게 하면 되겠군요. 
+
+Detail.js 아무데나 useEffect() 하나 집어넣으면 1번 번역 끝이고
+
+2번은 아마 예전에 let 찾은상품 이런거 만들어둔 적이 있을겁니다 
+
+그거 쓰면 현재 페이지의 상품번호도 잘 출력가능합니다.
+
+2번 번역 끝 
+
+ 
+
+3번 localStorage에 watch항목에 추가는 
+
+localStorage에 있던 기존 데이터를 수정하고 그런건 불가능하다고 했습니다.
+
+입력/출력밖에 안됩니다. 
+
+ 
+
+그래서 watch에 있던 [ ] 빼서 
+
+찾은상품.id를 추가하고
+
+다시 watch 항목으로 저장하는 식으로 코드짜면 됩니다.
+
+localStorage 수정할 때 이렇게 하라고 저번시간에 배운듯
+
+ 
+
+ 
+
+ 
+
+ 
+
+(Detail.js)
+
+useEffect(()=>{
+  let 꺼낸거 = localStorage.getItem('watched')
+  꺼낸거 = JSON.parse(꺼낸거)
+  꺼낸거.push(찾은상품.id)
+  localStorage.setItem('watched', JSON.stringify(꺼낸거))
+}, [])
+그래서 watched에 있던 [ ] 꺼내서
+
+찾은상품.id 추가하고
+
+다시 watched 이름으로 집어넣으라고 했습니다. 
+
+3번 번역 끝 
+
+ 
+
+근데 같은 상품페이지 계속 접속하면 
+
+똑같은 상품id가 계속 추가되는 현상이 발생하는군요. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+중복제거하기
+
+ 
+
+그런 버그같은건 여러분이 한글을 대충적어놔서 생기는 것입니다.
+
+한글을 아주 상세히 정확히 짜면 이론상 버그가 절대없음 
+
+ 
+
+"상품id가 이미 [ ]에 있으면 추가하지 말아주세요" 라고 추가만 하면 될 것 같은데 
+
+자바스크립트 기초를 잘 배운 분들은 딱봐도 if 대충 쓰면 되는구나 각이 나올텐데
+
+if 이런거 쓰기 귀찮으면 Set 자료형 쓰면 됩니다.
+
+Set은 array와 똑같은데 중복을 알아서 제거해주는 array입니다. 
+
+그리고 array <-> Set 변환도 쉬워서 
+
+array -> Set -> array 이런 식으로 쓰면 array에서 중복제거를 좀 쉽게 할 수 있습니다. 
+
+ 
+
+ 
+
+ 
+
+(Detail.js)
+
+useEffect(()=>{
+  let 꺼낸거 = localStorage.getItem('watched')
+  꺼낸거 = JSON.parse(꺼낸거)
+  꺼낸거.push(찾은상품.id)
+
+  //Set으로 바꿨다가 다시 array로 만들기
+  꺼낸거 = new Set(꺼낸거)
+  꺼낸거 = Array.from(꺼낸거)
+  localStorage.setItem('watched', JSON.stringify(꺼낸거))
+}, [])
+그래서 Set으로 바꿨다가 다시 array로 변환해봤습니다. 
+
+구글찾아보니 new Set(array자료) 하면 array를 Set으로 바꿀 수 있고
+
+Array.from(Set자료) 하면 Set을 array로 바꿀 수 있다는군요. 
+
+ 
+
+아무튼 이제 상세페이지 접속할 때 마다 localStorage에 상품번호들이 중복없이 잘 추가됩니다. 
+
+이제 심심하면 메인페이지 이런데다가 UI 하나 만들고
+
+그 안에 최근 본 상품 id를 진열해주거나 그래봅시다.
+
+상품id만 진열하면 안이쁠테니 상품id가지고 실제 상품명이나 이미지나 그런걸 진열해보는 것도 좋겠군요. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+localStorage에 state를 자동저장되게 만들고 싶으면
+
+ 
+
+직접 코드짜도 되긴 하는데 
+
+redux-persist 이런 라이브러리 설치해서 쓰면 redux store 안에 있는 state를 자동으로 localStorage에 저장해줍니다.
+
+state 변경될 때마다 그에 맞게 localStorage 업데이트도 알아서 해줌 
+
+하지만 셋팅문법 복잡하고 귀찮습니다. 
+
+ 
+
+그래서 요즘은 신규 사이트들은 Redux 대신 Jotai, Zustand 같은 라이브러리를 사용합니다. 
+
+같은 기능을 제공하는데 셋팅도 거의 필요없고 문법이 훨씬 더 쉬우니까요.
+
+그리고 그런 라이브러리들도 아마 localStorage 자동저장기능들이 있습니다. 
+
+ 
+
+물론 빨리 취업하려면 리덕스 떡칠된 포트폴리오 만들어서 보여주면 됩니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+응용사항
+
+ 
+
+지금은 사이트 새로고침시 localStorage에 있던 항목도 싹 [] 이렇게 비워집니다.
+
+왜냐면 App컴포넌트 로드시 [] 이거 새로 넣으라고 코드짰으니까요.
+
+이게 싫으면
+
+이미 localStorage에 watched 항목이 있으면 [] 이거 새로 넣지 말라고 코드를 짜봅시다. 
+
+
+----------------------------------------------------------------------
+	24강. 실시간 데이터가 중요하면 react-query
+
+
+
+
+(업데이트 사항) 라이브러리 이름이 react-query에서 @tanstack/react-query로 바뀌어서 
+
+ 
+
+npm install @tanstack/react-query 
+1. 설치시엔 이거 입력합시다 
+
+ 
+
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query' 
+2. import 해서 사용시엔 이거 입력합시다 
+
+ 
+
+useQuery(['작명'], 
+3. useQuery쓸 때 '작명' 말고 ['작명'] 입니다 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ajax 요청하다보면 이런 기능들이 가끔 필요해집니다. 
+
+- 몇초마다 자동으로 데이터 다시 가져오게 하려면?
+
+- 요청실패시 몇초 간격으로 재시도?
+
+- 다음 페이지 미리가져오기?
+
+- ajax 성공/실패시 각각 다른 html을 보여주려면?
+
+ 
+
+직접 개발해도 되겠지만 귀찮으면 react-query 라는 라이브러리 설치해서 써도 됩니다.
+
+SNS, 코인거래소같은 실시간 데이터를 보여줘야하는 사이트들이 쓰면 유용하고
+
+나머지 사이트들은 딱히 쓸데는 없습니다.
+
+원래 강의할 때 다양한거 얕게 찍먹하면 "와 많은걸 배웠네요" 하면서 만족도가 높아지는 이상한 현상이 있습니다.
+
+그래서 찍먹하고 넘어가야합니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+react-query 설치 & 셋팅은
+
+ 
+
+터미널에서 npm install react-query 하고 
+
+index.js 파일 열어서 
+
+ 
+
+import { QueryClient, QueryClientProvider } from "react-query"  //1번
+const queryClient = new QueryClient()   //2번
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <QueryClientProvider client={queryClient}>  //3번
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </QueryClientProvider>
+); 
+1번 2번 3번 하면 됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+react-query로 ajax 요청하는 법
+
+ 
+
+그냥 ajax 요청해도 되는데 
+
+react-query를 써서 ajax 요청을 날리면 더 편리한 기능을 제공합니다. 
+
+ 
+
+function App(){
+  let result = useQuery('작명', ()=>
+    axios.get('https://codingapple1.github.io/userdata.json')
+    .then((a)=>{ return a.data })
+  )
+}
+useQuery 라는걸 상단에서 import 해온 뒤에 
+
+useQuery()로 ajax 요청을 감싸면 됩니다.
+
+그럼 유용한 기능을 제공해주는데 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+장점1. ajax 요청 성공/실패/로딩중 상태를 쉽게 파악할 수 있습니다. 
+
+ 
+
+ 
+
+function App(){
+  let result = useQuery('작명', ()=>
+    axios.get('https://codingapple1.github.io/userdata.json')
+    .then((a)=>{ return a.data })
+  )
+
+  return (
+    <div>
+      { result.isLoading && '로딩중' }
+      { result.error && '에러남' }
+      { result.data && result.data.name }
+    </div>
+  )
+}
+result라는 변수에 ajax 현재 상태가 알아서 저장됩니다.
+
+- ajax요청이 로딩중일 땐 result.isLoading 이 true가 됩니다. 
+
+- ajax요청이 실패시엔 result.error 가 true가 됩니다. 
+
+- ajax요청이 성공시엔 result.data 안에 데이터가 들어옵니다.
+
+ 
+
+그래서
+
+ajax 로딩중일 땐 <A/> 보여주세요~
+
+ajax 성공시엔 <B/> 보여주세요~
+
+이런거 직접 개발하려면 state 부터 만들어야 했을텐데 얘는 그럴 필요가 없습니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+장점2. 틈만나면 알아서 ajax 재요청해줍니다. 
+
+ 
+
+페이지 체류하고나서 일정시간이 경과하거나 
+
+님들이 다른 창으로 갔다가 다시 페이지로 돌아오거나 
+
+다시 메인페이지로 돌아가거나 
+
+이런 여러 경우에 알아서 ajax 요청을 다시 해줍니다. 
+
+당연히 재요청 끄는 법, 재요청간격 조절하는 법도 있습니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+장점3. 실패시 재시도 알아서 해줌 
+
+ 
+
+잠깐 인터넷이 끊겼거나 서버가 죽었거나 그러면 ajax 요청이 실패합니다.
+
+실패했을 때는 얘가 4번인가 5번인가 재시도를 알아서 해줍니다. 
+
+편리합니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+장점4. ajax로 가져온 결과는 state 공유 필요없음 
+
+ 
+
+지금 App 컴포넌트에서 유저이름 가져오는 ajax 요청을 날리고 있습니다. 
+
+근데 그 유저이름 결과가 Detail 컴포넌트에도 필요하면 어쩌죠?
+
+- 유저이름을 props 전송하면 됩니다. 
+
+ 
+
+근데 실은 props 전송 필요없습니다.
+
+Detail 컴포넌트에다가 유저이름 ajax 요청하는 코드 똑같이 또 적으면 됩니다.
+
+react-query는 스마트하기 때문에 ajax 요청이 2개나 있으면 1개만 날려주고
+
+캐싱기능이 있기 때문에 이미 같은 ajax 요청을 한 적이 있으면 그걸 우선 가져와서 씁니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+react-query가 주장하는 장점은 
+
+server-state (DB 데이터)를 프론트엔드에서 실시간 동기화해주는걸 도와준다고 합니다.
+
+근데 ajax 요청을 몇초마다 계속 날려서 가져오는 방식이라 좀 비효율적일 수도 있습니다. 
+
+실시간으로 서버에서 데이터를 자주 보내려면 웹소켓이나 Server-sent events 같은 가벼운 방식들도 있습니다. 
+
+그래서 react-query는 ajax 관련 기능개발 편하게 할 수 있는데에 의의가 더 있습니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+RTK Query 라이브러리도 있음
+
+ 
+
+Redux Toolkit 설치한 경우 RTK Query 라는것도 기본적으로 사용가능한데
+
+비슷한 기능들을 제공합니다.
+
+다만 셋팅하는 코드가 좀 더럽습니다. 
+
+ 
+
+RTK Query는 실은 다른 용도로도 많이 쓰는데 
+
+ajax 요청후 Redux state 변경을 하고 싶다면...
+
+원래 Redux state변경함수 안에선 ajax요청하면 안되어서 컴포넌트 안에서 해야합니다.
+
+근데 ajax 요청하는 코드가 다양하고 많으면 컴포넌트 안의 코드가 길어지고 관리도 귀찮은데
+
+그런걸 Slice 안에서 관리가능하게 도와줍니다.
+
+그리고 ajax 요청하는 코드가 100만개 있으면 그걸 편리하게 관리할 수 있게 도와줍니다. 
+
+근데 코드가 약간 더러울 뿐  
+----------------------------------------------------------------------
+25강. 성능개선 1 : 개발자도구 & lazy import
+
+
+
+props를 보냈는데 출력이 안된다거나
+
+이미지를 넣었는데 안보이는 버그같은게 생기면
+
+개발자도구를 켜서 Elements 탭 살펴보면 되는데
+
+여기선 여러분이 짠 코드가 실제 html css로 변환되어서 보여집니다. 
+
+그게 싫고 컴포넌트로 미리보고 싶으면 리액트 개발자도구를 설치해서 켜보면 됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+크롬 확장프로그램 : React Developer Tools 
+
+ 
+
+https://chrome.google.com/webstore/
+
+크롬 웹스토어 들어가면 확장프로그램 설치가 가능합니다. 
+
+여기서 React Developer Tools 설치하면 Components 탭이 생기는데
+
+여러분들이 개발중인 리액트사이트를 컴포넌트로 미리볼 수 있습니다. 
+
+ 
+
+ 
+
+
+
+ 
+
+왼쪽에서 컴포넌트구조 파악이 가능하고 
+
+왼쪽상단 아이콘눌러서 컴포넌트 찍어보면
+
+거기 있는 state, props 이런거 조회가능합니다. 수정해볼 수도 있음 
+
+그리고 우측 상단 여러가지 버튼도 있는데 함 눌러보시면 됩니다. 크게 쓸모는 없습니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Profiler 탭에서 성능평가 가능
+
+ 
+
+
+
+ 
+
+Profiler 탭 들어가서
+
+- 녹화버튼 누르고
+
+- 페이지 이동이나 버튼조작을 해보고
+
+- 녹화를 끝내면 
+
+방금 렌더링된 모든 컴포넌트의 렌더링시간을 측정해줍니다. 
+
+ 
+
+이상하게 느린 컴포넌트가 있다면 여기서 범인을 찾을 수 있습니다. 
+
+<div>를 1만개 만들거나 그러지 않는 이상 보통은 걱정할 필요는 없습니다.
+
+지연 원인 대부분은 서버에서 ajax 요청결과가 늦게 도착해서 그런 경우가 많습니다.
+
+서버가 느린 건 어쩔 수 없음 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Redux Developer Tools 
+
+ 
+
+이것도 크롬 웹스토어에서 설치가능합니다. 
+
+Redux store에 있던 state를 전부 확인가능합니다.
+
+그리고 dispatch 날릴 때 마다 뭐가 어떻게 바뀌었는지 로그를 작성해줍니다. 
+
+store 복잡해지면 유용함 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+lazy import
+
+ 
+
+리액트 코드 다 짰으면 npm run build 입력해서
+
+여러분이 짰던 이상한 코드들을 역사와 전통의 html css js 파일로 변환해야합니다.  
+
+근데 리액트로 만드는 Single Page Application의 특징은 html, js 파일이 하나만 생성됩니다. 
+
+그 안에 지금까지 만든 App / Detail / Cart 모든 내용이 들어있어서 파일사이즈가 좀 큽니다. 
+
+원래 그래서 리액트 사이트들은 첫 페이지 로딩속도가 매우 느릴 수 있습니다. 
+
+ 
+
+ 
+
+그게 싫다면 js 파일을 잘게 쪼개면 됩니다.
+
+쪼개는 방법은 import 문법을 약간 고치면 되는데  
+
+지금 메인페이지 보면 Detail, Cart를 import 해서 쓰고있습니다.
+
+근데 잘 생각해보면 Detail, Cart 컴포넌트는 메인페이지에서 전혀 보이지 않고 있기 때문에
+
+이런 컴포넌트들은 이런 문법으로 import 해놓으면 좋습니다. 
+
+ 
+
+ 
+
+ 
+
+(App.js)
+
+import Detail from './routes/Detail.js'
+import Cart from './routes/Cart.js'
+이거를 
+
+ 
+
+ 
+
+(App.js)
+import {lazy, Suspense, useEffect, useState} from 'react'
+
+const Detail = lazy( () => import('./routes/Detail.js') )
+const Cart = lazy( () => import('./routes/Cart.js') )
+이렇게 바꾸라는 소리입니다.
+
+lazy 문법으로도 똑같이 import가 가능한데 이 경우엔
+
+"Detail 컴포넌트가 필요해지면 import 해주세요" 라는 뜻이 됩니다. 
+
+그리고 이렇게 해놓으면 Detail 컴포넌트 내용을 다른 js 파일로 쪼개줍니다.
+
+그래서 첫 페이지 로딩속도를 향상시킬 수 있습니다.
+
+필요할 것 같으면 씁시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+<Suspense fallback={ <div>로딩중임</div> }>
+  <Detail shoes={shoes} />
+</Suspense>
+lazy 사용하면 당연히 Detail 컴포넌트 로드까지 지연시간이 발생할 수 있습니다. 그럴 땐
+
+1. Suspense 라는거 import 해오고
+
+2. Detail 컴포넌트를 감싸면
+
+Detail 컴포넌트가 로딩중일 때 대신 보여줄 html 작성도 가능합니다. 
+
+ 
+
+귀찮으면 <Suspense> 이걸로 <Routes> 전부 감싸도 됩니다. 
+----------------------------------------------------------------------
+26강.   성능개선 2 : 재렌더링 막는 memo, useMemo
+
+
+컴포넌트가 재렌더링되면 거기 안에 있는 자식컴포넌트는 항상 함께 재렌더링됩니다.
+
+리액트는 그렇게 대충 무식하게 동작하는데
+
+평소엔 별 문제가 없겠지만 자식컴포넌트가 렌더링시간이 1초나 걸리는 무거운 컴포넌트면 어쩔 것입니까. 
+
+부모컴포넌트에 있는 버튼 누를 때 마다 1초 버벅이는 불상사가 발생합니다. 
+
+그럴 땐 자식을 memo로 감싸놓으면 됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+테스트용 자식 컴포넌트 하나 만들어보기 
+
+ 
+
+function Child(){
+  console.log('재렌더링됨')
+  return <div>자식임</div>
+}
+
+function Cart(){ 
+
+  let [count, setCount] = useState(0)
+
+  return (
+    <Child />
+    <button onClick={()=>{ setCount(count+1) }}> + </button>
+  )
+}
+Cart 컴포넌트 안에 Child 컴포넌트를 만들었습니다.
+
+그리고 버튼누를 때 Cart 컴포넌트가 재렌더링되게 만들어놨는데
+
+이 경우 <Child> 이것도 재렌더링됩니다.
+
+ 
+
+평소엔 별 문제가 없겠지만 <Child> 얘가 렌더링이 2초정도 걸리는 느린 컴포넌트면 어쩌죠?
+
+그럼 버튼 누를 때 마다 버벅일듯요.
+
+ 
+
+그럴 땐 memo라는 함수를 쓰면
+
+"꼭 필요할 때만 <Child> 컴포넌트 재렌더링해주세요" 라고 코드를 짤 수도 있습니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+memo()로 컴포넌트 불필요한 재렌더링 막기
+
+ 
+
+memo() 써보려면 'react' 라이브러리로부터 import 해오시면 됩니다.
+
+ 
+
+ 
+
+ 
+
+import {memo, useState} from 'react'
+
+let Child = memo( function(){
+  console.log('재렌더링됨')
+  return <div>자식임</div>
+})
+
+function Cart(){ 
+
+  let [count, setCount] = useState(0)
+
+  return (
+    <Child />
+    <button onClick={()=>{ setCount(count+1) }}> + </button>
+  )
+}
+1. memo를 import 해와서
+
+2. 원하는 컴포넌트 정의부분을 감싸면 됩니다. 
+
+근데 컴포넌트를 let 컴포넌트명 = function( ){ } 이런 식으로 만들어야 감쌀 수 있습니다.
+
+그럼 이제 Child로 전송되는 props가 변하거나 그런 경우에만 재렌더링됩니다. 
+
+진짜 그러나 버튼눌러서 테스트해봅시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Q. 어 그럼 memo는 좋은거니까 막써도 되겠네요?
+
+memo로 감싼 컴포넌트는 헛된 재렌더링을 안시키려고
+
+기존 props와 바뀐 props를 비교하는 연산이 추가로 진행됩니다.
+
+props가 크고 복잡하면 이거 자체로도 부담이 될 수도 있습니다.
+
+그래서 꼭 필요한 곳에만 사용합시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+비슷하게 생긴 useMemo
+
+ 
+
+비슷한 useMemo라는 문법도 있는데 이건 그냥 useEffect와 비슷한 용도입니다.
+
+컴포넌트 로드시 1회만 실행하고 싶은 코드가 있으면 거기 담으면 됩니다. 
+
+ 
+
+ 
+
+import {useMemo, useState} from 'react'
+
+function 함수(){
+  return 반복문10억번돌린결과
+}
+
+function Cart(){ 
+
+  let result = useMemo(()=>{ return 함수() }, [])
+
+  return (
+    <Child />
+    <button onClick={()=>{ setCount(count+1) }}> + </button>
+  )
+}
+1. 예를 들어서 반복문을 10억번 돌려야하는 경우 
+
+2. 그 함수를 useMemo 안에 넣어두면 컴포넌트 로드시 1회만 실행됩니다. 
+
+그럼 재렌더링마다 동작안하니까 좀 효율적으로 동작하겠죠? 
+
+useEffect 처럼 dependency도 넣을 수 있어서 
+
+특정 state, props가 변할 때만 실행할 수도 있습니다.  
+----------------------------------------------------------------------
+27강.성능개선 3 : useTransition, useDeferredValue
+
+
+
+리액트18버전 이후부터
+
+렌더링 성능이 저하되는 컴포넌트에서 쓸 수 있는 혁신적인 기능이 하나 추가되었습니다. 
+
+useTransition 이건데 이걸로 오래걸리는 부분을 감싸면 렌더링시 버벅이지 않게 해줍니다.
+
+실은 코드 실행시점만 조절해주는 식임
+
+ 
+
+ 
+
+ 
+
+ 
+
+리액트 18버전부터 추가된 기능 1 : 일관된 batching
+
+ 
+
+automatic batching 이라는 기능이 있는데 
+
+ 
+
+setCount(1) 
+setName(2) 
+setValue(3)   //여기서 1번만 재렌더링됨
+state변경함수를 연달아서 3개 사용하면 재렌더링도 원래 3번 되어야하지만 
+
+리액트는 똑똑하게도 재렌더링을 마지막에 1회만 처리해줍니다. 
+
+일종의 쓸데없는 재렌더링 방지기능이고 batching이라고 합니다.
+
+ 
+
+ 
+
+fetch().then(() => {
+    setCount(1)   //재렌더링됨
+    setName(2)   //재렌더링됨
+}) 
+근데 문제는 ajax요청, setTimeout안에 state변경함수가 있는 경우 batching이 일어나지 않습니다. 
+
+리액트 17버전까진 그런 식으로 일관적이지 않게 동작했는데
+
+18버전 이후 부터는 어디 있든 간에 재렌더링은 마지막에 1번만 됩니다. 
+
+ 
+
+ 
+
+batching 되는게 싫고 state변경함수 실행마다 재렌더링시키고 싶으면 
+
+flushSync라는 함수를 쓰면 됩니다. 필요하면 찾아봅시다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+리액트 18버전부터 추가된 기능 2 : useTransition 추가됨
+
+ 
+
+렌더링시간이 매우 오래걸리는 컴포넌트가 있다고 칩시다. 
+
+버튼클릭, 타이핑할 때 마다 그 컴포넌트를 렌더링해야한다면
+
+이상하게 버튼클릭, 타이핑 반응속도도 느려집니다. 
+
+사람들은 원래 클릭, 타이핑을 했을 때 0.3초 이상 반응이 없으면 불편함을 느끼기 때문에 (한국인은 0.2초)
+
+개선방법을 알아봅시다. 
+
+ 
+
+당연히 그 컴포넌트 안의 html 갯수를 줄이면 대부분 해결됩니다. 
+
+근데 그런게 안되면 useTransition 기능을 쓰면 됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+우선 재렌더링이 느린 컴포넌트 만들어보기 
+
+ 
+
+import {useState} from 'react'
+
+let a = new Array(10000).fill(0)
+
+function App(){
+  let [name, setName] = useState('')
+  
+  return (
+    <div>
+      <input onChange={ (e)=>{ setName(e.target.value) }}/>
+      {
+        a.map(()=>{
+          return <div>{name}</div>
+        })
+      }
+    </div>
+  )
+}
+- 데이터가 10000개 들어있는 array자료를 하나 만들고
+
+- 그 갯수만큼 <div>를 생성하라고 했습니다.
+
+- 그리고 유저가 타이핑할 수 있는 <input>도 만들어봤습니다.
+
+ 
+
+유저가 <input>에 타이핑하면 그 글자를 <div> 1만개안에 집어넣어줘야하는데
+
+<div> 1만개 렌더링해주느라 <input>도 많은 지연시간이 발생합니다.
+
+타이핑한 결과가 바로바로 반응이 안옵니다. 답답해죽음 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+useTransition 쓰면 
+
+ 
+
+import {useState, useTransition} from 'react'
+
+let a = new Array(10000).fill(0)
+
+function App(){
+  let [name, setName] = useState('')
+  let [isPending, startTransition] = useTransition()
+  
+  return (
+    <div>
+      <input onChange={ (e)=>{ 
+        startTransition(()=>{
+          setName(e.target.value) 
+        })
+      }}/>
+
+      {
+        a.map(()=>{
+          return <div>{name}</div>
+        })
+      }
+    </div>
+  )
+}
+- useTransition() 쓰면 그 자리에 [변수, 함수]가 남습니다. 
+
+- 그 중 우측에 있는 startTransition() 함수로 state변경함수 같은걸 묶으면
+
+그걸 다른 코드들보다 나중에 처리해줍니다.
+
+ 
+
+그래서 <input> 타이핑같이 즉각 반응해야하는걸 우선적으로 처리해줄 수 있습니다. 
+
+타이핑해보면 아까보다 반응속도가 훨씬 낫습니다. 
+
+ 
+
+물론 근본적인 성능개선이라기보단 특정코드의 실행시점을 뒤로 옮겨주는 것일 뿐입니다. 
+
+html이 많으면 여러페이지로 쪼개십시오. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+isPending은 어디다 쓰냐면 
+
+ 
+
+startTransition() 으로 감싼 코드가 처리중일 때 true로 변하는 변수입니다.
+
+ 
+
+{
+  isPending ? "로딩중기다리셈" :
+  a.map(()=>{
+    return <div>{name}</div>
+  })
+} 
+그래서 이런 식으로 코드짜는 것도 가능합니다.
+
+위의 코드는 useTransition으로 감싼게 처리완료되면 <div>{name}</div> 이게 보이겠군요.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+useDeferredValue 이것도 비슷함
+
+ 
+
+startTransition() 이거랑 용도가 똑같습니다.
+
+근데 얘는 state 아니면 변수하나를 집어넣을 수 있게 되어있습니다. 
+
+그래서 그 변수에 변동사항이 생기면 그걸 늦게 처리해줍니다. 
+
+ 
+
+ 
+
+import {useState, useTransition, useDeferredValue} from 'react'
+
+let a = new Array(10000).fill(0)
+
+function App(){
+  let [name, setName] = useState('')
+  let state1 = useDeferredValue(name)
+  
+  return (
+    <div>
+      <input onChange={ (e)=>{ 
+          setName(e.target.value) 
+      }}/>
+
+      {
+        a.map(()=>{
+          return <div>{state1}</div>
+        })
+      }
+    </div>
+  )
+}
+이렇게 쓰면 아까랑 똑같은 기능을 개발가능합니다.
+
+- useDeferredValue 안에 state를 집어넣으면 그 state가 변동사항이 생겼을 때 나중에 처리해줍니다.
+
+그리고 처리결과는 let state에 저장해줍니다.  
+----------------------------------------------------------------------
+28강. PWA 셋팅해서 앱으로 발행하기 (모바일앱인척하기)
+
+
+
+구글이 밀고있는 PWA라는게 있습니다.
+
+Progressive Web App이라는건데 이건 웹사이트를 안드로이드/iOS 모바일 앱처럼 사용할 수 있게 만드는 일종의 웹개발 기술입니다. 
+
+여러분 지금까지 강의 따라오면서 리액트로 모바일 App 처럼 동작하는 사이트 만들어놨죠?
+
+모바일 앱처럼 스무스하잖아요. 
+
+그래서 이 웹사이트를 모바일 앱으로 발행해서 그냥 쓰자는겁니다.
+
+근데 iOS, Android 앱으로 발행하는게 아니라 웹사이트 자체를 스마트폰 홈화면에 설치합니다. 그게 바로 PWA 입니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+웹사이트를 PWA화 시키는게 뭐가 좋냐면
+
+ 
+
+ 
+
+
+
+ 
+
+1. 스마트폰, 태블릿 바탕화면에 여러분 웹사이트를 설치 가능합니다.
+
+(저거 설치된 앱 누르면 상단 URL바가 제거된 크롬 브라우저가 뜹니다. 일반 사용자는 앱이랑 구분을 못함)
+
+ 
+
+2. 오프라인에서도 동작할 수 있습니다.
+
+service-worker.js 라는 파일과 브라우저의 Cache storage 덕분에 그렇습니다.
+
+자바스크립트로 게임만들 때 유용하겠네요.
+
+ 
+
+3. 설치 유도 비용이 매우 적습니다.
+
+앱설치를 유도하는 마케팅 비용이 적게들어 좋다는 겁니다.
+
+구글플레이 스토어 방문해서 앱 설치하고 다운받게 하는건 항상 매우 높은 마케팅비용이 듭니다. 
+
+근데 PWA라면 웹사이트 방문자들에게 간단한 팝업을 띄워서 설치유도할 수 있으니 훨씬 적은 마케팅 비용이 들고요. 
+
+그래서 미국에선 PWA를 적극 이용하고 있는 쇼핑몰들이 많습니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+PWA 만드는건 별거 없고 그냥 아무사이트나 파일 2개만 사이트 로컬경로에 있으면 브라우저가 PWA로 인식합니다. (그리고 HTTPS 사이트여야합니다)
+
+manifest.json과 service-worker.js 라는 이름의 파일 두개를 만드시면 됩니다.
+
+ 
+
+ 
+
+하지만 기본 프로젝트를 npm build / yarn build 했을 경우 manifest.json 파일만 생성해줍니다. 
+
+service-worker.js 까지 자동으로 생성을 원한다면 프로젝트를 처음 만들 때 애초에 
+
+ npx create-react-app 프로젝트명 --template cra-template-pwa
+이렇게 터미널에 입력하라고 합니다.
+
+ 
+
+ 
+
+Q. 잉 그럼 프로젝트 다시만들어야해요? 
+
+A. 맞습니다.
+
+1. 다른 폴더에 위 명령어를 이용해 프로젝트 새로 하나 만든 다음에
+
+2. 기존 프로젝트의 App.js App.css index.js 이런 파일들을 새 프로젝트로 복붙하시면 됩니다. 
+
+여러분이 건드린 파일은 다 복붙하셈 근데 index.js 파일은 많이 바뀐점이 좀 있어서 차이점만 잘 복붙하시면 될듯합니다. 
+
+3. router, redux 이런 라이브러리를 설치했다면 그것도 새프로젝트에서 다시 설치하시면 됩니다.  
+
+ 
+
+ 
+
+ 
+
+그리고 파일들 중에 index.js 하단에 보시면 
+
+serviceWorkerRegistration.unregister();
+이 부분을 
+
+ 
+
+serviceWorkerRegistration.register();
+이렇게 바꾸시면 끝입니다.
+
+ 
+
+ 
+
+그럼 이제 yarn build / npm run build 했을 때 아까 그 manifest.json과 service-worker.js 파일이 자동으로 생성됩니다. 
+
+PWA 발행 끝!
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+manifest.json / service-worker.js 파일 살펴보기
+
+ 
+
+build 하고 나시면 build 폴더 내에 이 파일들이 있을겁니다.
+
+manifest.json 파일은 웹앱의 아이콘, 이름, 테마색 이런걸 결정하는 부분이라고 보시면 됩니다. 
+
+거기 안에 들어가는 내용들은 대략 이렇습니다.
+
+ 
+
+{
+  "version" : "여러분앱의 버전.. 예를 들면 1.12 이런거",
+  "short_name" : "설치후 앱런처나 바탕화면에 표시할 짧은 12자 이름",
+  "name" : "기본이름",
+  "icons" : { 여러가지 사이즈별 아이콘 이미지 경로 },
+  "start_url" : "앱아이콘 눌렀을 시 보여줄 메인페이지 경로",
+  "display" : "standalone 아니면 fullscreen",
+  "background_color" : "앱 처음 실행시 잠깐 뜨는 splashscreen의 배경색",
+  "theme_color" : "상단 탭색상 등 원하는 테마색상",
+}
+등 여러가지를 집어넣을 수 있습니다.
+
+시간나시면 version, scope 항목에 대해서도 한번 찾아보시길 바랍니다. 
+
+▼ 그리고 이 파일은 웹앱에서 사용하는 모든 html 안에 이런 식으로 집어넣으셔야하는데
+
+<link rel="manifest" href="/manifest.webmanifest">
+근데 다행히도 그거 설치는 리액트가 알아서 해줬기 때문에 우린 건드릴게 없군요.
+
+ 
+
+ 
+
+ 
+
+service-worker.js 파일은 좀 설명하자면 긴데
+
+여러분 카카오톡 앱같은거 설치할 때 구글플레이 스토어 가서 설치하죠?
+
+그럼 카톡 구동에 필요한 이미지, 데이터들이 전부 하드에 설치됩니다.
+
+그리고 카톡을 켜면 카톡 로고 같은 데이터를 카톡 서버에 요청하는게 아니라
+
+하드에 이미 설치되어 있는걸 그대로 가져와서 씁니다. 
+
+ 
+
+ 
+
+이걸 흉내내도록 도와주는 파일이 바로 service-worker 라는 파일입니다.
+
+이 파일에 설정을 잘 해주면 이제 여러분의 웹앱을 설치했을 때 어떤 CSS, JS, HTML, 이미지 파일이 하드에 설치될지 결정할 수 있습니다.
+
+그럼 이제 다음에 앱을 켤 때마다 서버에 CSS,JS,HTML 파일을 요청하는게 아니라 Cache Storage에 저장되어있던 CSS,JS,HTML 파일을 사용하게 됩니다.
+
+(그럼 이제 오프라인에서도 사용이 가능해지는거죠)
+
+ 
+
+ 
+
+ 
+
+근데 설정은 이미 되어있습니다.
+
+그래서 우린 그냥 가만히 있기만하면 됩니다.
+
+모든 HTML CSS JS 파일을 cache storage에 저장하도록 기본 셋팅이 되어있는데
+
+간혹 저장해두기 싫은, 자주변하는 파일들이 간혹 있을 수 있습니다. 
+
+필요하면 하단 튜토리얼을 참고해서 수정해보도록 합시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+그냥 쌩으로 service worker 파일을 만들고 싶다면 
+
+구글 공식 튜토리얼이나 크롬브라우저 권장 튜토리얼을 참고하십시오.
+
+service worker 제작에 필요한 문법이 따로 있고 그걸 학습하셔야합니다. 
+
+(공식 튜토리얼) https://developers.google.com/web/fundamentals/primers/service-workers
+
+(샘플) https://googlechrome.github.io/samples/service-worker/basic/
+
+ 
+
+ 
+
+ 
+
+홈페이지 업데이트할 때마다 유저들이 올드한 JS 파일을 사용하진 않을까 걱정은 안하셔도 됩니다. 
+
+그리고 build할 때마다 JS,CSS,HTML 파일의 이름과 경로가 무작위로 바뀝니다.
+
+사이트에 필요한 JS,CSS,HTML 파일명이 바뀌면 하드에 있는게 아니라 서버에 요청해서 새로 받아오니까
+
+여러분이 파일을 서버에 올려서 배포할 때 마다 유저는 새로운 파일을 보게 될겁니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+개발자도구로 PWA 디버깅하기
+
+ 
+
+ 
+
+내가 build 했던 프로젝트가 PWA인지 아닌지 살펴보고 싶으면 
+
+일단 사이트를 호스팅받아 올리거나 아니면 .. (Github pages 이런 것도 됩니다)
+
+VScode 익스텐션중에 live server 이걸 검색해서 설치하신 뒤에
+
+1. build 폴더를 에디터로 오픈하고
+
+2. 거기 있는 index.html을 우클릭 - live server로 띄우기 누르면 됩니다.
+
+ 
+
+아무튼 여러분의 사이트에서 크롬 개발자도구를 켜시면 Application 이라는 탭이 있습니다.
+
+여기 들어가시면 PWA와 관련된 모든걸 살펴보실 수 있습니다.
+
+ 
+
+ 
+
+
+
+ 
+
+(내 사이트가 없으면 flipkart.com 이런 PWA 사이트 들어가서 따라해보시면 됩니다)
+
+ 
+
+ 
+
+Manifest 메뉴에선 manifest.json 내용들을 확인가능하고
+
+Service Worker 메뉴에선 service-worker 파일이 잘 있는지, 오프라인에선 잘 동작하는지 테스트 가능하고 푸시알림 기능을 개발해놨다면 푸시알림도 샘플로 전송해볼 수 있습니다.
+
+Cache Storage 메뉴에선 service-worker 덕분에 하드에 설치된 CSS, JS, HTML 파일들을 확인할 수 있습니다. 캐시된 파일 제거도 가능합니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+나의 PWA를 커스터마이징하려면
+
+ 
+
+지금 PWA 발행이 쉽고 간단한 이유는 구글의 workbox 라는 라이브러리 덕분입니다.
+
+이게 create-react-app 설치할 때 함께 설치되었기 때문입니다.
+
+그래서 PWA 발행방식 같은걸 커스터마이징 하고싶으면 workbox 사용법을 익히셔야하는데
+
+구글 직원들이 써놓은 개발문서 같은거 보면 매우 불친절하고 어렵습니다. 
+
+ 
+
+그래서 빠르게 커스터마이징 방법 하나만 알려드리겠습니다. 
+
+Q. 하드에 설치할 파일 중에 HTML을 제외하고 싶다면?
+
+이런 경우 많습니다. HTML 파일은 너무 자주 변해서 하드에 저장해놓기 싫다면 여길 수정하시면 됩니다.
+
+(근데 그럴거면 앱실행시 아무것도 안뜰꺼고 모바일 앱의 장점이 사라지는데얌)
+
+ 
+
+ 
+
+여러분 프로젝트 폴더 내의 
+
+node_modules/react-scripts/config/webpack.config.js 파일을 찾으시면 됩니다. 
+
+거기 하단 쯤에 보면 이런 코드가 있습니다. 
+
+ 
+
+new WorkboxWebpackPlugin.GenerateSW({
+    clientsClaim: true,
+    exclude: [/\.map$/, /asset-manifest\.json$/],
+}) 
+(▲구버전)
+
+new WorkboxWebpackPlugin.InjectManifest({
+    swSrc,
+    dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
+    exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/], 
+(▲신버전)
+
+ 
+
+ 
+
+여기의 exclude라는 항목이 어떤 파일을 캐싱하지 않을건지 결정하는 부분입니다.
+
+정규식으로 작성하는데 정규식과 일치하는 파일명을 제외합니다. 
+
+그래서 원하는 HTML 파일을 여기 등록하시면 끝입니다.
+
+ 
+
+ 
+
+new WorkboxWebpackPlugin.GenerateSW({
+    clientsClaim: true,
+    exclude: [/\.map$/, /asset-manifest\.json$/, /index\.html/],
+}) 
+이거 말고도 "모든 .css로 끝나는 파일"  "a라는 글자로 시작하는 파일"
+
+이런 식으로 정규식으로 작성할 수도 있는데 그것은 정규식 문법을 잘 찾아보시면 되겠습니다.
+
+근데 여러분 사이트가 페이스북, 인스타, 유튜브처럼 입장과 동시에 Ajax로 초기데이터들을 전부 받아오는 사이트라면
+
+굳이 HTML 파일을 저렇게 할 필요는 없겠죠? 맞습니다. 쓸데없습니다. 
+
+ 
+
+ 
+
+ 
+
+아무튼 위처럼 코드를 추가하면 build 할 때 index.html 파일을 캐싱목록에서 제외해주게 됩니다.
+
+오늘도 service-worker 쉽게 만들어주는 구글신님께 감사인사를 올리도록 합시다. 
+
+참고로 PWA는 구글 앱스토어에 올릴 수 있는 apk 파일로 변환할 수도 있는데 
+
+PWAbuilder 등을 이용하시면 됩니다. 
+----------------------------------------------------------------------
+29강. state 변경함수 사용할 때 주의점 : async
+(짧아서 글로 진행합니다)
+
+ 
+
+ 
+
+ 
+
+ 
+
+자바스크립트의 sync / async 관련 상식
+
+ 
+
+자바스크립트는 일반적인 코드를 작성하면 synchronous 하게 처리됩니다. 번역하면 동기방식 이런데.. 
+
+뭔소리냐면 코드 적은 순서대로 윗줄부터 차례로 코드가 실행된다는 뜻입니다.
+
+실은 거의 모든 프로그래밍 언어들은 무조건 위에서 부터 한줄한줄 실행됩니다. 
+
+ 
+
+예를 들어 
+
+console.log(1+1)
+console.log(1+2)
+console.log(1+3)
+이런 코드는 그냥 위에서부터 한줄한줄 잘 실행됩니다. 그니까 콘솔창에 2, 3, 4 순으로 출력된다는 소리입니다. 
+
+뭔가 당연한 소리를 하고 있습니다. 
+
+ 
+
+ 
+
+ 
+
+자바스크립트는 이상한 함수들을 사용하면 asynchronous 하게 코드실행이 가능합니다. 번역하면 비동기적인데 
+
+ajax, 이벤트리스너, setTimeout 이런 함수들을 쓸 때 그런 현상이 일어납니다.
+
+이런 함수들은 처리시간이 오래걸립니다. ajax를 예로 들면 인터넷 상황이 안좋으면 코드 실행이 오래걸리겠죠? 10초도 걸릴 수 있습니다. 
+
+그래서 ajax 요청하는 코드들은 순차적으로 실행되지 않고 완료되면 실행됩니다.
+
+ 
+
+ 
+
+예를 들어 
+
+console.log(1+1)
+axios로 get요청하고나서 console.log(1+2) 실행해주셈~
+console.log(1+3)
+이런 코드는 2, 4가 바로 출력되고 그 다음에 3이 출력됩니다.
+
+3을 출력하는 코드가 asynchronous 처리를 지원하는 코드라 그렇습니다. 
+
+3을 출력할 때 오래걸리면 완료될 때 까지 잠깐 보류했다가 다른 코드를 먼저 실행시킨다는 소리입니다. 
+
+심지어 ajax요청이 0.00초 걸려도 2, 4가 먼저, 그 다음 3이 출력됩니다.
+
+물리적으로 잠깐 처리가 보류되어서 그렇습니다. 
+
+자바스크립트라는 언어의 특징이자 장점이라고 볼 수 있겠습니다. 
+
+ 
+
+(asynchronous 처리를 지원하는 함수들을 써야 이런 식으로 동작합니다)
+
+ 
+
+ 
+
+ 
+
+ 
+
+리액트의 setState 함수 특징
+
+ 
+
+리액트로 state 만들 땐 이렇게 합니다. 
+
+function App(){
+  let [name, setName] = useState('kim')
+}
+그리고 이제 setName을 사용하시면 name이라는 state를 자유롭게 변경가능합니다. 
+
+setName('park') 이런 식으로 하면 변경된다는 겁니다.
+
+근데 문제는 setName() 같은 state 변경함수들은 전부 asynchronous (비동기적) 으로 처리됩니다.
+
+그니까 setName()이 오래걸리면 이거 제껴두고 다른 밑에 있는 코드들부터 실행한다는 겁니다.
+
+그래서 뭔가 예상치 못한 문제가 생길 수 있습니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+예제 : 버튼을 누르면 2개 기능을 순차적으로 실행하고 싶습니다.
+
+ 
+
+function App(){
+  let [count, setCount] = useState(0);
+  let [age, setAge] = useState(20);
+
+  return (
+    <div>
+      <div>안녕하십니까 전 {age}</div>
+      <button>누르면한살먹기</button>
+    </div>
+  )
+
+}
+ 
+
+위와 같은 코드가 있다고 칩시다.
+
+여러분도 한번 그대로 따라적어보십시오. 그리고 하단처럼 기능개발해보십시오. 
+
+ 
+
+ 
+
+버튼을 누를 때마다
+
+(1) count라는 state를 +1 해야합니다. (버튼누른 횟수 기록용)
+
+(2) age라는 state도 +1 해야합니다. 
+
+(3) 근데 count 가 3 이상이면 더 이상 age라는 state를 1 더하지 말도록 코드를 짜십시오.
+
+버튼 3번 이상 누르면 (count가 3 이상이면) 나이를 그만더하라는 기능입니다. 그니까 22살에서 멈춰야합니다.
+
+이거 코드 어떻게 짜면 되죠? 
+
+버튼에다가 onClick 열고 짜면 될 것 같은데 빨리 짜보십시오. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+저는 이렇게 짰습니다. 잘 되는 것 같지만 뭔가 이상합니다. 
+
+<button onClick={()=>{
+
+  setCount(count+1);
+  if ( count < 3 ) {
+    setAge(age+1);
+  }
+         
+}}>누르면한살먹기</button> 
+1. 버튼을 누르면 count를 +1 해줍니다. 버튼누른 횟수 기록용이니까요.
+
+2. 그리고 만약에 count라는게 3회보다 적으면 age를 +1 해줍니다.
+
+끝입니다. 그러면 아마 count라는게 2일 때 까지 실행해주니까
+
+age는 20에서 22가 되면 더이상 증가하지 않고 멈추겠군요. 
+
+ 
+
+ 
+
+ 
+
+근데 23까지 증가하는데얌? 
+
+뭔가 이상합니다. 
+
+분명 count가 2일 때까지만 age를 +1 해주라고 했습니다.
+
+count가 1일 때 age +1
+
+count가 2일 때 age +1
+
+count가 3이면 age +1 하지마 이런 코드니까요. 
+
+근데 지금은 count가 3일 때도 age +1를 해주고 있는 듯 합니다. 
+
+왜죠? 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+이유는 위에서 제가 말한 async라는 특징 때문에 그렇습니다. 
+
+state 변경함수는 async 하게 처리되는 함수기 때문에 완료되기까지 시간이 오래걸리면 제쳐두고 다음 코드를 실행해줍니다.
+
+그래서 코드를 해석해보자면 
+
+① 버튼을 세번째 누르면 setCount(count+1); 이걸 실행해서 count를 3을 만들어줍니다.
+
+② 근데 count를 3으로 만드는건 오래걸리니까 제껴두고 if ( count > 3 ) {} 이걸 실행합니다.
+
+③ 이 때 count는 아직 2라서 if문 안의 setAge(age+1)이 잘 동작하고 있는겁니다.
+
+ 
+
+이 모든 문제는 setCount()가 async 함수라서 그렇습니다. 
+
+async함수는 오래걸리면 제껴두고 다음 줄 코드부터 실행하니까 그렇습니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+그래서 저렇게 state1 변경하고나서 state2를 변경하는 코드를 작성할 땐 가끔 문제가 생깁니다.
+
+이걸 정확히 sync스럽게, 순차적으로 실행하고 싶을 때 해결책은 useEffect입니다. 
+
+useEffect를 잘 작성하면 특정 state가 변경될 때 useEffect를 실행할 수 있다고 하지 않았습니까.
+
+알아서 해결해보십시오.
+
+
+
+전 어떻게 해결했냐면
+ 
+
+App 컴포넌트안에 useEffect를 만들어봅니다.
+
+ 
+
+useEffect(()=>{
+    
+ }, [count]) 
+ 
+
+ 
+
+useEffect는 컴포넌트가 렌더링/재렌더링될 때 실행되는 함수랬습니다.
+
+근데 뒤에다가 [] 대괄호안에 state를 집어넣으면
+
+state가 변경되면 이 코드 실행해주세요~ 라는 뜻으로도 사용가능합니다.
+
+그래서 이거 쓰시면 아까 말했던 문제를 해결할 수 있습니다. 
+
+1. count라는 state가 변경되고나서 2. age도 변경해주세요~ 이런 식으로 순차적으로 코드를 실행할 수 있다는 것입니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+① 그래서 일단 버튼을 이렇게 변경했습니다. 
+
+<button onClick={()=>{
+
+  setCount(count+1);
+
+}}>누르면한살먹기</button> 
+count라는 것만 +1 되게 바꿨습니다. 
+
+ 
+
+ 
+
+ 
+
+② 그 다음에 나머지 age를 +1 하는 코드는 useEffect안에 개발해놨습니다.
+
+ 
+
+useEffect(()=>{
+  if ( count < 3 ) {
+    setAge(age+1)
+  }
+ }, [count]) 
+이런 식입니다.
+
+그러면 useEffect는 count라는 state가 변경되고나서 실행이 되며
+
+그럼 if문으로 count라는 state값을 제대로 의도대로 측정해볼 수 있는 겁니다.
+
+ 
+
+ 
+
+ 
+
+③ 근데 문제는 useEffect 저렇게 써도 처음 페이지 로드될 때도 한번 실행이 되기 때문에 의도치 않은 버그가 발생할 수 있습니다. 
+
+그래서 처음 페이지 로드시 useEffect 실행을 막는 코드를 알아서 검색해서 적용하셔도 되고
+
+아니면 count라는 state를 또 활용하셔도 됩니다. 
+
+count가 0일 때는 (페이지 처음 로드되었을 때는) 내부 코드를 동작시키지 않으면 될듯요
+
+ 
+
+ 
+
+useEffect(()=>{
+  if ( count != 0 && count < 3 ) {
+    setAge(age+1)
+  }
+ }, [count]) 
+이런 식입니다. count가 0이 아닐 때만 실행하라고 조건을 추가해줬습니다.
+
+이제 버튼 누르면 22살까지만 잘 증가합니다.
+
+ 
+
+ 
+
+ 
+
+문제해결! 이지만
+
+- 혹은 count와 age를 동시에 한 곳의 state에 array/object자료형으로 집어넣어놓어보거나 
+
+- 하나는 굳이 state로 만들지 않고 일반 var 변수로 만드는 것도 쉽게 해결할 수 있을듯요? 변경시 HTML 자동 재렌더링이 필요한 변수들은 state로 만들라고 했지않습니까. 
+----------------------------------------------------------------------
+30강.Node+Express 서버와 React 연동하려면 
+
+
+
+리액트를 내가 만든 서버에서 사용하고 싶으면 어떻게 하는지 알아봅시다. 
+
+이번 강의 빠른 요약부터 하자면
+
+서버는 유저가 메인페이지로 접속하면 리액트로 만든 html 파일을 보내주면 그게 연동 끝입니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+서버는 누가 html 파일 요청하면 보내주는 간단한 프로그램입니다.
+
+ 
+
+진짜로 서버는 별거 아니고 어떤 고객이 codingapple.com으로 접속하면 거기맞는 html을 보내주는 기계일 뿐입니다.
+
+임시 서버를 Nodejs + Express로 쉽게 만들어봅시다. 
+
+ 
+
+1. 구글검색해서 nodejs 설치
+
+2. 작업폴더만들고 에디터로 오픈
+
+3. server.js 파일을 만들고 아래 코드 작성
+
+ 
+
+const express = require('express');
+const path = require('path');
+const app = express();
+
+app.listen(8080, function () {
+  console.log('listening on 8080')
+}); 
+ 
+
+4. 터미널을 열어서 npm init -y 입력 
+
+5. npm install express 이것도 입력  
+
+ 
+
+이러면 웹서버만들기 끝입니다.
+
+서버 미리보기 띄우고 싶으면 터미널열어서 nodemon server.js를 입력합니다.
+
+nodemon 이런게 없으면 node server.js 입력해야합니다.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+리액트는 HTML을 이쁘게 만들어주는 툴입니다. 
+
+ 
+
+왜 쓰는지도 모르고 리액트 배우는 사람들이 많은데 
+
+리액트는 대단한거 아니고 앱처럼 부드럽게 동작하는 html을 만들고 싶을 때 사용하는 툴입니다.
+
+ 
+
+ 
+
+
+
+ 
+
+▲ 카톡 같은 모바일 앱 생각해보면
+
+그런 앱들은 새로고침 없이 페이지 전환이 샥샥 되죠?
+
+그런 식으로 새로고침할 필요없이 부드럽게 전환되는 사이트를 만들고 싶을 때 리액트 쓰면 됩니다. 
+
+그런 사이트를 전문용어로 Single Page Application 이라고 합니다. 
+
+쌩자바스크립트로도 가능한데 코드 길어져서 귀찮아서 리액트 쓰는 것임
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+리액트 프로젝트 만드는 법 
+
+ 
+
+지금 하고 있는 server.js 옆에 서브폴더로 리액트 프로젝트를 하나 만들어봅시다. 
+
+0. 구글 검색해서 nodejs 최신버전 설치하고 
+
+1. 터미널에 npx create-react-app 프로젝트명 을 입력합니다. 프로젝트명 자유작명하셈 다만 작명할 때 띄어쓰기하지마십시오. 
+
+2. 그럼 서브폴더에 리액트 프로젝트가 생성되는데 그걸 다시 에디터로 오픈합니다.
+
+3. 리액트 문법으로 열심히 만들고 싶은걸 개발해봅니다. 개발시 코드를 미리보고 싶으면 npm run start 를 입력합니다.   
+
+4. 개발 완료되면 리액트 프로젝트 터미널에 npm run build를 입력하면 리액트 완성본 html 파일이 build 폴더내에 생성됩니다.
+
+그 html 파일을 서버에서 필요할 때 유저에게 보내주면 됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+리액트로 만든 HTML 전송하는법 
+
+ 
+
+무슨 서버언어를 쓰든간에 
+
+리액트로 개발한 html파일을 고객에게 보내주면 그게 서버랑 리액트 합치는거 끝입니다. 
+
+ 
+
+ 
+
+
+
+ 
+
+▲ 리액트로 개발을 다 마친 후 npm run build 라는걸 하시면 build라는 폴더가 생기고 안에 html css js 파일이 생성됩니다.
+
+그 중에 html 파일은 사진에 보이는 index.html 파일 딱 하나입니다. 
+
+왜냐면 기본적인 리액트 프로젝트는 SPA라는걸 만들어주는데
+
+SPA는 기본적으로 html 파일 하나만 씁니다. 
+
+ 
+
+ 
+
+ 
+
+이걸 서버에다가 이렇게 코드를 짜면 
+
+(server.js)
+어떤 놈이 메인페이지로 접속하면 저거 리액트로 build한 index.html 보내주셈
+리액트와 Nodejs 서버 합치기 끝입니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+▲ 예를 들면 폴더구조를 이렇게 만들었다고 칩시다.
+
+server.js 옆에다가 react-project라는 폴더명으로 리액트 프로젝트를 하나 만든겁니다. 
+
+그럼 안에 build한 파일들이 있겠죠?
+
+ 
+
+이렇게 되어있는 경우 코드를 어떻게 짜냐면  
+
+(server.js에 추가)
+app.use(express.static(path.join(__dirname, 'react-project/build')));
+
+app.get('/', function (요청, 응답) {
+  응답.sendFile(path.join(__dirname, '/react-project/build/index.html'));
+});
+express.static이라는걸 쓰시면 특정 폴더안의 파일들을 static 파일로 고객들에게 잘 보내줄 수 있습니다. 
+
+그럼 아마 build 폴더 안의 css js img 파일들도 잘 사용할 수 있겠죠. 
+
+그리고 늘 하던대로 누군가 / 페이지로 접속하면 리액트로 만든 html 보내주는겁니다.
+
+그럼 localhost:8080 으로 접속하시면 리액트 프로젝트가 나옵니다. 합치기 끝
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Q. 리액트에서 라우팅을 담당하는 경우?
+
+ 
+
+서버에서도 라우팅을 담당해줄 수 있고 
+
+리액트에서도 라우팅을 담당해줄 수 있습니다. 리액트는 react-router-dom을 설치하면 됩니다.
+
+그럼 리액트상에서 누가 /list 로 접속하면 글목록 보여주고 /mypage 접속하면 마이페이지도 보여줄 수 있습니다. 
+
+ 
+
+근데 리액트 라우터로 /list 페이지를 개발해놨는데 실제 localhost:8080/list 로 직접 URL 입력해서 접속하면 아무것도 안뜹니다. 
+
+왜냐면 브라우저 URL창에 때려박는건 서버에게 요청하는거지 리액트 라우터에게 라우팅 요청하는게 아니기 때문입니다. 
+
+이걸 리액트가 라우팅하게 전권을 넘기고 싶다면 server.js 에 다음과 같은 코드를 밑에 추가하십시오. 
+
+ 
+
+(server.js에 추가)
+
+app.get('*', function (요청, 응답) {
+  응답.sendFile(path.join(__dirname, '/react-project/build/index.html'));
+});
+별표 * 라는 것은 모든 문자라는 뜻입니다. 
+
+"고객이 URL란에 아무거나 입력하면 걍 리액트 프로젝트나 보내주셈"이라는 뜻인데 이렇게 하면 리액트 라우팅 잘됩니다. 
+
+이 코드는 항상 가장 하단에 놓아야 잘됩니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Q. 리액트에서 DB데이터 보여주고 싶으면? 
+
+ 
+
+예를 들어서 DB에서 글목록 데이터를 꺼내서 HTML로 보여주고 싶은 경우
+
+server-side rendering / client-side rendering 둘 중 하나 선택하면 됩니다. 
+
+ 
+
+server-side rendering은 html을 서버가 만들어서 보내주는 겁니다. 
+
+nodejs 강의처럼
+
+1. DB에서 데이터 뽑아서
+
+2. 글목록.html 파일에 꽂아넣고
+
+3. 그 html 파일을 서버에서 보내주는 것임 
+
+ 
+
+client-side rendering은 html을 리액트가 브라우저안에서 만드는 겁니다.
+
+1. 리액트가 서버에 GET요청으로 DB데이터를 가져와서
+
+2. 그걸 html로 만들어서 보여주는 것임 
+
+ 
+
+ 
+
+리액트를 쓰는 경우 보통 client-side rendering을 합니다.
+
+그래서 DB에 있는 상품목록을 가져와서 리액트에서 보여주고 싶으면 
+
+이런 식으로 코드를 짭니다. 
+
+1. 서버는 누군가 /product로 GET요청을 하면 DB에서 데이터 꺼내서 보내주라고 API를 짜놓습니다. 
+
+2. 리액트는 상품목록을 보여주고 싶을 때 서버 /product 주소로 GET요청 날리면 됩니다.
+
+3. 그럼 데이터 받아오겠죠? 그걸 가지고 html에 집어넣든 맘대로 개발하면 됩니다. 
+
+ 
+
+그래서 리액트는 서버와의 통신은 거의 ajax로 진행합니다.
+
+POST요청, 로그인해서 세션만들기 이런것도 ajax로 잘됩니다. 
+
+ 
+
+ 
+
+근데 nodejs 서버파일 상단엔
+
+app.use(express.json());
+var cors = require('cors');
+app.use(cors());
+이 코드 넣고 시작하셔야 리액트와 nodejs 서버간 ajax 요청 잘됩니다. 
+
+이거 쓰려면 서버프로젝트 터미널에서 npm install cors 설치해야합니다. 
+
+express.json() 은 유저가 보낸 array/object 데이터를 출력해보기 위해 필요하고
+
+cors는 다른 도메인주소끼리 ajax 요청 주고받을 때 필요합니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Q. 리액트프로젝트 코드 수정할 때 마다 build 작업을 해야하나요? 
+
+ 
+
+그럴 필요 없습니다.
+
+그건 나중에 사이트를 aws, google cloud 이런 곳에 발행할 때만 한 번 해주면 됩니다. 
+
+평소에 개발할 땐 
+
+리액트도 localhost로 미리보기 띄워놓고, 서버도 localhost로 미리보기를 띄워두고 개발 진행하면 별 문제 없습니다.
+
+ 
+
+- 다만 리액트 -> 서버 ajax 요청시 /product 이렇게 말고 http://서버주소/product 잘 입력하고
+
+- 서버에 cors 옵션 잘 켜놓으면 됩니다. 
+
+ 
+
+ 
+
+서버주소 입력하는게 귀찮으면  
+
+리액트에서 package.json이라는 파일을 열어서 proxy라는 부분 설정을
+
+서버 미리보기 띄우던 localhost:어쩌구 주소로 설정해주면 됩니다. 
+
+그러면 리액트에서 ajax 요청 대충해도 localhost:어쩌구 주소로 ajax 요청을 알아서 보내줍니다. 
+
+https://create-react-app.dev/docs/proxying-api-requests-in-development/
+
+이걸 참고합시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+서브디렉토리에 리액트앱 발행하고 싶은 경우 
+
+ 
+
+지금 메인페이지가 리액트앱인데 그거 말고
+
+/react 이렇게 접속하면 리액트로 만든 html
+
+/ 이렇게 접속하면 public 폴더에 있던 그냥 main.html
+
+보여주고 싶은 경우 어떻게 하냐면 
+
+ 
+
+(server.js)
+
+app.use( '/', express.static( path.join(__dirname, 'public') ))
+app.use( '/react', express.static( path.join(__dirname, 'react-project/build') ))
+
+app.get('/', function(요청,응답){
+  응답.sendFile( path.join(__dirname, 'public/main.html') )
+}) 
+app.get('/react', function(요청,응답){
+  응답.sendFile( path.join(__dirname, 'react-project/build/index.html') )
+})
+▲ server.js 라우팅을 이렇게 바꿔주고 
+
+ 
+
+ 
+
+(리액트프로젝트 내의 package.json)
+{
+  "homepage": "/react",
+  "version": "0.1.0",
+  ... 등
+} 
+▲ 리액트 프로젝트 내의 package.json에 homepage라는 항목을
+
+여러분이 발행을 원하는 서브디렉토리명으로 새로 기입해주면 됩니다. 
+
+그럼 방금 server.js 에서 /react 접속시 리액트 프로젝트보내고 
+
+/ 접속시 일반 html 파일 보내라고 했으니 정말 그렇게 됩니다. 
+
+딱히 쓸 일은 별로 없습니다. 
+
+----------------------------------------------------------------------
+31강. 
+
+
+ 5 분
+React 강의 나가는 말
+ 
+
+
+
+ 
+
+이것은 저의 생각일 뿐인데 
+
+학생들이 빨리 하산할 수록 좋은 프로그래밍강의가 아닐까요 
+
+프로그래밍은 뭐 모범답안 달달 외워서 하는 시험공부 그런게 아니기 때문입니다. 
+
+ 
+
+프로그래밍은 비유하자면 레고조립같은 것인데 
+
+그냥 대충 블록들의 사용법을 익히면 누구나 레고로 집을 지을 수 있듯
+
+React 이런 것도 사용법만 조금 익혀주면 누구나 멋진 사이트 완성할 수 있습니다.
+
+ 
+
+“레고로 집만들기” 그런 강의를 꼭 들어야 집을 만들 수 있는건 아닙니다. 레고 사용법만 알면 누구나 가능
+
+“React로 쇼핑몰만들기” 이런 강의를 꼭 들어야 쇼핑몰을 만들 수 있는건 아닙니다. 
+
+리액트 사용법만 알면 누구나 가능 
+
+그래서 여태 사용법과 용도를 많이 가르쳐드린 것이고 이제 가르칠게 없으니 강의 그만 듣도록 합시다
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+1. 강의 다 들었다고 리액트 마스터가 된게 아님
+
+ 
+
+모든 리액트 강의에 전부 체크마크 했다고 "이제 리액트 마스터함 ㅅㄱ" 라고 생각하시면 안됩니다. 
+
+강의 들으며 제 코드 따라치는건 복붙이지 공부가 아닙니다.  
+
+직접 여러분만의 프로젝트들을 손수 만들어보시며 손에 익게 만들어야합니다. 
+
+ 
+
+원리위주의 강의다보니 쇼핑몰을 만들었다고 해도 뼈대밖에 없었습니다. 
+
+(그래서 이걸 포트폴리오에 대충 넣으시면 안됩니다)
+
+쇼핑몰의 기능을 추가하거나 완성도를 높이는 걸 직접 마무리 느낌으로다가 해보실 수도 있고
+
+(가짜 결제기능도 추가해서 결제 누르면 재고가 1 감해지거나.. 무통장입금 계좌 표시해주는 그런 것도 어떨까요)
+
+풀스택 개발에 관심있으시면 Node.js + Express 같은걸로 쉽게 서버기능까지 추가해볼 수도 있겠으며  
+
+다른걸 만들어보고 싶으면 타 사이트를 카피해보십시오. 
+
+저런 사이트를 리액트로 만들려면 어떻게 해야할지 생각해보고 구현해봅시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+2. 나 혼자 사이트를 직접 만들라니 시작 어떻게할지 모르겠쪄요
+
+ 
+
+리액트 쓴다고 해서 웹개발을 옛날과 다르게 하고 그런게 아닙니다.
+
+HTML CSS 평소에 짜던 대로 페이지 쭉 만들어나가면 됩니다. 
+
+ 
+
+- 근데 중간에 div 여러개를 한 단어로 축약하고 싶으면 컴포넌트로 줄여보고 
+
+- 페이지를 나누고 싶으면 라우터 쓰시고 
+
+- 자주 바뀌는 데이터를 꽂아넣으려면 state에 담았다가 꽂아넣으시고
+
+- 근데 자식컴포넌트에 꽂아야한다면 props 문법 쓰고
+
+- 데이터를 서버에서 받아와야한다면 서버로 GET요청 하고나서 state에 집어넣으시고 
+
+- 모달창, 탭 이런 UI가 필요하면 그 UI만드는 법 따라하시고
+
+이게 끝인데얌 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+3. 기능을 혼자 못만들겠어요 리액트 더 공부해야할까요? 
+
+ 
+
+이런 질문을 자주 받는데
+
+"Q. 스크롤 내려도 상단고정되는 navbar 컴포넌트를 만들고 싶은데 모르겠어요. 리액트를 덜 공부한 것일까요?"
+
+그건 리액트를 못하는게 아니라 HTML CSS를 못하는 것입니다
+
+ 
+
+"Q. 상품 가나다순 정렬기능을 못만들겠어요 리액트를 덜 공부한 것일까요?"
+
+그건 리액트를 못하는게 아니라 자바스크립트를 못하는 것입니다 
+
+ 
+
+그냥 JavaScript로 array 자료 정렬을 못하는 것일 뿐이니 
+
+자바스크립트 기초 실력이 흔들흔들 하시다면 그것 부터 빨리 공부하십시오.
+
+리액트 좋다좋다 거려서 자바스크립트 모른 채로 리액트부터 시작해서 요즘 JS 기초학력 저하현상이 심각합니다. 
+
+리액트는 HTML + JavaScript 웹개발을 도와주는 역할일 뿐임을 명심합시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+4. 심화 강의 만들어주세요 
+
+ 
+
+시중 강의들 보면 
+
+“React MongoDB Node.js로 인스타그램 클론코딩”
+
+이런 사람들 현혹하는 120시간짜리 강의 저도 똑같이 심화과정 40만원에 개설하면 물론 제가 부자가 되겠지만
+
+저런거 들어봤자 의미없습니다. 나중에 돈 급해지면 만들 것임 
+
+ 
+
+ 
+
+굳이 저런거 안만드는 이유는
+
+1. 리액트로 더 이상 가르칠게 없습니다 저도 마지막에 딱히 할 게 없어서 리액트 외적인 localStorage 가르치는 것좀 보셈
+
+나머지 리액트 내용들은 핵심이 아니라 필요할 때 검색하면 배울 수 있는 수준입니다. 
+
+아니면 외부 리액트 라이브러리들인데 그런건 맨날 바뀌고 유통기한있습니다. 
+
+2. 실제 서비스는 강의 따라한다고 만들 수 있는 사이즈가 아닙니다. 흔한 쇼핑몰 관리자 화면보면 60~70페이지정도 되는데 어떻게 다 만들어볼 것임 아마 700강 들어야할 듯  
+
+3. 어짜피 클론프로젝트 이런 식으로 진행하는 강의는 그냥 받아쓰기 실력만 늡니다.
+
+4. 옷 파는 쇼핑몰만 만들어봤는데 실제 취직하고 나서 청소 서비스 파는 쇼핑몰을 만들라고 하면 어쩔겁니까.
+
+결국 혼자서도 직접 뭔가 만드는 법을 연습하셔야합니다. 사용법만 알면 누구나 만들 수 있습니다 
+
+그래도 모르겠으면 게시판 ㄱㄱ
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+5. 개발자는 항상 공부해야합니다. 
+
+ 
+
+리액트 하나 해봤다고 개발 잘하는 사람이 될 수는 없습니다.  
+
+리액트는 그냥 html css js 코드짜는거 도와주는 툴일 뿐이고 
+
+ 
+
+HTML5 이후에 추가된 웹개발 기본 기술들을 소개하자면 
+
+- FileReader API 
+
+- 로컬스토리지
+
+- IndexedDB
+
+- Web worker
+
+- Geolocation
+
+- Canvas
+
+- drag & drop & touch 이벤트 
+
+- fetch API
+
+- CSS grid, flex 레이아웃  
+
+- Web audio/video
+
+등 여러가지가 있습니다. 
+
+리액트랑 자바스크립트 문법 잘 안다고 웹개발 잘하는게 아니라
+
+항상 브라우저 기본 기능과 API를 잘 알아야 실제 웹개발을 잘하는 사람이 됩니다.
+
+기타 async await promise iterator 같은 ES6 문법들도 많으니
+
+웹개발 실력을 향상시키고 싶으면 리액트 말고 많은 주변 것들도 공부해보도록 합시다. 
+
+근데 그런것들은 멋진 개인프로젝트 하다보면 자연스레 배우게됨 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+(▲리액트 만든 나쁜놈)
+
+ 
+
+ 
+
+리액트의 구현원리 이런 것도 궁금하지 않으십니까. 
+
+- 구글 페이스북 본사 근무하는 천재 개발자들이 리액트나 앵귤러를 어떻게 만들었는지 
+
+- 리액트로 함수를 만들었을 뿐인데 왜 그걸 <컴포넌트/> 이렇게 박아넣을 수 있는지 
+
+- props 문법은 어떻게 코드를 짜서 구현한건지
+
+- 리액트 컴포넌트는 대체 어떤 원리로 브라우저에서 렌더링이 되는건지 
+
+궁금하지 않으십니까.
+
+ 
+
+그런 동작원리 같은걸 알면 응용도 할 수 있고 심지여 여러분이 리액트 비슷한걸 만들어낼 수도 있습니다. 
+
+하지만 기초 기술 만드는건 등따숩고 배부른 나라가 잘하니까 미국 놈들에게 맡기도록 합시다.
+
+한국은 먹고살기 힘드니까 빨리 기술만 슉슉 배워서 돈벌러 나가야합니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+다른 툴도 재밌습니다. 
+
+Angular는 기타 라이브러리 설치안해도 모든걸 내장기능으로 끝낼 수 있는 역사와 전통의 웹앱 라이브러리입니다.  
+
+Vuejs는 리액트랑 같은 기능을 제공하는데 모든게 더 쉽습니다. Redux 이런것도 Vuex 를 쓰는데 100만배 더 쉬움 
+
+아니면 리액트 문법을 그대로 써서 모바일 앱을 만들어주는 React Native는 어떠십니까.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+ 
+
+6. 미래를 생각하는 건 어떨까요.
+
+ 
+
+5년 후에도 리액트 쓸 것 같습니까. 
+
+신규 프로젝트는 리액트 말고 1. 더 간단하고 2. 리액트보다 성능좋고 3. 코드 정리도 쉬운
+
+Vue, Svelte, SolidJS 이런 라이브러리를 도입하는 곳들이 많습니다. 
+
+아니면 웹과 앱을 동시에 개발할 수 있는 툴이 나오긴 했는데 
+
+Flutter라는게 그걸 지향하고 있긴 한데 매몰비용 때문인지 아직 대중화는 안되었습니다. 
+
+ 
+
+외부 라이브러리도 변화가 잦은데
+
+신규 프로젝트는 Redux 복잡하고 어려워서 Zustand, Jotai 이런거 쓰는 사람들이 많습니다. 
+
+근데 취업이 목적이면 React + Redux나 합시다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+자바스크립트의 자료형부분을 업그레이드 해서 쓸 수 있는 타입스크립트가 여전히 개발자들에게 인기를 끌고 있습니다. 
+
+Vue 3버전부터는 타입스크립트 기본 지원이고 
+
+Angular는 이미 오래 전부터 타입스크립트 강제로 쓰라고 요구하고 
+
+React 주요 라이브러리도 타입스크립트를 지원하고 있습니다. 
+
+ 
+
+타입스크립트를 왜 쓰냐면 ..
+
+실은 자바스크립트는 프로그래밍언어라기보다 쪼그만한 스크립트 언어라서 이걸로 코드 1천줄 1만줄 짜다보면 단점이 눈에 보입니다. 
+
+- 원래 자바스크립트 자체가 자료의 형식이 자유로워서 예상치 못한 버그가 발생하고
+
+- props로 string 자료형이 들어와야할 곳에 이상한 array가 들어와서 버그를 일으키기도 합니다. 
+
+- 심지어 기본 에러 메세지도 추상적이고 그지같습니다. 
+
+ 
+
+이런 버그를 예방하기 위해 type 체크하는 코드를 잔뜩 써서 자료형을 체크하곤 하지만 
+
+이게 귀찮다면 그냥 타입스크립트를 쓰면 됩니다.
+
+이 변수에 무슨 자료형이 들어와야할지 정확히 미리 정의할 수 있기 때문에 저런 귀찮고 쓸데없는 버그를 미연에 방지할 수 있습니다.
+
+다만 약간 코드가 암호문같아집니다. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+잡소리는 그만하고 일단 리액트로 만들고 싶었던 걸 만들어보도록 합시다. 
+
+홀로서는데 좋은 시작점이 될듯요 
+
+ 
+
+ 
+
+ 
+
+ 
+
+개발욕구를 자극하기 위한 리액트 사이트 몇가지 보여드리면 
+
+ 
+
+(수강생 작) 완벽한 하루 : 목표 달성 앱 https://jioo-developer.github.io/
+
+(수강생 작) Firebase 더한 Velog https://hopeful-brown-a1e560.netlify.app/
+
+리액트로 만든 테트리스 https://chvin.github.io/react-tetris/ (spacebar, 방향키 이용)
+
+간단한 영화정보 검색기 https://skempin.github.io/reactjs-tmdb-app/
+
+파일 버전관리 툴인 git 문법 배우기 앱 https://learngitbranching.js.org/
+
+iOS 스타일 계산기 https://codepen.io/mjijackson/full/xOzyGX
+
+가짜 주식 트레이딩 앱 http://web-demo.adaptivecluster.com/
+
+캘린더 UI http://clauderic.github.io/react-infinite-calendar/
+
+스케치패드 http://svrcekmichal.github.io/react-sketchpad/ 
+
+솔리테르 Solitaire 게임 http://pl12133.github.io/react-solitaire/
+
+ 
+
+(남의 사이트이기 때문에 링크는 언제든 짤릴 수 있습니다)

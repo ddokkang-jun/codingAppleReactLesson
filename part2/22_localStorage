@@ -1,0 +1,155 @@
+localStorage로 만드는 최근 본 상품 기능 1
+
+
+
+
+로컬스토리지 사용법 
+
+4:38 로컬스토리지에 object 자료를 저장하고싶으면 
+
+9:26 최근본상품 UI 만들기 가이드 
+
+
+
+
+새로고침하면 모든 state 데이터는 리셋됩니다.
+
+왜냐면 새로고침하면 브라우저는 html css js 파일들을 첨부터 다시 읽기 때문입니다.
+
+이게 싫다면 state 데이터를 서버로 보내서 DB에 저장하거나 하면 됩니다.
+
+내가 서버나 DB 지식이 없다면 localStorage를 이용해도 됩니다.
+
+유저의 브라우저에 몰래 정보를 저장하고 싶을 때 쓰는 공간입니다. 
+
+
+
+
+
+
+
+
+▲ 크롬개발자 도구에서 Application 탭 들어가면 구경가능합니다.
+
+- 사이트마다 5MB 정도의 문자 데이터를 저장할 수 있습니다.
+
+- object 자료랑 비슷하게 key/value 형태로 저장합니다.
+
+유저가 브라우저 청소를 하지 않는 이상 영구적으로 남아있습니다.
+
+
+밑에 있는 Session Storage도 똑같은데 브라우저 끄면 삭제됩니다. 
+
+
+
+
+
+
+localStorage 문법 
+
+
+그냥 js 파일 아무데서나 다음 문법을 쓰면
+
+localStorage에 데이터 입출력할 수 있습니다.
+
+
+
+localStorage.setItem('데이터이름', '데이터');
+localStorage.getItem('데이터이름');
+localStorage.removeItem('데이터이름')
+차례로 추가, 읽기, 삭제 문법입니다.
+
+진짜 저장되었는지 application 탭에서 확인해보십시오.
+
+
+
+
+
+
+
+
+
+localStorage에 array/object 자료를 저장하려면
+
+
+문자만 저장할 수 있는 공간이라 array/object를 바로 저장할 수는 없습니다. 
+
+강제로 저장해보면 문자로 바꿔서 저장해주는데 그럼 array/object 자료가 깨져서 저장됩니다.
+
+그래서 편법이 하나 있는데 array/object -> JSON 이렇게 변환해서 저장하면 됩니다. 
+
+JSON은 문자취급을 받아서 그렇습니다. 
+
+JSON은 그냥 따옴표친 array/object 자료입니다. 
+
+
+
+localStorage.setItem('obj', JSON.stringify({name:'kim'}) );
+JSON.stringify() 라는 함수에 array/object를 집어넣으면 그 자리에 JSON으로 변환된걸 남겨줍니다.
+
+그래서 위처럼 코드짜면 저장가능합니다. 
+
+"{"name":"kim"}" 이런거 저장될듯 
+
+
+
+
+var a = localStorage.getItem('obj');
+var b = JSON.parse(a)
+당연히 데이터를 다시 꺼내면 JSON이 나옵니다. 
+
+JSON -> array/object 변환하고 싶으면 
+
+JSON.parse()를 쓰면 되겠습니다.
+
+
+
+
+
+
+
+
+
+최근 본 상품 UI 기능 만들기 
+
+
+메인페이지에 최근 본 상품을 보여주는 성가신 UI를 만들어봅시다. 
+
+근데 사이트를 재접속해도 잘 보여야하기 때문에 localStorage를 활용해봅시다.  
+
+그래서 다음 시간까지 만들어오면 되는데
+
+하지만 여러분에 대한 기대치가 높지 않기 때문에 가장 쉬운거 하나만 해오면 됩니다. 
+
+상세페이지 들어가면 현재 페이지에 있는 상품 id를 localStorage에 저장되게 만들어오면 됩니다. 
+
+
+
+
+
+
+저장할 땐 array 자료형을 활용합시다.
+
+만약에 0번 1번 상품을 보았다면 [0,1] 이런 데이터가 localStorage에 저장되게 하면 되겠군요.
+
+그리고 시간남으면 메인페이지에서 이 데이터를 가지고
+
+최근 본 상품 UI도 자유롭게 만들어보십시오.
+
+
+
+누가 내 사이트로 접속시 localStorage에 [ ] 가 하나 있어야
+
+자료 추가같은게 쉬울 것 같습니다. 
+
+
+
+
+function App() {
+
+  useEffect(()=>{
+    localStorage.setItem('watched', JSON.stringify( [] ))
+  },[]) 
+
+}
+그래서 이런코드 하나 넣고 시작하면 편리할듯요 

@@ -1,0 +1,231 @@
+styled-components 쓰면 CSS 파일 없어도 되는데
+
+
+
+
+
+
+styled-components 사용법 
+
+6:21 props 이용하면 컴포넌트 재활용 가능하댔음 
+
+9:48 물론 장점만 있는게 아님 
+
+
+
+
+컴포넌트가 많은 경우 스타일링을 하다보면 불편함이 생기는데
+
+1. class 만들어놓은걸 까먹고 중복해서 또 만들거나
+
+2. 갑자기 다른 이상한 컴포넌트에 원하지않는 스타일이 적용되거나
+
+3. CSS 파일이 너무 길어져서 수정이 어렵거나
+
+이런 경우가 있습니다.
+
+
+그래서 스타일을 바로 입혀서 컴포넌트를 만들어버릴 수도 있는데
+
+styled-components 라는 인기 라이브러리를 설치하여 이용하시면 됩니다.
+
+
+
+
+일단 설치부터 해봅시다
+
+
+터미널 열어서 
+
+npm install styled-components
+
+해주면 됩니다.
+
+
+import styled from 'styled-components'
+그리고 사용하고 싶은 컴포넌트 맨위에 이런걸 import 해와야합니다.
+
+Detail.js 파일 위에 ▲ 위처럼 입력해서 import 해오십시오. 그럼 셋팅 끝 
+
+
+
+
+
+
+styled-components 기본적인 사용법 
+
+
+이 라이브러리를 이용하면 컴포넌트를 만들 때 스타일을 미리 주입해서 만들 수 있습니다.
+
+제가 한번 예시로 padding : 20px인 div박스를 styled-components를 이용해 만들어보겠습니다.
+
+
+
+
+import styled from 'styled-components';
+
+let Box = styled.div`
+  padding : 20px;
+  color : grey
+`;
+let YellowBtn = styled.button`
+  background : yellow;
+  color : black;
+  padding : 10px;
+`;
+
+function Detail(){
+  return (
+    <div>
+      <Box>
+        <YellowBtn>버튼임</YellowBtn>
+      </Box>
+    </div>
+  )
+}
+
+1. <div>를 하나 만들고 싶으면 저렇게 styled.div 라는걸 사용하면 됩니다.
+
+<p> 만들려면 styled.p 이런 식임 
+
+2. 오른쪽에 `` backtick 기호를 이용해서 CSS 스타일을 넣을 수 있습니다. 
+
+3. 그럼 그 자리에 컴포넌트를 남겨주는데 변수에 저장해서 쓰면 됩니다. 
+
+
+
+장점1. CSS 파일 오픈할 필요없이 JS 파일에서 바로 스타일넣을 수 있습니다.
+
+장점2. 여기 적은 스타일이 다른 JS 파일로 오염되지 않습니다. 원래 그냥 CSS파일은 오염됩니다.
+
+장점3. 페이지 로딩시간 단축됩니다.
+
+왜냐면 저기 적은 스타일은 html 페이지의 <style>태그에 넣어줘서 그렇습니다. 
+
+
+
+
+
+
+
+실은 일반 CSS 파일도 오염방지 가능
+
+
+여러분이 App.css 파일을 만들어서 App.js에서 import해서 쓴다고 해도 
+
+거기 적은 클래스명들은 Detail.js까지 사용가능합니다. (오염됨)
+
+프로젝트 사이즈가 작을 땐 편리하겠지만 사이즈가 커지면 관리하기 힘들어집니다. 
+
+
+그럴 땐 styled-components 써도 되지만 그냥 CSS파일에서도 다른 JS 파일에 간섭하지 않는 '모듈화' 기능을 제공하는데
+
+컴포넌트명.module.css
+
+이렇게 CSS 파일을 작명하면 됩니다.
+
+그리고 컴포넌트명.js 파일에서 import 해서 쓰면 그 스타일들은 컴포넌트명.js 파일에만 적용됩니다.
+
+
+
+
+
+
+추가 문법 : props로 재활용가능
+
+
+여러가지 비슷한 UI가 필요한 경우 어쩌죠?
+
+예를 들어 지금 노란 버튼말고 오렌지색 버튼이 필요해지면?
+
+물론 예전 강의를 잘 되살려보면 props 이용하면 기존 컴포넌트를 살짝씩 다르게 이용할 수 있다고 했습니다.
+
+그래서 여기도 props 문법 지원합니다. 
+
+
+
+import styled from 'styled-components';
+
+let YellowBtn = styled.button`
+  background : ${ props => props.bg };
+  color : black;
+  padding : 10px;
+`;
+
+function Detail(){
+  return (
+    <div>
+        <YellowBtn bg="orange">오렌지색 버튼임</YellowBtn>
+        <YellowBtn bg="blue">파란색 버튼임</YellowBtn>
+    </div>
+  )
+}
+
+${ props => props.bg } 이게 styled-components 에서의 props 뚫는 문법입니다.
+
+bg부분에 자유롭게 작명하면되고
+
+이제 컴포넌트 쓸 때 bg라는 props를 입력가능합니다.
+
+
+물론 CSS 쓴다고 이게 불가능한건 아닙니다. class 더 만들면 되는 것임
+
+
+
+Q. 저거 ${ } 이거 무슨 문법임?
+
+A. 자바스크립트 `` 백틱 따옴표 안에 적어도 문자를 만들 수 있는데
+
+백틱으로 만든 문자 중간에 변수같은걸 넣고 싶을 때 ${ 변수명 } 이렇게 쓸 수 있습니다. 
+
+
+Q. props 전송시 작명={ } 이렇게 전송안하고 따옴표써도 되나요?
+
+A. 넴
+
+
+
+
+let YellowBtn = styled.button` 
+  background : ${ props => props.bg };
+  color : ${ props => props.bg == 'blue' ? 'white' : 'black' };
+  padding : 10px; 
+`; 
+자바스크립트 적는 공간이다보니까 이런 식의 스타일 프로그래밍도 가능합니다. 
+
+무슨 뜻이게요 
+
+
+
+
+
+
+세상에 장점만 있는게 어딨습니까 
+
+
+단점1. JS 파일이 매우 복잡해집니다.
+
+그리고 이 컴포넌트가 styled 인지 아니면 일반 컴포넌트인지 구분도 어렵습니다.
+
+
+단점2. JS 파일 간 중복 디자인이 많이 필요하면 어쩌죠?
+
+다른 파일에서 스타일 넣은 것들 import 해와서 쓰면 됩니다.
+
+근데 그럼 CSS파일 쓰는거랑 차이가 없을 수도요
+
+
+단점3. CSS 담당하는 디자이너가 있다면 협업시 불편할텐데 
+
+그 사람이 styled-components 문법을 모른다면 
+
+그 사람이 CSS로 짠걸 styled-components 문법으로 다시 바꾸거나 그런 작업이 필요하겠군요.
+
+그래서 신기술같은거 도입시엔 언제나 미래를 생각해보아야합니다. 
+
+
+
+
+styled-components를 써보고 싶다면 직접 레이아웃 몇개 만들어보며 익혀보면 되겠습니다.
+
+언제까지 강의만 보고 있을 것임 

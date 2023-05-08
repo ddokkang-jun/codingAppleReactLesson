@@ -1,0 +1,220 @@
+탭만들기 
+
+6:22 삼항연산자말고 if 조건문 쓰는 법은 
+
+11:26 오늘의 새로운 팁2개
+
+
+
+
+
+
+
+오늘은 쇼핑몰에서 흔히 볼 수 있는 탭 UI를 만들어봅시다. 
+
+버튼 3개와 박스 3개를 미리 만들어놓고 버튼 누를 때 마다 그에 맞는 박스 보여주는게 탭 UI입니다. 
+
+동적인 UI 만드는 법 다 알려드렸는데
+
+그거 가지고 혼자 코드짜보는게 실력향상에 많은 도움이 될듯 합니다. 
+
+
+1. html css로 디자인 미리 완성해놓고
+
+2. UI의 현재 상태를 저장할 state 하나 만들고
+
+3. state에 따라서 UI가 어떻게 보일지 작성하면 된다고 했습니다. 
+
+
+
+
+
+
+1. html css로 탭 디자인 미리 완성하기
+
+
+버튼3개와 <div> 3개가 필요합니다. 
+
+디자인하기 귀찮아서 버튼은 react-bootstrap 사이트에서 복사해서 Detail 페이지에 넣어봤습니다. 
+
+
+<Nav variant="tabs"  defaultActiveKey="link0">
+    <Nav.Item>
+      <Nav.Link eventKey="link0">버튼0</Nav.Link>
+    </Nav.Item>
+    <Nav.Item>
+      <Nav.Link eventKey="link1">버튼1</Nav.Link>
+    </Nav.Item>
+    <Nav.Item>
+      <Nav.Link eventKey="link2">버튼2</Nav.Link>
+    </Nav.Item>
+</Nav>
+<div>내용0</div>
+<div>내용1</div>
+<div>내용2</div> 
+
+거기 문서 보니까 eventKey 속성은 버튼마다 맘대로 작명하면 된다고 합니다. 
+
+defaultActiveKey 여기는 페이지 로드시 어떤 버튼에 눌린효과를 줄지 결정하는 부분입니다. 
+
+
+
+
+
+
+
+2. UI의 현재 상태를 저장할 state 하나 만들기
+
+
+function Detail(){
+  let [탭, 탭변경] = useState(0)
+  (생략)
+}
+상단에 state 하나 만들었습니다.
+
+탭 UI의 상태는
+
+0번 내용이 보이거나 / 1번 내용이 보이거나 / 2번 내용이 보이거나 
+
+셋 중 하나기 때문에 저는 0, 1, 2 숫자로 상태를 표현해보겠습니다.
+
+
+
+
+
+
+3. state에 따라서 UI가 어떻게 보일지 작성
+
+
+state가 0이면 0번 내용 보여주세요~
+
+1이면 1번 내용 보여주세요~
+
+이렇게 코드짜면 됩니다. 삼항연산자 이런거 써도 되는데 심심하니까 컴포넌트로 만들어봅시다.
+
+
+function Detail(){
+  let [탭, 탭변경] = useState(0)
+  
+  return (
+    <TabContent/>
+  )
+}
+
+function TabContent(){
+  if (탭 === 0){
+    <div>내용0</div>
+  }
+  if (탭 === 1){
+    <div>내용1</div>
+  }
+  if (탭 === 2){
+    <div>내용2</div>
+  }
+}
+
+그래서 컴포넌트로 만들어서 Detail 페이지 안에 넣어봤습니다.
+
+근데 위 코드는 잘 동작하진 않을 것 같군요.
+
+알아서 고쳐봅시다. 
+
+
+왜일까요
+
+
+function Detail(){
+  let [탭, 탭변경] = useState(0)
+  
+  return (
+    <TabContent 탭={탭}/>
+  )
+}
+
+function TabContent(props){
+  if (props.탭 === 0){
+    return <div>내용0</div>
+  }
+  if (props.탭 === 1){
+    return <div>내용1</div>
+  }
+  if (props.탭 === 2){
+    return <div>내용2</div>
+  }
+}
+
+탭이라는 state는 Detail 안에 있지 TabContent 안에는 없어서 그렇습니다.
+
+부모에 있던 state를 자식이 쓰고 싶으면 props로 보내면 됩니다. 
+
+
+
+완성이군요 이제 탭이라는 state를 0, 1, 2로 변경할 때마다 
+
+원하는 내용들이 잘 보입니다.
+
+그럼 0번 버튼 누르면 0번 내용
+
+1번 버튼 누르면 1번 내용
+
+2번 버튼 누르면 2번 내용 
+
+을 보여주고 싶으면 코드 어떻게 짜야합니까?
+
+
+
+
+
+
+
+<Nav variant="tabs"  defaultActiveKey="link0">
+    <Nav.Item>
+      <Nav.Link onClick={()=>{ 탭변경(0) }} eventKey="link0">버튼0</Nav.Link>
+    </Nav.Item>
+    <Nav.Item>
+      <Nav.Link onClick={()=>{ 탭변경(1) }} eventKey="link1">버튼1</Nav.Link>
+    </Nav.Item>
+    <Nav.Item>
+      <Nav.Link onClick={()=>{ 탭변경(2) }} eventKey="link2">버튼2</Nav.Link>
+    </Nav.Item>
+</Nav>
+
+이러면 버튼 누를 때 마다 원하는 탭 내용을 보여줄 수 있습니다. 
+
+
+
+
+
+
+센스좋으면 if 필요 없을 수도 있습니다
+
+
+function TabContent(props){
+  return [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][props.탭]
+}
+
+이래도 될듯요 
+
+왜냐면 props.탭이 0이면 저 긴 array자료에서 0번 자료를 꺼내줄테니까요. 
+
+
+
+
+
+
+참고사항 : props 쉽게 쓰고 싶으면
+
+
+function TabContent({탭}){
+  return [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][탭]
+}
+
+자식컴포넌트에서 props라고 파라미터를 하나만 작명하는게 아니라
+
+{state1이름, state2이름 ... }
+
+이렇게 작성하면
+
+props.state1이름 이렇게 쓸 필요가 없어집니다. 
+
+마음에 들면 씁시다.

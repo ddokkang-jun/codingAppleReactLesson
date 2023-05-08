@@ -1,0 +1,176 @@
+장바구니 페이지 만들기 & Redux 1 : Redux Toolkit 설치
+
+
+
+
+
+장바구니 페이지 만들기
+
+3:40 <table> 레이아웃 사용법
+
+5:15 Redux 쓰는 이유 
+
+6:48 Redux 설치 & 셋팅
+
+
+
+/cart로 접속하면 장바구니 페이지를 보여줍시다. 
+
+근데 장바구니 기능은 Redux 배울 겸 그걸 이용해서 만들어봅시다. 
+
+
+
+
+
+장바구니 페이지만들기
+
+
+페이지하나 필요하면 어떻게 해야합니까.
+
+라우터 쓰면 되는 것 아니겠습니까 그래서 App.js의 <Routes> 쓰던 곳을 찾아가봅시다.
+
+
+
+<Route path="/cart" element={ <Cart/> } /> 
+그리고 <Route>를 하나 추가했습니다. 누가 /cart 로 접속하면 <Cart> 컴포넌트를 보여주기로 했습니다.
+
+<Cart> 컴포넌트는 알아서 만들어서 저기 넣으면 됩니다. 
+
+전 Cart.js 라는 다른 파일에 컴포넌트 만들었음
+
+
+
+
+
+
+장바구니 페이지에서 사용할 Table 레이아웃은 
+
+
+<Table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>상품명</th>
+      <th>수량</th>
+      <th>변경하기</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>안녕</td>
+      <td>안녕</td>
+      <td>안녕</td>
+    </tr>
+  </tbody>
+</Table> 
+
+이거 넣으면 표가 생성됩니다. Cart 컴포넌트에 넣어봤습니다. 
+
+물론 React-bootstrap에서 가져온거라 상단에서 import { Table } from 'react-bootstrap' 하면 됩니다. 
+
+
+
+
+
+
+Redux 쓰면 뭐가 좋냐면
+
+
+Redux는 props 없이 state를 공유할 수 있게 도와주는 라이브러리입니다. 
+
+
+
+
+
+이거 설치하면 js 파일 하나에 state들을 보관할 수 있는데
+
+그걸 모든 컴포넌트가 직접 꺼내쓸 수 있습니다. 
+
+그래서 귀찮은 props 전송이 필요없어집니다. 
+
+컴포넌트가 많아질 수록 좋겠군요. 
+
+
+그래서 사이트가 커지면 쓸 수 밖에 없어서 
+
+개발자 구인시에도 redux같은 라이브러리 숙련도를 대부분 요구합니다. 
+
+
+
+
+
+
+Redux 설치는 
+
+
+
+설치하기 전에 package.json 파일을 열어서
+
+"react"
+
+"react-dom" 
+
+항목의 버전을 확인합시다.
+
+이거 두개가 18.1.x 이상이면 사용가능합니다. 
+
+
+
+
+npm install @reduxjs/toolkit react-redux
+
+터미널에 입력하면됩니다. 
+
+참고로 redux toolkit이라는 라이브러리를 설치할 건데 redux의 개선버전이라고 보면 됩니다. 문법이 좀 더 쉬워짐 
+
+
+
+
+▲ 그게 아니면 직접 두개를 18.1.0 이렇게 수정한 다음 파일저장하고
+
+터미널에서 npm install 누르면 됩니다. 그럼 이제 redux 설치가능
+
+
+
+
+
+
+Redux 셋팅은 
+
+
+import { configureStore } from '@reduxjs/toolkit'
+
+export default configureStore({
+  reducer: { }
+}) 
+
+1. 아무데나 store.js 파일을 만들어서 위 코드를 복붙해줍니다. 
+
+저는 src 폴더 안에 만들었음 
+
+이게 뭐냐면 아까 말했던 state들을 보관하는 파일입니다. 
+
+
+
+import { Provider } from "react-redux";
+import store from './store.js'
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>
+); 
+
+2. index.js 파일가서 Provider 라는 컴포넌트와 아까 작성한 파일을 import 해옵니다. 
+
+그리고 밑에 <Provider store={import해온거}> 이걸로 <App/> 을 감싸면 됩니다. 
+
+그럼 이제 <App>과 그 모든 자식컴포넌트들은 store.js에 있던 state를 맘대로 꺼내쓸 수 있습니다.
+
+간편하겠군요 실제 사용은 다음시간에 해봅시다. 

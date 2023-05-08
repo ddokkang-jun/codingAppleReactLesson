@@ -1,0 +1,28 @@
+body {
+  box-sizing: border-box;
+}
+.nav {
+  background-color: black;
+  color: white;
+  padding: 20px;
+}
+.actionBtn {
+  text-align: center;
+}
+.list {
+  text-align: center;
+  padding-left: 20px;
+  border-bottom: 1px solid grey;
+}
+.list > h4:hover {
+  cursor: pointer;
+}
+.modal {
+  margin-top: 20px;
+  padding: 20px;
+  background: #eee;
+  text-align: center;
+}
+.input-area {
+  text-align: center;
+}

@@ -1,0 +1,1155 @@
+
+1. 리액트의 기초
+
+1-2. 환경설정 : Nodejs를 설치하자!
+
+https://nodejs.org/en/
+recommanded for most users 설치하기.
+
+node -v 명령어를 통해 nodejs가 설치가 잘 됬는지 확인해보자.
+
+npm이란? : Node Package Manager의 약자이다. 
+
+NodeJS로 개발된 모듈들을 설치하고 관리해주는 패키지 매니져이다. 
+
+우리가 HTML CSS 수업에서 부트스트랩이 필요하면 가져다 썼던 것 처럼 
+
+nodeJS로 만들어진 유용한 모듈들을 가져다 쓰고 관리할 수 있다.
+
+
+ : 프로젝트 시작하기
+
+프로젝트를 설치하고싶은 경로로 먼저 이동하기.
+
+cd desktop 
+     cd noonaProject 
+
+     (프로젝트 폴더가 없다면 만들어주기.) 
+     cd desktop 
+     mkdir noonaProject 
+     cd noonaProject
+
+
+npx create-react-app 폴더명 을통해 설치.
+
+Happy hacking 메세지가 나오면 설치 완료 code .으로 프로젝트 열기.
+
+
+ : SPA란?
+Single Page Application의 준말 즉 페이지가 하나라는 뜻이다. 
+
+하나의 페이지 안에서 자바스크립트가 필요한 페이지나 정보만 동적으로 그려준다. 
+
+즉, 새 페이지로 넘어갈때마다 서버에서 HTML CSS JS 소스를 가져올 필요가 없어 새로고침이 필요없다. 
+
+따라서 사용자에게 물흐르듯 끊김없는 웹앱 경험을 선사해줄 수 있다.
+
+단점은 처음에 필요한 리소스를 다 가져와야 해서 초기 구동 속도가 느리다.
+
+리액트는 이런 SPA의 형식이다.
+
+--------------------------------------------------------------------------
+
+1-3 component : 재활용의 시작
+
+컴포넌트 만드는 단축키 : rafce
+단축키가 안나올 경우 설치해야하는 extention : ES7 + React/Redux/React-Native snippets
+
+dsznajder 
+
+	컴포넌트 만들시 주의사항:
+
+컴포넌트 이름은 반드시 대문자로 시작해야한다.
+
+리액트가 컴포넌트와 일반 HTML태그(<div>,<p>등..)을 
+
+구별하는 방법은 태그가 대문자로 시작하는지 여부이다. 
+
+따라서 소문자로 시작을 하면 일반 HTML태그로 분류해버리기 때문에 에러를 이르킨다.
+
+ 반드시 첫 글자는 대문자로 하자! 
+
+.js파일을 만들때도 대문자로 해주자.
+
+
+	어떤걸 컴포넌트로 만들어야 할까?
+
+ -반복이 되는 부분.
+리스트의 아이템이라던가 반복이되는 UI요소는 컴포넌트로 만드는게 좋다.
+
+
+ -기능별로
+기능별로 나누어야 개발할때나 테스트, 유지보수할때 훨씬 더 용이하다.
+
+ -하나에 한 기능만
+나중에 재활용 될 경우를 대비해 한 컴포넌트에 한 기능만 들어있는것이 좋다.
+
+컴포넌트를 이렇게 나누어라 저렇게 나누어라 사실 절대적 기준은 없다. 
+
+시스템에 따라, 회사따라 그 규칙은 바뀌지만 그래도 우리는 배우는 입장에서 
+
+컴포넌트를 이러한 기준으로 나누는 걸 누나는 추천한다.
+
+--------------------------------------------------------------------------
+
+1-4 props : 함수의 매개변수와 같은 존재
+
+
+--------------------------------------------------------------------------
+
+1-5 state : 리액트가 리액트인 이유
+
+왜 state는 const로 선언을 할까?
+자바스크립트를 공부해본 사람이라면 const로 선언을 하게되면 변수의 값을 바꿀 수 없다는 사실을 알것이다.
+근데 state의 값은 계속 바뀌는데 왜 let이 아닌 const로 선언을 하는가??
+
+useState를 구현해보면 대충 이렇게 생겼다
+
+
+
+function MyReact{
+    function (){
+        let val
+        useState(inivialValue){
+          val = val | inivialValue
+          function setState(newValue){
+              val = newValue
+          }
+          return [val,setState]
+        }
+    }
+}
+
+const [counter,setCounter]=MyReact.useState(0)
+state는 일반 변수와 달리 setState 함수를 이용하여 값을 변경한다.
+
+(이렇게 함수 내부의 변수가 함수 수명이 끝나더라도, 
+
+변수의 참조가 계속 된다면 그 변수의 수명은 계속 된다.
+
+-이걸 클로저라고함 이렇게 우린 컴포넌트가 render 가 되더라도 state를 기억할 수 있다.)
+
+허나 let을 사용하게되면
+
+counter2=100 과같은 변수형식의 할당이 가능해진다.
+
+따라서 이를 방지하고 setState를 사용한 변수 변경만 허락하기위해 const로 선언한다 
+
+(const로 선언하면 변수형태의 재 할당을 막을 수 있다.)
+
+클로저 참조문서: 
+https://poiemaweb.com/js-closure#:~:text=클로저에 의해 참조되는,있는 함수라는 뜻이다.
+
+--------------------------------------------------------------------------
+2. 첫번째 프로젝트 : 가위바위보 게임
+--------------------------------------------------------------------------
+2-1. 게임 소개
+
+데모 링크🎬: https://rock-paper-scissor-game-nab.netlify.app/
+--------------------------------------------------------------------------
+2-3. 아이템 선택하기 Comment
+
+	이벤트 처리하기
+
+기존에 HTML에서 이벤트를 처리할때는 함수를 문자열 형태로 전달을 해주었다.
+
+<button onclick="activateLasers()">
+
+  Activate Lasers
+
+ </button>
+
+
+
+리액트에서는 문자열이 아닌 함수를 받아서 이벤트를 처리한다.
+<button onClick={activateLasers}>
+  Activate Lasers
+</button>
+
+
+
+onClick안에서 HTML에서 전달해준 것 처럼 activateLasers()
+
+이렇게 전달을 하면 이는 함수를 실행하는 문장이기 때문에 
+
+이벤트가 발생하지 않았음에도 불구하고 처음에 render 시 바로 호출 되버린다.
+
+따라서 함수를 콜백형태로 전달해주는 것이 중요하다.
+
+전달해줄 매개변수가 있는 경우
+
+<button onClick={()=>activateLasers('some value')}>
+  Activate Lasers
+</button>
+
+참고 문헌
+
+https://ko.reactjs.org/docs/handling-events.html
+--------------------------------------------------------------------------
+2-4. 유저가 선택한 아이템 보여주기 Comment
+
+	조건부 렌더링
+
+리액트를 하다보면 많이 부딛히는 에러중 하나는 이것일 것이다.
+
+
+리액트의 컴포넌트들은 기본적으로 그려주고 싶은UI를 return을하고
+
+만약에 UI를 그릴 당시에 보여주고자 하는 값이 없다면 에러를 일으킨다.
+
+이런 문제를 해결하기 위해 우린 조건부 렌더링을 할 수 있다.
+
+내가 원하는 UI를 원하는 조건일때만 보여주는 것이다.
+
+조건부 렌더링을하는 3가지 방식을 소개하겠다.
+
+	1) if-else
+
+if else 로 조건을 주어 상황마다 다른 내용이 보이게 한다
+
+if (loading){
+    return <div>로딩중...</div>
+}else{
+    return <div>데이터들</div>
+}
+
+	2) 논리 연산자 &&
+
+자바스크립트에서 true && expression은 항상 expression으로 평가되고 
+
+false && expression은 항상 false로 평가됩니다.
+
+따라서 아래와 같이 코드를 이렇게 짜면 ?
+
+return(
+    <div>{data && data.title}</div>
+)
+
+data에 값이 있을때 (즉, null 이 아닐때)만 .title을 보여준다
+
+
+	3)삼항연산자
+
+if-else 는 언제나 삼항연산식으로 표현이 가능하다 (내가 제일 좋아하는 방식이기도 하다)
+
+<div>{loading?'로딩중...':'데이터들'}</div>
+
+참고문서 https://ko.reactjs.org/docs/conditional-rendering.html
+
+--------------------------------------------------------------------------
+
+2-5. 컴퓨터 랜덤한 아이템 선택
+
+Object.keys 참고 문서
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+--------------------------------------------------------------------------
+
+2-6. 게임의 승자 가리기
+
+⛰과제1 : 유저와 컴퓨터의 결과 반대로 보여주기.
+
+유저와 컴퓨터가 비겼다면 둘다 Tie (비기다) 이지만
+유저가 이겼다면 컴퓨터는 졌다라는 메세지가
+유저가 졌담녀 컴퓨터는 이겼다 라는 메세지가 나와야 한다.
+
+로직을 스스로 만들어보고
+아래 솔루션을 확인하자!
+
+Box.js에  들어가는 코드
+
+import React from "react";
+
+const Box = (props) => {
+  let result;
+  if (
+    props.title === "Computer" &&
+    props.result !== "tie" &&
+    props.result !== ""  ) {
+ // 카드가 computer카드인가? && 결과가 비긴건 아닌가? && props.result에 값이 있는가?
+    result = props.result === "win" ? "lose" : "win";
+  } else {// 위의 경우가 아니라면 props&nbsp;로 전달된 결과를 그대로 쓴다.
+    result = props.result;
+  }
+  return (
+    <div className='box'>
+      <h1>{props.title}</h1>
+      <h2>{props.item && props.item.name}</h2>
+      <img className="item-img" src={props.item && props.item.img} />
+      <h2>{result}</h2>
+    </div>  );
+};
+
+export default Box;
+
+
+
+⛰과제2 : 결과에 따라 다른 테두리색 보여주기
+글씨보다 색깔이 주는 힘이 더 클때가 있다.
+데모를 보면 알겠지만 결과에따라 테두리색이 바뀐다.
+어떻게하면 결과에 따라 다른 테두리색을 줄 수 있는지 고민하고 만들어보자.
+
+정답소스는 충분히 고민(최소 30분이상)한 후에 보자.
+
+App.css
+추가해야하는 스타일들
+
+.win {  border: 10px solid green;  color: green; }
+.lose {  border: 10px solid red;  color: red; }
+.tie {  border: 10px solid black;  color: black; }
+Box.js 의 return 값
+
+return (
+
+    <div className={`box ${result}`}>
+
+      <h1>{props.title}</h1>
+
+      <h2>{props.item && props.item.name}</h2>
+
+      <img className="item-img" src={props.item && props.item.img} />
+
+      <h2>{result}</h2>
+
+    </div>  );
+
+className={box ${result}}이 부분이 핵심이다.
+
+게임 전체 소스코드 🎮
+https://github.com/legobitna/noona-Rock-Scissors-Paper
+--------------------------------------------------------------------------
+4장 . 리액트 lifecycle
+
+4-1. 클래스 컴포넌트 lifecycle
+
+리액트 앱의 lifecycle은 크게
+
+Mounting : 앱이 생성될 때
+
+Updating : 앱이 실행될 때
+
+Unmounting : 앱이 사용이 중지되거나 소멸할 때
+
+이렇게 크게 3가지 스탭으로 나뉜다.
+
+
+
+Mounting 과정에서 중요한 점들 :
+
+컴포넌트가 실행될땐 무조건 constructor를 호출하고 들어간다.
+
+그래서 개발자는 앱이 실행되자마자 해줘야하는 작업들을  constructor에 넣는다.
+
+그 다음과정은 
+
+getDerivedStateFromProps, shouldComponentUpdate
+
+가 있는데 얘네들은 자세한 설명은 생략한다.
+
+그 다음이 
+
+render() : 렌더는 UI를 화면에 그려주는 일을 한다. 그려줄 일이 있을때마다 호출된다.
+
+그 다음은 
+
+componentDidMount() : UI setting이 완료되면 우리한테 알려준다. Hey ~ UI Ready~~~(준비됐어~~)
+
+componentDidUpdate() : state를 주시하고 있다가 값이 바뀌면 실행된다.
+
+componentWillUnmount() : 컴포넌트가 종료되면 호출된다.
+
+--------------------------------------------------------------------------
+
+4-2. 함수형 컴포넌트 lifecycle
+
+
+
+class컴포넌트에서 사용되었던 함수들 componentDidMount(),componentDidUpdate(),
+
+componentWillUnmount() 얘네들은 function Component에서는 사용할 수 없다.
+
+대신에  
+
+react Hook == 리액트에서 제공하는 유용한 함수들 중에 useEffect()를 사용한다.
+
+import { useState, useEffect } from 'react';
+
+
+
+useEffect: 상황에 따라 다양한 역할을 하는 멀티 플레이어
+
+useEffect 는 매개변수를 2개 받는다.
+
+useEffect(콜백함수, 배열)
+
+useEffect(()=>{}, []);
+
+useEffect 의 주요 역할 :
+
+	componentDidMount
+
+useEffect 는 기본적으로 앱실행후 첫번째 렌더 후에 한번 실행이 된다.
+
+여기에선 주로 화면에 처음 보여줘야할 데이터들에 대한 api호출을 한다.
+
+	componentDidUpdate
+
+useEffect두번째 매개변수인 배열에 state가 들어가 있다면 state를 주시하고 있다가 값이 바뀔때마다 
+
+호출되는 componentDidUpdate 의 역할을 한다.
+
+state가 바뀌고 렌더후 호출된다
+
+	배열 안에 여러개의 state 가 들어있다면?
+
+배열안에 여러개의 state를 구독하고 있다면 배열 안에 state중 하나라도 업데이트가 되면 
+
+해당 useEffect가 호출이 된다. 하지만 여러개의 state가 동시에 업데이트 되었다 해도 한번만 호출이 된다.
+
+
+
+const [vlaue1,setValue1]=useState(0)
+const [vlaue2,setValue2]=useState(0)
+
+useEffect(()=>{
+    console.log("hey")
+},[value1,value2])
+
+const updateValue =()=>{
+    setValue1(1) // 1개의 state만 업데이트 됨
+}
+ 
+콘솔 결과는
+  hey  
+한번만 프린트 됨
+
+const [vlaue1,setValue1]=useState(0)
+const [vlaue2,setValue2]=useState(0) 
+useEffect(()=>{
+    console.log("hey")
+ },[value1,value2]) 
+const updateValue =()=>{
+    setValue1(1) // 2개의 state가 동시에 업데이트 됨
+    setValue2(1)
+ }
+ 콘솔 결과는
+  hey  
+한번만 프린트 됨
+
+--------------------------------------------------------------------------
+
+5장. 날씨앱 만들기
+
+
+5-1. 날씨앱 소개
+
+
+https://bitna-weather.netlify.app
+
+
+API 문서
+https://openweathermap.org/api
+
+가입하고 api key 얻어오자.....
+
+--------------------------------------------------------------------------
+
+5-8. 도시별 날씨 보여주기 Comment
+
+
+stateful, stateless
+컴포넌트를 나누는 또 다른 방식이다.
+
+stateful 컴포넌트 : 모든 state를 들고있는 컴포넌트 (ex : App.js같은 부모 컴포넌트)
+
+stateless 컴포넌트: state를 안들고 있고 props 와 같이 받은 데이터만 보여주는 컴포넌트 
+
+(App 컴포넌트의 자식 컴포넌트들)
+
+
+
+리액트는 단방향 통신이다 즉 부모에서 자식으로만 데이터를 전달 할 수 있다.
+
+이를통해 데이터 흐름을 추적하기는 더 쉽지만, 같은 형제끼리 데이터를 주고받기는 힘들다.
+
+ 그래서 데이터는 주로 부모가 들고있고 자식에게 전달해주는 형식이 된다. 
+
+state를 들고있는 부모 컴포넌트는 stateful 컴포넌트, 
+
+부모가주는 데이터만 받는 컴포넌트를 stateless 컴포넌트라고 한다.
+
+(똑똑한 컴포넌트와 멍청한 컴포넌트로 불리기도한다)
+
+이렇게 컴포넌트를 구성하면 장점은 state가 없는 stateless컴포넌트는 재사용이 쉽고
+
+ 데이터를 걱정하지 않아도 된다. (왜냐 받아서 쓰기만 하니까)
+모든 중요한 데이터들은 stateful컴포넌트에 있기 때문에 유지보수가 쉽다
+
+ (stateful컴포넌트 하나만 주시하고 관리해주면 되니까)
+
+그래서 최대한 모든 컴포넌트를 stateless로 만들고 몇개의 stateful컴포넌트에서 
+
+데이터를 관리하는 구조가 이상적이라고 리액트는 말하고 있다.
+
+
+--------------------------------------------------------------------------
+
+5-9. 날씨앱 MINI과제 
+여기까지 오시느라 수고하셨습니다! 처음배운 낯선 개념인 lifecycle를 이용해서 프로젝트 만드시기 힘드셨을 것 같은데. 얼른 이 개념이 익숙해 지기 위해 우리 마지막 2가지 기능은 스스로 해봅시다!
+
+과제 1 :유저가 current location버튼을 누르면 다시 현재 위치 날씨를 볼 수 있다.
+과제 2 :유저가 버튼을 클릭하면 클릭된 버튼이 표시가 된다.
+과제 3 : try-catch를 이용한 api호출 에러 핸들링도 해보자
+이 두가지를 스스로 먼저 충분히 고민해보시고 저의 정답코드를 보시기 바랍니다!
+
+https://hackmd.io/@oW_dDxdsRoSpl0M64Tfg2g/HkMdpT84c
+
+
+
+API_KEY git에서 숨기기
+
+	.env 
+
+REACT_APP_API_KEY = adqe125i10i0sada[skdqk221p31p23
+
+	.gitignore
+
+#API_KEY
+.env
+
+	App.js
+
+const API_KEY = REACT_APP_API_KEY;
+
+
+
+--------------------------------------------------------------------------
+
+6. 라우터: 멀티 웹페이지를 만드는 법
+
+6-1. 라우터란? : 여러 웹페이지를 만드는 지름길
+
+리액트는 페이지가 하나다. 딱 하나다. 지금까지 다 하나만 만들었다.
+
+페이지는 하나지만 안에 있는 내용을 바꾸면서 마치 페이지가 여러개인양 눈속임을 하는 것을 배울 것이다.
+
+우리는 리액트 라우터라는 라이브러리를 이용해서 웹페이지를 여러개를 연결하는 것을 할 수 있다.
+
+구글에 react router 를 치고 
+
+https://reactrouter.com
+
+에 가자
+
+이거저거 읽어보고
+
+내 컴퓨터에서 콘솔을 열고 이번 수업에서 연습할 프로젝트 폴더를 하나 만들자.
+
+App을 실행해보면 하나의 페이지에서 여러개의 컴포넌트 즉 여러개의 페이지가 동시에 보여진다.
+
+라우터를 사용해서 각각 상황에 맞게 보여지도록 해주는 것을 배워보자
+
+
+이번엔 콘솔에서 router를 install 설치하자.
+
+$ npm install react-router-dom@6
+
+이제 index.js < 
+
+import { BrowserRouter } from 'react-router-dom';
+
+BrowserRouter 로 App 을 감싸준다.
+
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById("root")
+);
+
+
+자 이번엔 App.js로 가서 import를 하자.
+
+import { Routes, Route } from "react-router-dom";
+
+<div>
+      <Routes>
+        <Route path='/' element={<Homepage />} />
+        <Route path='about' element={<Aboutpage />} />
+      </Routes>
+    </div>
+
+
+
+--------------------------------------------------------------------------
+
+6-3. Restful Route
+
+요즘 유행하는 url 디자인의 한 종류
+
+
+HTTP Verb(명령어) : 
+
+-GET : data를 가져오는것 , action : index, URL : /subject
+
+-POST : data를 만드는 것, action : create, URL : /subjects
+
+-PATCH : update, 수정하는 것, action : update, URL : /subject/:id
+
+-DELETE : data를 지우는 것, action : destroy, URL : /subject/:id
+
+id : parameter : 동적인 값
+
+
+
+Http 명령어와 URL을 매칭시켜 url디자인을 좀더 단순하고 통일성 있게 만듬
+
+HTTP명령어
+Get : 데이터를 가져올 때 쓰임 (fetch하면 기본 명령어 속성이 Get임)
+Post : 데이터를 생성할 때 쓰임.
+Put : 데이터를 수정할 때 쓰임(Patch 라고도 불림)
+Delete: 데이터를 삭제할때 쓰임
+
+
+
+Restful Route의 필요성
+
+우리가 쇼핑몰 아이템을 보여주는 페이지가 있다고 가정하자
+어떤이는
+
+/showitem
+이라고 만들고 어떤이는
+
+/getItem
+이라고 만들 수 있다.
+
+어떤 아이템을 삭제하는 페이지의 경우에는
+어떤이는
+
+/removeItems
+어떤이는
+
+/deleteItems
+라고 이름지을 수 있다. 이런식으로 하면 이름에 통일성이 없어지고 어떤 아이템에대해서 모든 생성,읽기,수정,삭제 행위에 대해서 총 4개의 url이 필요하다
+
+/getItem /createItem /updateItem /deleteItem
+이렇게 하면 url은 길고 복잡해진다. 이를 해결하기 위해 나온게 restful 디자인이다
+url에서 동사는 빼고 이를 Http 명령어로 대체한다
+따라서
+
+/items + get 명령어 = 아이템읽어오기
+/items + post 명령어 = 아이템 생성하기 
+/items + put 명령어 = 아이템 수정하기 
+/items + delete명령어 = 아이템 삭제하기
+이런 규칙으로 바뀐다
+즉 /items라는 url 하나로 4가지의 액션을 할 수 있게 되었다.
+
+내가 하나의 아이템만 가져오고싶다면 뒤에 아이템의 id를 붙이는것도 restful route의 규칙이다
+
+/items/:id +get 명령어 = id를 가진 아이템읽어오기 
+/items/:id +put 명령어 = id를 가진 아이템 수정하기 
+/items/:id +delete 명령어 = id를 가진 아이템 삭제하기
+
+--------------------------------------------------------------------------
+
+6-4. useParams : URL 의 파라미터 값을 읽어오기
+
+useParams : 사용법 익히기
+
+<App component> 
+
+<Route path='products/:id' element={<Productdetail />} />			// Params {id: '10'}
+
+<Route path='products/:id/:num' element={<Productdetail />} />		// Params {id: 'aaaa', num: '23'}
+
+
+<Product Detail component > 
+
+
+import { useParams } from 'react-router-dom';
+
+
+const Productdetail = () => {
+  const { id, num } = useParams();
+  console.log("Params", id, num);	
+
+  return (
+    <div>
+      <h1>product Detail{id}</h1>
+    </div>
+  )
+}
+
+export default Productdetail;
+
+
+
+
+
+--------------------------------------------------------------------------
+
+7. 세번째 프로젝트 : 쇼핑몰 웹사이트 만들기
+
+
+7-1. H&M 소개 Comment
+
+https://noona-hnm.netlify.app/
+
+npx create-react-app hnm-react-router-practice
+
+happy hacking!
+
+
+--------------------------------------------------------------------------
+
+7-2. 라우터 세팅
+
+1. 제일 먼저 할 일들 하나하나 쓰기
+
+2. 리액트 라우터 인스톨 하기 
+
+3. 공식 문서 보면서 기본 세팅 고대로 따라가기
+
+4. 3개의 페이지 만들기 ProductAll.js, Login.js, ProductDetail.js
+
+5. App.js < imports pages!! < next  < mk Router path < /product/:id productdetail
+
+
+--------------------------------------------------------------------------
+
+7-3. 상단 메뉴 만들기
+
+이번 수업에서는 프로젝트 앱의 기본적인 UI구성을 잡아줄 것인데
+
+그중에서도 넷바를 만들거다.
+
+
+1. 네비게이션 바 만들기 
+
+// 네비게이션 바는 움직이지 않는다. navigation bar
+
+
+컴포넌트폴더를 만들고 넷바 컴포넌트를 만든다.
+
+App.js < 
+
+<Routes> 위에다가<Navbar />를 컴포넌트로 만들어준다.
+
+
+// 로그인 아이콘은 폰트어섬을 쓰고 폰트어썸 리액트로 검색한다.
+
+//폰트어섬을 인스톨한다. 3가지 깔아보자. 어레이가 들어간건 유료고 그 밑에 꽁짜버전을 쓰자.
+
+메뉴를 만들때에 ul < li 들을 배열로 만들어보자. map을 사용하자.
+
+과제 : 
+
+search 박스를 이쁘게 디자인 해보자.
+
+과제를 끝내고 다음 영상으로 넘어가기! 
+
+
+
+--------------------------------------------------------------------------
+
+7-4. Json Server 소개
+
+
+설치명령어
+npm install -g json-server
+
+
+제일 밖에다가 db.json
+
+
+json-server 다운받는 곳 :
+https://www.npmjs.com/package/json-server
+
+
+json-server 시작 명령어
+
+json-server --watch db.json --port 5000
+
+
+
+--------------------------------------------------------------------------
+
+7-6. Mini 과제 Comment
+
+
+concious choice 부분도 true이면 보이고 false이면 안보이게 해주세요.
+카드에 마우스를 올려두면 카드가 커지는 hover 이벤트를 만들어 주세요.
+로그인 버튼을 클릭하면 로그인 페이지가 나오게 스스로 도전해보세요!
+로그인 페이지의 디자인을 스스로 해보세요.
+--------------------------------------------------------------------------
+
+7-8. useNavigate로 홈페이지로 돌아가자
+
+
+Mini 과제
+상품 디테일 페이지를 눌렀을 때, 로그인이 안된 경우 로그인 페이지가 보인다.
+상품 디테일 페이지를 눌렀을 때, 로그인이 된 경우 상품 디테일 페이지가 보인다.
+
+--------------------------------------------------------------------------
+
+7-9. Private Route
+
+상품 디테일 페이지 디자인하기
+
+--------------------------------------------------------------------------
+
+7-10. 상품 디테일 페이지 만들기
+
+
+
+상품 디테일 페이지 디자인 마무리하기
+검색기능 스스로 만들어보기
+--------------------------------------------------------------------------
+
+7-12. 도전 과제 Comment
+
+1.유저는 로그아웃 할 수 있다.
+2.로그인이된 상태이면 로그아웃버튼이, 로그아웃 된 상태이면 로그인 버튼이 보인다.
+3.H&M로고를 클릭하면 상품 전체페이지로 돌아온다.
+4.모바일 버전에서 메뉴는 사이드 메뉴로 들어간다. 제품 사진들은 한장씩 세로로 나온다.
+
+--------------------------------------------------------------------------
+
+7-13. 배포하기
+
+여러분들 그동안 어려운 프로젝트 하시느라 수고하셨습니다!
+
+lifecycle 부터 react router까지 정말 지금까지 배운 모든 컨셉이 들어가있는 프로젝트 였습니다.
+
+당연히 한번에 이해하는거 힘들고! 여러분들이 최소 1~2번은 스스로 만들어 보셔야 이해가 가능합니다! 
+
+그래서 여기서 주어지는 과제!
+
+모든 코드 지우고 처음부터 스스로 만들어보기
+반드시 이 마지막 과제 까지 하고 다음 레슨으로 넘어가시기 바랍니다.
+
+	참고 사이트🔊
+
+my-json 사이트🏹 : https://my-json-server.typicode.com/
+
+Netlify 주소 : https://www.netlify.com/
+
+전체 소스코드📜 : https://github.com/legobitna/hnm-react-router
+
+netlify 사용법을 모른다면? : https://youtu.be/WJtetccrv3o
+
+github 사용법을 모른다면? : https://youtu.be/lelVripbt2M
+
+CI=false란?
+
+CI는 환경변수 입니다. 
+
+우리가 애플리케이션을 빌드 할때 필요한 환경변수들을 넣어줄 수 있습니다.
+
+CI를 이용해서 빌드하는 환경을 허가하는게 netlify의 기본 설정값이고 (2020년 6월 15일에 생긴 룰),
+
+이게 필요 없는 환경인 경우 false로 설정해주면 된다
+
+참고자료: 
+
+https://answers.netlify.com/t/new-ci-true-build-configuration-treating-warnings-as-errors-because-process-env-ci-true/14434
+
+
+
+installs~~~~~~~~~~~~~~~~~~
+
+npm install react-router-dom@6
+
+npm i --save @fortawesome/fontawesome-svg-core
+npm install --save @fortawesome/free-solid-svg-icons
+npm install --save @fortawesome/free-regular-svg-icons
+npm install --save @fortawesome/react-fontawesome
+npm install --save @fortawesome/free-brands-svg-icons
+npm install react-bootstrap bootstrap
+npm install -g json-server
+
+
+--------------------------------------------------------------------------
+
+8. Redux : 게임 체인져
+
+8-1. redux는 왜 필요한가?
+
+리덕스는 리액트의 라이브러리이다.
+
+리덕스가 없다고 안쓴다고 리액트가 안돌아가지 않는다.
+
+다만 사용하면 편리하기 때문에 사용하는 것뿐이다.
+
+요즘 회사들은 리액트를 쓰면 리덕스는 필수 사항이 되어버렸다.
+
+--------------------------------------------------------------------------
+
+8-2. redux 개념 소개
+
+
+리덕스를 만든 이유는? 리액트의 어떤 불편함 점때문에 리덕스가 만들어졌을까??
+
+리액트의 가장 큰 문제는 바로 state 관리다. app컴포넌트에서 모든 state를 관리해야한다는 점이다.
+
+props로 오로지 한방향으로만 정보를 줄 수 있다. 그래서 매번 props를 졸라게 써야한다는 점.
+
+즉 state를 다른 컴포넌트에서 공유할 수 없다는 점...
+
+이것을 해결하기 위해 redux를 사용한다.
+
+리덕스의 개념은 
+
+component -> action -> reducer -> store(redux)
+
+useDispatch, useSelector
+
+
+
+store -> <- componet 
+
+컴포넌트를 사용할 때 필요하면 언제든 리덕스 = store에서 정보를 요청하고 쓸 수 있는 구조.
+
+--------------------------------------------------------------------------
+
+8-3. redux를 셋업하자
+
+구글에서 redux를 검색하고
+
+https://redux.js.org/introduction/getting-started/
+
+Redux Core <
+
+# NPM
+npm install redux
+
+# Yarn
+yarn add redux
+
+이번엔 react redux를 설치하자
+
+https://react-redux.js.org/
+
+npm install react-redux
+
+
+
+--------------------------------------------------------------------------
+
+8-4. redux 적용하기
+--------------------------------------------------------------------------
+
+8-5. useSelector : 리덕스의 진정한 묘미
+
+--------------------------------------------------------------------------
+
+8-6. Payload : 함수의 매개변수와 같은 것
+--------------------------------------------------------------------------
+
+11-3. 프로젝트 시작
+
+ / 리액트 부트스트랩 인스톨
+
+ / 리액트 라우터
+npm install react-router-dom@6
+
+ / 리덕스
+npm install redux react-redux
+
+ / 미들웨어
+npm install redux-thunk
+
+ / 리덕스 dev tool
+npm install --save redux-devtools-extension
+import { composeWithDevTools } from 'redux-devtools-extension';
+const store = createStore(reducer, composeWithDevTools(
+  applyMiddleware(...middleware),
+));
+
+ / 리덕스 툴킷
+npm install @reduxjs/toolkit
+
+
+
+
+
+
+
+이제 vs code를 열고 셋팅을 하자
+
+1. 일단 필요한 페이지가 먼가? 3가지 정도 만든다.Page < Home, movie, movieDetail
+
+2. 홈페이지부터 조지자. Banner 를 볼 수 잇따.
+
+3. 3가지 섹션의 영화를 볼 수 있다. (popular, top rated, upcoming)
+
+4. 각 영화에 마우스를 올리면? 제목, 장르, 점수, 청불여부, 인기도 등의 정보를 볼 수 있다.
+
+5. 영화를 슬라이드로 넘길 수 있다.
+
+6. 영화 디테일 페이지에서 영화에 대한 자세한 정보를 볼 수 있다. (점수, 인기도, 줄거리, 포스터, 트레일러...)
+
+7. 트레일러도 볼 수 있다.
+
+8. 관련된 영화도 볼 수 있다.
+
+9. 검색도 할 수 있다.
+
+10. 영화 정렬도 할 수 있다.
+
+11. 영화를 필터링 할 수 있다. 
+
+--------------------------------------------------------------------------
+
+11-4 라우터 셋팅
+
+page 폴더를 만들고 Home.js Movies.js MovieDetail.js
+
+라우터를 설치해주자
+
+index.js로 가서 <BrowerRouter>를 넣어준다.
+
+다음 App.js로 가서
+
+<Routes>
+  <Route path="/" element={<Home />}>
+   <Route path="/movies" element={<Home />}>
+  <Route path="/movies/:id" element={<Home />}>
+를 넣는다.
+
+npm remove redux react-redux 한 다음에
+
+npm install redux@4.1.2 react-redux 합시다 
+
+
+--------------------------------------------------------------------------
+11-6 상단 메뉴바 만들기
+
+만들어봥~
+
+--------------------------------------------------------------------------
+
+11-7 url 들고 오기
+
+data를 가져오자
+
+redux폴더 안에 action 폴더를 만든다. 안에 다가 movieAction.js를 만든다.
+
+movieAction.js에서 
+
+https://api.themoviedb.org/3
+
+https://api.themoviedb.org/3/movie/popular?api_key=<<api_key>>&language=en-US&page=1
+
+https://api.themoviedb.org/3/movie/top_rated?api_key=<<api_key>>&language=en-US&page=1
+
+https://api.themoviedb.org/3/movie/upcoming?api_key=<<api_key>>&language=en-US&page=1
+
+작업을 하는데 "똑같다" 부분을 axios를 사용해서 action을 만들자.
+
+
+--------------------------------------------------------------------------
+
+11-8 axios
+
+api 호출 3대장을 말하자면
+
+fetch : Node.js에서 쓸 수 없다. 
+
+Ajax : Jquery
+
+axios : 요즘 많이 쓴다.
+
+가 있는데 axios를 사용하자.
+
+npm install axios
+
+api.js파일을 만들고 써보자.
+
+ex :
+ 
+const instance = axios.create({
+  baseURL: 'https://some-domain.com/api/',
+  timeout: 1000,
+  headers: {'X-Custom-Header': 'foobar'}
+});
+
+Interceptors
+You can intercept requests or responses before they are handled by then or catch.
+
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+    // Do something before request is sent
+    return config;
+  }, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  });
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    return response;
+  }, function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    return Promise.reject(error);
+  });
+
+
+--------------------------------------------------------------------------
+
+11-9 환경변수
+
+매우 주의 사항 !!!!!!!!!!
+
+.env 를 만들고 
+
+다시 재시작 해줘야 한다 반드시.......................
+
+
+--------------------------------------------------------------------------
+
+11-10 promise: API 여러개 동시에 부르는 방법
+
+let data = await Promise.all([a_API, b_API, c_API]);
+
+--------------------------------------------------------------------------
+
+11-11 reducer 만들기
+
+
+--------------------------------------------------------------------------
+
+11-12, 13 배너 조건부 렌더링, 배너 만들기
+
+
+--------------------------------------------------------------------------
+
+11-14 슬라이드 만들기
+
+먼저 컴포넌트폴더에 MovieSlide.js를 만들어주자.
+
+슬라이드는 구글에서 가져다 쓰자.
+
+react multi carousel을 검색하자.
+
+https://www.npmjs.com/package/react-multi-carousel
+
+$ npm install react-multi-carousel --save
+
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
+--------------------------------------------------------------------------
+
+11-15 로딩
+
+카드를 만들기 전에 로딩스피너를 만들어보자.
+
+구글에 react loading spinner 검색하자.
+
+react-spinner-npm
+
+homepage에서 쓰자.
+

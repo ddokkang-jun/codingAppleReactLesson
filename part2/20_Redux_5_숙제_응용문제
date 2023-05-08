@@ -1,0 +1,254 @@
+Redux 5 : 장바구니 기능 만들기 숙제 & 응용문제
+
+
+
+
+
+숙제1
+
+3:40 숙제1 추가사항
+
+7:59 숙제2
+
+11:52 응용문제 & 실은 Redux Toolkit임 
+
+
+
+
+실력향상 응용문제들 : 
+
+응용1. 표의 행마다 삭제버튼 만들고 그거 누르면 상품이 삭제되게 만들려면?
+
+응용2. 주문하기 버튼 누를 때 이미 상품이 state안에 있으면 추가가 아니라 기존 항목 수량증가만?
+
+
+
+
+
+
+숙제1. 수량 +1 기능 만들기
+
+
+
+
+
+버튼누르면 일단 state를 수정해야하니까 state를 +1 해주는 수정함수부터 만들었습니다.
+
+
+
+let cart = createSlice({
+  name : 'cart',
+  initialState : [
+    {id : 0, name : 'White and Black', count : 2},
+    {id : 2, name : 'Grey Yordan', count : 1}
+  ],
+  reducers : {
+    addCount(state, action){
+      state[action.payload].count++
+    }
+  }
+}) 
+
+addCount라는 함수 만들어놨습니다.
+
+addCount(0) 하면 0번째 상품이 +1 됩니다. 
+
+addCount(1) 하면 1번째 상품이 +1 됩니다. 
+
+export 해놓고 필요할 때 쓰면 되겠군요. 
+
+
+
+
+
+(Cart.js)
+
+<tbody>
+  {
+    state.cart.map((a, i)=>
+      <tr key={i}>
+        <td>{state.cart[i].id}</td>
+        <td>{state.cart[i].name}</td>
+        <td>{state.cart[i].count}</td>
+        <td>
+          <button onClick={()=>{ dispatch(addCount(i)) }}>+</button>
+        </td>
+      </tr>
+    )
+  }
+</tbody> 
+장바구니페이지에 있는 + 버튼 누르면 addCount() 하라고 코드짜봤습니다.
+
+당연히 쓰려면 import해와야합니다. 
+
+근데 addCount(i) 이렇게 i 변수를 넣어봤는데 이러면 
+
+0번째 버튼을 누르면 addCount(0) 실행해줍니다.
+
+1번째 버튼을 누르면 addCount(1) 실행해줍니다. 
+
+왜냐고요? i 변수는 반복문에서 생성해주는 0,1,2 이렇게 1씩 증가하는 숫자니까요.
+
+여기까지만 하면 잘 동작하긴 합니다. 
+
+
+
+
+
+
+
+
+근데 좀 정확히하고 싶으면 
+
+
+"버튼 누르면 버튼 옆에 있는 상품 id 가져와서
+
+이거랑 똑같은 id를 가진 상품을 state에서 찾아서 그걸 +1 해주쇼"
+
+라고 코드짜는게 더 확실할 것 같군요.
+
+그럼 나중에 상품 순서가 이상하게 바뀌거나 그래도 잘 동작할듯 하니까요. 
+
+
+
+dispatch(addCount(state.cart[i].id)) 
+1. 그래서 버튼누르면 이렇게 옆에있던 상품 id를 payload로 전송하라고 해놨고 
+
+
+
+
+
+let cart = createSlice({
+  name : 'cart',
+  initialState : [
+    {id : 0, name : 'White and Black', count : 2},
+    {id : 2, name : 'Grey Yordan', count : 1}
+  ],
+  reducers : {
+    addCount(state, action){
+      let 번호 = state.findIndex((a)=>{ return a.id === action.payload })
+      state[번호].count++
+    }
+  }
+}) 
+2. "payload와 같은 id를 가진 상품을 찾아서 +1 해달라~"고 코드짰습니다. 
+
+array 자료에서 원하는 항목을 찾으려면 
+
+반복문, find(), findIndex() 이런거 골라서 쓰면 됩니다.
+
+
+
+
+
+findIndex()는 array 뒤에 붙일 수 있는데 
+
+- 안에 콜백함수넣고 return 뒤에 조건식도 넣으면 됩니다. 
+
+- a라는 파라미터는 array 안에 있던 하나하나의 자료입니다.
+
+- array에 있던 자료를 다 꺼내서 조건식에 대입해보는데 조건식이 참이면 그게 몇번째 자료인지 알려줍니다. 
+
+그래서 위의 코드는 a.id와 payload가 같으면 그게 몇번째 자료인지 변수에 저장하라는 소리입니다. 
+
+
+
+Q. 안가르쳐준건데 저걸 내가 어떻게 알고 사용합니까?
+
+A. 저도 "array에서 원하는거 찾는 법"을 검색했읍니다 
+
+
+
+
+
+
+
+숙제2. 주문버튼누르면 state에 새로운 상품추가
+
+
+상세페이지의 주문하기 버튼을 누르면
+
+장바구니 state에 항목이 하나 추가되어야합니다.
+
+이것도 state 변경함수 만들고 export하고 import해서 사용했습니다. 
+
+
+
+
+
+let cart = createSlice({
+  name : 'cart',
+  initialState : [
+    {id : 0, name : 'White and Black', count : 2},
+    {id : 2, name : 'Grey Yordan', count : 1}
+  ],
+  reducers : {
+    addCount(state, action){
+      state[action.payload].count++
+    },
+    addItem(state, action){
+      state.push(action.payload)
+    }
+  }
+}) 
+1. addItem이라고 함수 만들어놨습니다.
+
+addItem( {id : 2, name : 'Grey Yordan', count : 1} )
+
+이렇게 사용하면 {id : 2, name : 'Grey Yordan', count : 1} 이 상품이 state에 추가가 됩니다. 
+
+export 하고 가져다쓰도록 합시다. 
+
+
+
+
+
+(Detail.js)
+
+<div className="col-md-6">
+  <h4 className="pt-5">{찾은상품.title}</h4>
+  <p>{찾은상품.content}</p>
+  <p>{찾은상품.price}원</p>
+  <button className="btn btn-danger" onClick={()=>{
+    dispatch(addItem( {id : 1, name : 'Red Knit', count : 1} ))
+  }}>주문하기</button>
+  </div>
+</div> 
+2. 상세페이지에서 주문버튼 누르면 addItem() 이거 실행해달라고 코드짰습니다.
+
+(당연히 상단에서 import 해와야겠죠)
+
+
+
+
+그럼 이제 버튼 누를 때 {id : 1, name : 'Red Knit', count : 1} 이런 상품이 추가되는데
+
+'Red Knit' 라고 하드코딩하는게 아니라 현재 페이지의 상품명을 집어넣는 것도 좋겠군요. 
+
+그럼 각각 다른 상세페이지여도 잘 동작하겠네요. 
+
+
+
+
+
+
+Q. 근데 cart 페이지로 가보면 장바구니에 새로운 상품이 없는데요 
+
+A. 주소창에 /cart 입력하면 페이지가 새로고침됩니다.
+
+새로고침되면 state도 초기값으로돌아갑니다. 라우터 버튼 만들어서 페이지 이동합시다. 
+
+
+
+
+
+
+
+실은 지금 설치해서 사용중인 라이브러리는 Redux Toolkit임
+
+
+Redux 만든 사람이 이전의 과오를 깨닫고 새롭게 만든 라이브러리입니다.
+
+Redux를 조금 더 쓰기 쉽게 만든 버전인데
+
+Redux 만든 아저씨가 요즘은 이거 쓰라고하니까 이걸 많이 쓰도록 합시다. 

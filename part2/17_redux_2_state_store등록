@@ -1,0 +1,122 @@
+Redux 2 : store에 state 보관하고 쓰는 법
+
+
+
+
+Redux store에 state 보관하는 법
+
+3:10 Redux store에 있던 state 가져다쓰는 법
+
+8:13 그럼 Redux 쓰지 왜 props 가르친대 
+
+
+
+오늘의 숙제 : 
+
+하단에 있는 데이터를 Redux store 안에 보관해둡시다. 
+
+그리고 Cart.js 페이지에 가져와서 데이터바인딩해봅시다.
+
+데이터 갯수에 맞게 표 생성해달라고 반복문쓰는 것도 좋을듯요 
+
+
+숙제용 장바구니 데이터
+
+
+뭐 배우기 전에 항상 이걸 왜 쓰는지 생각해보는게 중요합니다. 
+
+그래야 나중에 "여기서 Redux 쓰는게 맞나요?" 이런 질문 안하고 알아서 코드 잘짬 
+
+Redux 라이브러리 왜 쓴다고 했냐면
+
+state를 Redux store에 보관해둘 수 있는데 모든 컴포넌트가 거기 있던 state를 직접 꺼내쓸 수 있어서
+
+props 없어도 편리하게 state 공유가 가능하다고 했습니다. 
+
+오늘은 Redux store에 state 보관하는 법을 알아봅시다. 
+
+
+
+
+
+Redux store에 state 보관하는 법 
+
+
+저번시간에 만들어둔 store.js 파일 열어서 이렇게 코드짜면 state 하나 만들 수 있습니다.
+
+step 1. createSlice( ) 로 state 만들고
+
+step 2. configureStore( ) 안에 등록하면 됩니다.
+
+
+import { configureStore, createSlice } from '@reduxjs/toolkit'
+
+let user = createSlice({
+  name : 'user',
+  initialState : 'kim'
+})
+
+export default configureStore({
+  reducer: {
+    user : user.reducer
+  }
+}) 
+
+1. createSlice( ) 상단에서 import 해온 다음에 
+
+{ name : 'state이름', initialState : 'state값' } 이거 넣으면 state 하나 생성가능합니다. 
+
+(createSlice( ) 는 useState( ) 와 용도가 비슷하다고 보면 됩니다)
+
+
+2. state 등록은 configureStore( ) 안에 하면 됩니다.
+
+{ 작명 : createSlice만든거.reducer } 이러면 등록 끝입니다. 
+
+여기 등록한 state는 모든 컴포넌트가 자유롭게 사용가능합니다. 
+
+
+
+
+
+
+
+
+Redux store에 있던 state 가져다쓰는 법
+
+
+(Cart.js)
+
+import { useSelector } from "react-redux"
+
+function Cart(){
+  let a = useSelector((state) => { return state } )
+  console.log(a)
+
+  return (생략)
+}
+아무 컴포넌트에서 useSelector((state) => { return state } ) 쓰면 store에 있던 모든 state가 그 자리에 남습니다. 
+
+변수에 저장해서 진짜로 출력해보십시오. 
+
+{ user : 'kim' } 이런거 출력될듯
+
+
+
+
+
+let a = useSelector((state) => state.user ) 
+이런 식으로 쓰면 좀 더 편리할 수도 있습니다.
+
+
+
+
+
+Redux 편하니까 맨날 쓰면 되겠네요
+
+
+간단한거 만들 때
+
+컴포넌트가 몇개 없을 때 
+
+이럴 땐 그냥 props 쓰는게 더 코드가 짧습니다. 

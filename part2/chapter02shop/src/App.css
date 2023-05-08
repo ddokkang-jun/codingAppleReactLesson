@@ -1,0 +1,86 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+.navbar-brand:hover {
+  cursor: pointer;
+  color: crimson !important;
+  font-weight: bold;
+}
+.nav-link {
+  text-decoration: none;
+}
+.main-bg-img {
+  height: 350px;
+  background-size: cover;
+  background-position: center;
+}
+.product-container {
+  display: flex;
+  justify-content: center;
+}
+.row {
+  margin-top: 100px !important;
+}
+.col-md-4 {
+  transition: all 0.5ms ease-in;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center
+}
+.col-md-4:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+.card-body {
+  text-align: center;
+}
+.card-title {
+  height: 48px;
+}
+.more-btn {
+  padding: 20px;
+  text-align: center;
+}
+.alert {
+  margin-top: 30px;
+  text-align: center;
+}
+.product-detail-area {
+  display: flex;
+  flex-direction: column;
+}
+.order-btn {
+  margin-top: 20px;
+}
+.more-products {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  padding: 30px;
+  background-color: crimson;
+  border-radius: 8px;
+  color: white;
+}
+.detailPage-tab-btn {
+  margin-top: 20px;
+}
+.detailPage-tab {
+  text-align: center;
+}
+.detailPage-tab-description {
+  padding: 3rem;
+  border: 1px solid #ddd;
+  border-top: none;
+}
+/* fade animation start and end class*/
+.start {
+  opacity: 0;
+}
+.end {
+  opacity: 1;
+  transition: all 0.5s ease-in;
+}

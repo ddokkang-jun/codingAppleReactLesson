@@ -1,0 +1,333 @@
+PWA 셋팅해서 앱으로 발행하기
+
+
+
+
+
+PWA 만드는 법
+
+4:32 manifest.json, service-worker.js 살펴보기 
+
+9:21 크롬 개발자도구에서 PWA 디버깅하기  
+
+11:45 나의 PWA를 커스터마이징하려면 
+
+
+
+
+구글이 밀고있는 PWA라는게 있습니다.
+
+Progressive Web App이라는건데 이건 웹사이트를 안드로이드/iOS 모바일 앱처럼 사용할 수 있게 만드는 일종의 웹개발 기술입니다. 
+
+여러분 지금까지 강의 따라오면서 리액트로 모바일 App 처럼 동작하는 사이트 만들어놨죠?
+
+모바일 앱처럼 스무스하잖아요. 
+
+그래서 이 웹사이트를 모바일 앱으로 발행해서 그냥 쓰자는겁니다.
+
+근데 iOS, Android 앱으로 발행하는게 아니라 웹사이트 자체를 스마트폰 홈화면에 설치합니다. 그게 바로 PWA 입니다. 
+
+
+
+
+웹사이트를 PWA화 시키는게 뭐가 좋냐면
+
+
+
+
+
+
+1. 스마트폰, 태블릿 바탕화면에 여러분 웹사이트를 설치 가능합니다.
+
+(저거 설치된 앱 누르면 상단 URL바가 제거된 크롬 브라우저가 뜹니다. 일반 사용자는 앱이랑 구분을 못함)
+
+
+2. 오프라인에서도 동작할 수 있습니다.
+
+service-worker.js 라는 파일과 브라우저의 Cache storage 덕분에 그렇습니다.
+
+자바스크립트로 게임만들 때 유용하겠네요.
+
+
+3. 설치 유도 비용이 매우 적습니다.
+
+앱설치를 유도하는 마케팅 비용이 적게들어 좋다는 겁니다.
+
+구글플레이 스토어 방문해서 앱 설치하고 다운받게 하는건 항상 매우 높은 마케팅비용이 듭니다. 
+
+근데 PWA라면 웹사이트 방문자들에게 간단한 팝업을 띄워서 설치유도할 수 있으니 훨씬 적은 마케팅 비용이 들고요. 
+
+그래서 미국에선 PWA를 적극 이용하고 있는 쇼핑몰들이 많습니다. 
+
+
+
+
+
+
+
+
+PWA 만드는건 별거 없고 그냥 아무사이트나 파일 2개만 사이트 로컬경로에 있으면 브라우저가 PWA로 인식합니다. (그리고 HTTPS 사이트여야합니다)
+
+manifest.json과 service-worker.js 라는 이름의 파일 두개를 만드시면 됩니다.
+
+
+
+하지만 기본 프로젝트를 npm build / yarn build 했을 경우 manifest.json 파일만 생성해줍니다. 
+
+service-worker.js 까지 자동으로 생성을 원한다면 프로젝트를 처음 만들 때 애초에 
+
+npx create-react-app 프로젝트명 --template cra-template-pwa
+
+이렇게 터미널에 입력하라고 합니다.
+
+
+
+Q. 잉 그럼 프로젝트 다시만들어야해요? 
+
+A. 맞습니다.
+
+1. 다른 폴더에 위 명령어를 이용해 프로젝트 새로 하나 만든 다음에
+
+2. 기존 프로젝트의 App.js App.css index.js 이런 파일들을 새 프로젝트로 복붙하시면 됩니다. 
+
+여러분이 건드린 파일은 다 복붙하셈 근데 index.js 파일은 많이 바뀐점이 좀 있어서 차이점만 잘 복붙하시면 될듯합니다. 
+
+3. router, redux 이런 라이브러리를 설치했다면 그것도 새프로젝트에서 다시 설치하시면 됩니다.  
+
+
+
+그리고 파일들 중에 index.js 하단에 보시면 
+
+serviceWorkerRegistration.unregister();
+이 부분을 
+
+
+serviceWorkerRegistration.register();
+이렇게 바꾸시면 끝입니다.
+
+
+
+그럼 이제 yarn build / npm run build 했을 때 아까 그 manifest.json과 service-worker.js 파일이 자동으로 생성됩니다. 
+
+PWA 발행 끝!
+
+
+
+
+
+
+
+
+manifest.json / service-worker.js 파일 살펴보기
+
+
+build 하고 나시면 build 폴더 내에 이 파일들이 있을겁니다.
+
+manifest.json 파일은 웹앱의 아이콘, 이름, 테마색 이런걸 결정하는 부분이라고 보시면 됩니다. 
+
+거기 안에 들어가는 내용들은 대략 이렇습니다.
+
+
+{
+  "version" : "여러분앱의 버전.. 예를 들면 1.12 이런거",
+  "short_name" : "설치후 앱런처나 바탕화면에 표시할 짧은 12자 이름",
+  "name" : "기본이름",
+  "icons" : { 여러가지 사이즈별 아이콘 이미지 경로 },
+  "start_url" : "앱아이콘 눌렀을 시 보여줄 메인페이지 경로",
+  "display" : "standalone 아니면 fullscreen",
+  "background_color" : "앱 처음 실행시 잠깐 뜨는 splashscreen의 배경색",
+  "theme_color" : "상단 탭색상 등 원하는 테마색상",
+}
+
+등 여러가지를 집어넣을 수 있습니다.
+
+시간나시면 version, scope 항목에 대해서도 한번 찾아보시길 바랍니다. 
+
+▼ 그리고 이 파일은 웹앱에서 사용하는 모든 html 안에 이런 식으로 집어넣으셔야하는데
+
+<link rel="manifest" href="/manifest.webmanifest">
+근데 다행히도 그거 설치는 리액트가 알아서 해줬기 때문에 우린 건드릴게 없군요.
+
+
+
+
+service-worker.js 파일은 좀 설명하자면 긴데
+
+여러분 카카오톡 앱같은거 설치할 때 구글플레이 스토어 가서 설치하죠?
+
+그럼 카톡 구동에 필요한 이미지, 데이터들이 전부 하드에 설치됩니다.
+
+그리고 카톡을 켜면 카톡 로고 같은 데이터를 카톡 서버에 요청하는게 아니라
+
+하드에 이미 설치되어 있는걸 그대로 가져와서 씁니다. 
+
+
+
+이걸 흉내내도록 도와주는 파일이 바로 service-worker 라는 파일입니다.
+
+이 파일에 설정을 잘 해주면 이제 여러분의 웹앱을 설치했을 때 어떤 CSS, JS, HTML, 이미지 파일이 하드에 설치될지 결정할 수 있습니다.
+
+그럼 이제 다음에 앱을 켤 때마다 서버에 CSS,JS,HTML 파일을 요청하는게 아니라 Cache Storage에 저장되어있던 CSS,JS,HTML 파일을 사용하게 됩니다.
+
+(그럼 이제 오프라인에서도 사용이 가능해지는거죠)
+
+
+
+
+근데 설정은 이미 되어있습니다.
+
+그래서 우린 그냥 가만히 있기만하면 됩니다.
+
+모든 HTML CSS JS 파일을 cache storage에 저장하도록 기본 셋팅이 되어있는데
+
+간혹 저장해두기 싫은, 자주변하는 파일들이 간혹 있을 수 있습니다. 
+
+필요하면 하단 튜토리얼을 참고해서 수정해보도록 합시다. 
+
+
+
+
+
+그냥 쌩으로 service worker 파일을 만들고 싶다면 
+
+구글 공식 튜토리얼이나 크롬브라우저 권장 튜토리얼을 참고하십시오.
+
+service worker 제작에 필요한 문법이 따로 있고 그걸 학습하셔야합니다. 
+
+(공식 튜토리얼) https://developers.google.com/web/fundamentals/primers/service-workers
+
+(샘플) https://googlechrome.github.io/samples/service-worker/basic/
+
+
+
+
+홈페이지 업데이트할 때마다 유저들이 올드한 JS 파일을 사용하진 않을까 걱정은 안하셔도 됩니다. 
+
+그리고 build할 때마다 JS,CSS,HTML 파일의 이름과 경로가 무작위로 바뀝니다.
+
+사이트에 필요한 JS,CSS,HTML 파일명이 바뀌면 하드에 있는게 아니라 서버에 요청해서 새로 받아오니까
+
+여러분이 파일을 서버에 올려서 배포할 때 마다 유저는 새로운 파일을 보게 될겁니다. 
+
+
+
+
+
+
+
+개발자도구로 PWA 디버깅하기
+
+
+
+내가 build 했던 프로젝트가 PWA인지 아닌지 살펴보고 싶으면 
+
+일단 사이트를 호스팅받아 올리거나 아니면 .. (Github pages 이런 것도 됩니다)
+
+VScode 익스텐션중에 live server 이걸 검색해서 설치하신 뒤에
+
+1. build 폴더를 에디터로 오픈하고
+
+2. 거기 있는 index.html을 우클릭 - live server로 띄우기 누르면 됩니다.
+
+
+
+아무튼 여러분의 사이트에서 크롬 개발자도구를 켜시면 Application 이라는 탭이 있습니다.
+
+여기 들어가시면 PWA와 관련된 모든걸 살펴보실 수 있습니다.
+
+
+
+
+
+
+(내 사이트가 없으면 flipkart.com 이런 PWA 사이트 들어가서 따라해보시면 됩니다)
+
+
+
+Manifest 메뉴에선 manifest.json 내용들을 확인가능하고
+
+Service Worker 메뉴에선 service-worker 파일이 잘 있는지, 오프라인에선 잘 동작하는지 테스트 가능하고 푸시알림 기능을 개발해놨다면 푸시알림도 샘플로 전송해볼 수 있습니다.
+
+Cache Storage 메뉴에선 service-worker 덕분에 하드에 설치된 CSS, JS, HTML 파일들을 확인할 수 있습니다. 캐시된 파일 제거도 가능합니다.
+
+
+
+
+
+
+
+나의 PWA를 커스터마이징하려면
+
+
+
+지금 PWA 발행이 쉽고 간단한 이유는 구글의 workbox 라는 라이브러리 덕분입니다.
+
+이게 create-react-app 설치할 때 함께 설치되었기 때문입니다.
+
+그래서 PWA 발행방식 같은걸 커스터마이징 하고싶으면 workbox 사용법을 익히셔야하는데
+
+구글 직원들이 써놓은 개발문서 같은거 보면 매우 불친절하고 어렵습니다. 
+
+
+
+그래서 빠르게 커스터마이징 방법 하나만 알려드리겠습니다. 
+
+Q. 하드에 설치할 파일 중에 HTML을 제외하고 싶다면?
+
+이런 경우 많습니다. HTML 파일은 너무 자주 변해서 하드에 저장해놓기 싫다면 여길 수정하시면 됩니다.
+
+(근데 그럴거면 앱실행시 아무것도 안뜰꺼고 모바일 앱의 장점이 사라지는데얌)
+
+
+
+여러분 프로젝트 폴더 내의 
+
+node_modules/react-scripts/config/webpack.config.js 파일을 찾으시면 됩니다. 
+
+거기 하단 쯤에 보면 이런 코드가 있습니다. 
+
+
+new WorkboxWebpackPlugin.GenerateSW({
+    clientsClaim: true,
+    exclude: [/\.map$/, /asset-manifest\.json$/],
+}) 
+(▲구버전)
+
+new WorkboxWebpackPlugin.InjectManifest({
+    swSrc,
+    dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
+    exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/], 
+(▲신버전)
+
+
+
+여기의 exclude라는 항목이 어떤 파일을 캐싱하지 않을건지 결정하는 부분입니다.
+
+정규식으로 작성하는데 정규식과 일치하는 파일명을 제외합니다. 
+
+그래서 원하는 HTML 파일을 여기 등록하시면 끝입니다.
+
+
+
+new WorkboxWebpackPlugin.GenerateSW({
+    clientsClaim: true,
+    exclude: [/\.map$/, /asset-manifest\.json$/, /index\.html/],
+}) 
+이거 말고도 "모든 .css로 끝나는 파일"  "a라는 글자로 시작하는 파일"
+
+이런 식으로 정규식으로 작성할 수도 있는데 그것은 정규식 문법을 잘 찾아보시면 되겠습니다.
+
+근데 여러분 사이트가 페이스북, 인스타, 유튜브처럼 입장과 동시에 Ajax로 초기데이터들을 전부 받아오는 사이트라면
+
+굳이 HTML 파일을 저렇게 할 필요는 없겠죠? 맞습니다. 쓸데없습니다. 
+
+
+
+
+아무튼 위처럼 코드를 추가하면 build 할 때 index.html 파일을 캐싱목록에서 제외해주게 됩니다.
+
+오늘도 service-worker 쉽게 만들어주는 구글신님께 감사인사를 올리도록 합시다. 
+
+참고로 PWA는 구글 앱스토어에 올릴 수 있는 apk 파일로 변환할 수도 있는데 
+
+PWAbuilder 등을 이용하시면 됩니다. 
